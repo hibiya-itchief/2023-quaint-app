@@ -1,8 +1,9 @@
-<template>  
+<template>
+<h1>search</h1>
 </template>
 
 <script>
 export default {
-  name: 'IndexPage'
+  name: 'SearchPage'
 }
 </script>
