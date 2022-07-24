@@ -9,7 +9,7 @@
       elevate-on-scroll
     >
       <v-app-bar-nav-icon  @click="drawer = true"></v-app-bar-nav-icon>
-      <v-toolbar-title >seiryofes.com</v-toolbar-title>
+      <v-toolbar-title to="/">seiryofes.com</v-toolbar-title>
     <v-spacer></v-spacer>
       <v-btn icon>
         <v-icon>mdi-account-circle</v-icon>
