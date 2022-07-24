@@ -1,12 +1,19 @@
 <template>
   <v-app>
-    <v-card>
+    <v-card class="overflow-hidden">
     <v-app-bar
+      fixed
       color="light-blue"
       dark
+      app
+      elevate-on-scroll
     >
       <v-app-bar-nav-icon  @click="drawer = true"></v-app-bar-nav-icon>
-      <v-toolbar-title >星陵祭2022</v-toolbar-title>
+      <v-toolbar-title >seiryofes.com</v-toolbar-title>
+    <v-spacer></v-spacer>
+      <v-btn icon>
+        <v-icon>mdi-account-circle</v-icon>
+      </v-btn>
     </v-app-bar>
     </v-card>
 
@@ -30,32 +37,38 @@
             <v-list-item-title>Home</v-list-item-title>
           </v-list-item>
 
-          <v-list-item>
+          <v-list-item @click="logOut()">
             <v-list-item-icon>
               <v-icon>mdi-account</v-icon>
             </v-list-item-icon>
-            <v-list-item-title>Account</v-list-item-title>
+            <v-list-item-title>Log out</v-list-item-title>
           </v-list-item>
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
+
+    <v-main>
     <Nuxt />
+    </v-main>
+    
+    
     <v-bottom-navigation
     color="light-blue"
-    absolute
+    fixed
+    app
     >
       <v-btn to="/">
-        <span>Home</span>
+        <span>ホーム</span>
         <v-icon>mdi-home</v-icon>
       </v-btn>
 
-      <v-btn to="/search">
-        <span>Find</span>
+      <v-btn to="/groups">
+        <span>探す</span>
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
 
-      <v-btn>
-        <span>Tickets</span>
+      <v-btn to="/tickets">
+        <span>チケット</span>
         <v-icon>mdi-ticket</v-icon>
       </v-btn>
     </v-bottom-navigation>
@@ -86,6 +99,11 @@ export default {
       right: true,
       rightDrawer: false,
       title: 'Vuetify.js'
+    }
+  },
+  methods:{
+    async logOut(){
+      await this.$auth.logout()
     }
   }
 }

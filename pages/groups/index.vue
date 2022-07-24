@@ -1,7 +1,12 @@
 <template>
-<v-app>
+<v-app >
+<v-container>
+<v-layout>
+<v-flex xs12 sm6 md8 lg6 xl6 >
+<p>{{message}}</p>
   <v-card
-    class="mx-auto"
+    class="ma-2 justify-center"
+    width="300"
     v-for="group in groups"
   >
     <v-card-text>
@@ -26,15 +31,17 @@
       </v-btn>
     </v-card-actions>
   </v-card>
+</v-flex>
+</v-layout>
+</v-container>
 </v-app>
 </template>
 
 <script>
 import axios from 'axios';
 
-//axios.defaults.baseURL = 'http://localhost:8000';
-//axios.defaults.headers.post['Content-Type'] = 'application/json';
-axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
+axios.defaults.headers.get['Access-Control-Allow-Origin'] = '*';
+axios.defaults.headers.get['Content-Type'] = 'application/json;charset=utf-8';
 
 export default {
   name: 'IndexPage',
