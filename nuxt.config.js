@@ -7,6 +7,10 @@ export default {
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
 
+  router:{
+    middleware:['auth']
+  },
+
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: '%s - quaint-app',
@@ -47,12 +51,40 @@ export default {
     '@nuxtjs/axios',
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
+    // https://auth.nuxtjs.org
+    '@nuxtjs/auth-next'
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
     baseURL: '/',
+  },
+
+  //Authorization
+  auth: {
+    redirect:{
+      login:"/signin",
+      logout:"/signin",
+      home:"/groups"
+    },
+    watchLoggedIn:true,
+    localStorage:false,
+    strategies:{
+      local:{
+        token:{
+          type:'Bearer',
+          property:'access_token',
+          global:true
+        },
+        user:{
+          property:false
+        },
+        endpoints:{
+          login:{url:"http://localhost:8000/token",method:'post',headers: { 'Content-Type': 'application/x-www-form-urlencoded' }}
+        }
+      }
+    }
   },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
