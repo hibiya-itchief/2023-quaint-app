@@ -65,9 +65,9 @@ export default {
   //Authorization
   auth: {
     redirect:{
-      login:"/signin",
-      logout:"/signin",
-      home:"/groups"
+      login:"/login",
+      logout:"/login",
+      home:"/tickets"
     },
     watchLoggedIn:true,
     localStorage:false,
