@@ -71,6 +71,11 @@
         <span>マイチケット</span>
         <v-icon>mdi-ticket</v-icon>
       </v-btn>
+
+      <v-btn to="/staff">
+        <span>スタッフ</span>
+        <v-icon>mdi-account-multiple</v-icon>
+      </v-btn>
     </v-bottom-navigation>
   </v-app>
 </template>
