@@ -68,7 +68,7 @@
       </v-btn>
 
       <v-btn to="/tickets">
-        <span>チケット</span>
+        <span>マイチケット</span>
         <v-icon>mdi-ticket</v-icon>
       </v-btn>
     </v-bottom-navigation>
