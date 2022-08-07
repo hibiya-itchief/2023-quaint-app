@@ -59,14 +59,21 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    baseURL: '/',
+    baseURL: 'http://localhost:8000/',
+    common:{
+      'Accept':'application/json, text/plain, */*'
+    },
+    post:{
+      'Content-Type':'application/json;charset=utf-8',
+      'Access-Control-Allow-Origin':'*'
+    }
   },
 
   //Authorization
   auth: {
     redirect:{
       login:"/login",
-      logout:"/login",
+      logout:"/login?logout",
       home:"/tickets"
     },
     watchLoggedIn:true,
@@ -82,7 +89,8 @@ export default {
           property:false
         },
         endpoints:{
-          login:{url:"http://localhost:8000/token",method:'post',headers: { 'Content-Type': 'application/x-www-form-urlencoded' }}
+          login:{url:"token/",method:'post',headers: { 'Content-Type': 'application/x-www-form-urlencoded' }},
+          user:false
         }
       }
     }
