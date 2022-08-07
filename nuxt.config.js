@@ -8,6 +8,7 @@ export default {
   target: 'static',
 
   router:{
+    base:'/quaint-app/',
     middleware:['auth']
   },
 
