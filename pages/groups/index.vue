@@ -53,6 +53,7 @@
 
 export default {
   name: 'IndexPage',
+  auth:false,
   data(){
     return {
       groups:{}

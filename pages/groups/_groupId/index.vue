@@ -24,6 +24,7 @@
 <script>
 export default {
   name: 'IndexPage',
+  auth:false,
   data(){
     return{
         groupId:this.$route.params.groupId
