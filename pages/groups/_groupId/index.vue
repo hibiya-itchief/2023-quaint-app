@@ -8,7 +8,7 @@
         <div>
             <!--タイトル，団体，お気に入り，映像で鑑賞ボタン-->
             <v-card>
-                <v-img :src="group.thumbnail"></v-img>
+                <!--<v-img :src="group.thumbnail"></v-img>-->
                 <div>
                     <v-card-title>{{group.title}}</v-card-title>
                     <v-card-subtitle>{{group.groupname}}</v-card-subtitle>
@@ -17,7 +17,7 @@
                     </v-btn>
                     <v-btn color="light-blue" light>
                         <v-icon>mdi-play</v-icon>
-                        <v-text>映像で鑑賞</v-text>
+                        <p>映像で鑑賞</p>
                     </v-btn>
                 </div>
                 
@@ -28,7 +28,7 @@
 
         <!--公演時間の選択-->
         <div>
-            <v-text>公演を選択してください</v-text>
+            <p>公演を選択してください</p>
             <div v-for="event in events">
                <v-dialog
                 v-model="dialog"
@@ -68,30 +68,34 @@
 </template>
 
 <script>
-    export default {
+export default {
     data () {
       return {
         dialog: false,
-        group:{
-            groupname: '36R',
-            title: '炎と森のカーニバル',
-            description: 'string',
-            page_content: 'string',
-            enable_vote: true,
-            twitter_url: 'https://twitter.com/HibiyaSanro',
-            instagram_url: 'https://www.instagram.com/hibiyasanro/',
-            stream_url: 'example.com',
-            id: 'string',
-            thumbnail: '/image/Top-Gun.jpg',
-          },
-          events:{
-            event_id_1:{
-                title: '第1公演',
-                starts_at: '10:00',
-                ends_at: '10:45'
-            }
-          }
+        group:{},
+        events:[]
       }
     },
-  }
+    async asyncData({params,error,$axios}){
+    let res_group;
+    let res_events;
+    await $axios.get("/groups/"+params.groupId)
+    .then(function (response) {
+      console.log(response)
+      res_group=response.data
+    })
+    .catch((e => {
+        error({ statusCode:404,message: e.message })
+    }))
+    await $axios.get("/groups/"+params.groupId+"/events")
+    .then(function (response) {
+      console.log(response)
+      res_events=response.data
+    })
+    .catch((e => {
+        error({ statusCode:404,message: e.message })
+    }))
+    return {group:res_group,events:res_events}
+    }
+}
 </script>
