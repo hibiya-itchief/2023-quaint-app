@@ -2,6 +2,29 @@
 <v-app >
 <v-container>
 <div justify="center">
+
+  <v-sheet>
+    <v-row>
+      <v-col
+      cols="12"
+      >
+        <div class="pa-1">
+          <p>ジャンルを選択</p>
+          <v-chip-group
+            active-class="primary--text"
+            column
+          >
+            <v-chip
+              v-for="tag in tags"
+              :key="tag"
+            >
+              {{ tag }}
+            </v-chip>
+          </v-chip-group>
+        </div>
+      </v-col>
+    </v-row>
+  </v-sheet> 
 <v-row
 >
   <v-col
