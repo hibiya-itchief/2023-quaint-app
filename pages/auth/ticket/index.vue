@@ -16,7 +16,7 @@
         <v-divider></v-divider>
         <v-subheader>操作可能なチケットリスト</v-subheader>
         <v-list-item v-for="(event, i) in events" :key="event.id">
-          <v-list-item-content>{{ event.group_id }} - {{ event.event_id }}</v-list-item-content>
+          <v-list-item-content>{{ event.group_name }} - {{ event.event_name }}</v-list-item-content>
           <v-list-item-action>
             <v-btn v-bind:disabled="event.is_used" elevation="0" color="primary" small @click="selected_item = i" @click.stop="dialog = true">使用済みにする</v-btn>
           </v-list-item-action>
@@ -63,12 +63,14 @@ export default {
       this.events = []
       for (let i = 0; i < 4 + Math.floor(Math.random() * 3); i++) {
         this.events.push({
-          event_id: "第 " + String(Math.floor(Math.random() * 4)) + " 公演",
+          event_id: "event_id" + String(i),
+          event_name: "第 " + String(Math.floor(Math.random() * 4)) + " 公演",
           owner_id: "owner_id",
           is_family_ticket: false,
           person: 1,
           id: "id" + String(i),
-          group_id: String(11 + Math.floor(Math.random() * 27)) + "R",
+          group_id: "group_id" + String(i),
+          group_name: String(11 + Math.floor(Math.random() * 27)) + "R",
           created_at: "2022-08-11T08:20:58.1167",
           is_used: Math.random() > 0.5 ? true : false
         })
