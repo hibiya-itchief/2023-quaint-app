@@ -2,19 +2,27 @@
 <v-app >
   <v-container>
     <div justify="center">
-      <v-btn elevation="0" v-if="!readCode" @click="openCodeReader">QR コードを読み取る</v-btn>
-
+      <div>
+        <v-btn elevation="0" v-if="!readCode" @click="openCodeReader" class="mb-6 mt-3">QR コードを読み取る</v-btn>
+      </div>
       <div v-if="readCode">
-        <p class="error">{{ error }}</p>
+        <v-alert v-if="error!=''" dense type="error">
+           {{ error }}
+        </v-alert>
         <qrcode-stream @decode="onDecode" @init="onInit" />
       </div>
 
       <div v-if="!readCode">
-        <li v-for="(event, i) in events" :key="event.id">
-          {{ event.id}}
-          <v-btn v-bind:disabled="event.is_used" elevation="0" color="primary" @click="useTicket(i)">使用済みにする</v-btn>
-        </li>
+        <v-divider></v-divider>
+        <v-subheader>操作可能なチケットリスト</v-subheader>
+        <v-list-item v-for="(event, i) in events" :key="event.id">
+          <v-list-item-content>{{ event.group_id }} - {{ event.event_id }}</v-list-item-content>
+          <v-list-item-action>
+            <v-btn v-bind:disabled="event.is_used" elevation="0" color="primary" small @click="useTicket(i)">使用済みにする</v-btn>
+          </v-list-item-action>
+        </v-list-item>
       </div>
+
     </div>
   </v-container>
 </v-app>
@@ -42,12 +50,14 @@ export default {
       this.events = []
       for (let i = 0; i < 4 + Math.floor(Math.random() * 3); i++) {
         this.events.push({
-          event_id: "event id" + String(i),
+          /*event_id: "event id" + String(i),*/ 
+          event_id: "第 " + String(Math.floor(Math.random() * 4)) + " 公演",
           owner_id: "owner_id",
           is_family_ticket: false,
           person: 1,
           id: "id" + String(i),
-          group_id: "groupd_id" + String(i),
+          /*group_id: "groupd_id" + String(i),*/
+          group_id: String(11 + Math.floor(Math.random() * 27)) + "R",
           created_at: "2022-08-11T08:20:58.1167",
           is_used: Math.random() > 0.5 ? true : false
         })
