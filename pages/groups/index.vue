@@ -7,6 +7,7 @@
   <v-col
   cols="12"
   md="4"
+  sm="6"
   calss="my-1"
   v-for="group in groups"
   >
@@ -39,6 +40,7 @@
       >
         もっと見る
       </v-btn>
+      
     </v-card-actions>
   </v-card>
   </v-col>
