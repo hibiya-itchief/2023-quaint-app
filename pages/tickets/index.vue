@@ -4,6 +4,8 @@
             <v-icon>mdi-ticket</v-icon>
             整理券
         </h1>
+        <p>{{usersMeTickets}}</p>
+        <p>{{group}}</p>
         <v-conteiner>
           <v-row>
             <v-col col="6" md="6" sm="12">
@@ -97,114 +99,32 @@
 
 <script>
     export default {
-    data () {
-      return {
-        groups:[
-          {
-            groupname: '36R',
-            title: '炎と森のカーニバル',
-            description: 'string',
-            page_content: 'string',
-            enable_vote: true,
-            twitter_url: 'https://twitter.com/HibiyaSanro',
-            instagram_url: 'https://www.instagram.com/hibiyasanro/',
-            stream_url: 'example.com',
-            id: 'string',
-            thumbnail: '/image/Top-Gun.jpg',
-          },
-          {
-            groupname: '37R',
-            title: 'アラジン',
-            description: 'string',
-            page_content: 'string',
-            enable_vote: true,
-            twitter_url: 'https://twitter.com/HibiyaSanro',
-            instagram_url: 'https://www.instagram.com/hibiyasanro/',
-            stream_url: 'example.com',
-            id: 'string',
-            thumbnail: '/image/Top-Gun.jpg',
-          },
-          {
-            groupname: '38R',
-            title: 'アナと雪の女王',
-            description: 'string',
-            page_content: 'string',
-            enable_vote: true,
-            twitter_url: 'https://twitter.com/HibiyaSanro',
-            instagram_url: 'https://www.instagram.com/hibiyasanro/',
-            stream_url: 'example.com',
-            id: 'string',
-            thumbnail: '/image/Top-Gun.jpg',
-          },
-           {
-            groupname: '31R',
-            title: 'アナと雪の女王',
-            description: 'string',
-            page_content: 'string',
-            enable_vote: true,
-            twitter_url: 'https://twitter.com/HibiyaSanro',
-            instagram_url: 'https://www.instagram.com/hibiyasanro/',
-            stream_url: 'example.com',
-            id: 'string',
-            thumbnail: '/image/Top-Gun.jpg',
-          },
-           {
-            groupname: '32R',
-            title: 'アナと雪の女王',
-            description: 'string',
-            page_content: 'string',
-            enable_vote: true,
-            twitter_url: 'https://twitter.com/HibiyaSanro',
-            instagram_url: 'https://www.instagram.com/hibiyasanro/',
-            stream_url: 'example.com',
-            id: 'string',
-            thumbnail: '/image/Top-Gun.jpg',
-          },
-           {
-            groupname: '33R',
-            title: 'アナと雪の女王',
-            description: 'string',
-            page_content: 'string',
-            enable_vote: true,
-            twitter_url: 'https://twitter.com/HibiyaSanro',
-            instagram_url: 'https://www.instagram.com/hibiyasanro/',
-            stream_url: 'example.com',
-            id: 'string',
-            thumbnail: '/image/Top-Gun.jpg',
-          },
-          {
-            groupname: '34R',
-            title: 'アナと雪の女王',
-            description: 'string',
-            page_content: 'string',
-            enable_vote: true,
-            twitter_url: 'https://twitter.com/HibiyaSanro',
-            instagram_url: 'https://www.instagram.com/hibiyasanro/',
-            stream_url: 'example.com',
-            id: 'string',
-            thumbnail: '/image/Top-Gun.jpg',
-          },
-           {
-            groupname: '35R',
-            title: 'アナと雪の女王',
-            description: 'string',
-            page_content: 'string',
-            enable_vote: true,
-            twitter_url: 'https://twitter.com/HibiyaSanro',
-            instagram_url: 'https://www.instagram.com/hibiyasanro/',
-            stream_url: 'example.com',
-            id: 'string',
-            thumbnail: '/image/Top-Gun.jpg',
-          }  
-        ],
-        users:[
-          {
-          username: 'jt_j9',
-          id: 'string',
-          }
-        ]
-
-      }
+   data(){
+    return {
+      usersMeTickets:{},
+      group:{},
+    }
     },
+    asyncData({ params, error,$axios }) {
+      return $axios.get("/users/me/tickets")
+        .then((res) => {
+          return { usersMeTickets: res.data }
+        })
+        //エラー処理
+        .catch((e => {
+          error({ message: e.message })
+        }))
+    },
+    asyncData({ params, error,$axios }) {
+      return $axios.get("/group")
+        .then((res) => {
+          return { group: res.data }
+        })
+        //エラー処理
+        .catch((e => {
+          error({ message: e.message })
+        }))
+    },
+    
   }
 </script>
