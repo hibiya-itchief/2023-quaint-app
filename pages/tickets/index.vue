@@ -5,7 +5,7 @@
             整理券
         </h1>
         <p>{{usersMeTickets}}</p>
-        <p>{{group}}</p>
+        <p>{{groups}}</p>
         <v-conteiner>
           <v-row>
             <v-col col="6" md="6" sm="12">
