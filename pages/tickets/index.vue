@@ -102,7 +102,7 @@
    data(){
     return {
       usersMeTickets:{},
-      group:{},
+      groups:{},
     }
     },
     asyncData({ params, error,$axios }) {
@@ -116,9 +116,9 @@
         }))
     },
     asyncData({ params, error,$axios }) {
-      return $axios.get("/group")
+      return $axios.get("/groups")
         .then((res) => {
-          return { group: res.data }
+          return { groups: res.data }
         })
         //エラー処理
         .catch((e => {
