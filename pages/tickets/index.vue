@@ -5,7 +5,7 @@
             整理券
         </h1>
         <p>{{usersMeTickets}}</p>
-        <p>{{group}}</p>
+        <p>{{groups}}</p>
         <v-conteiner>
           <v-row>
             <v-col col="6" md="6" sm="12">
@@ -116,9 +116,9 @@
         }))
     },
     asyncData({ params, error,$axios }) {
-      return $axios.get("/group")
+      return $axios.get("/groups")
         .then((res) => {
-          return { group: res.data }
+          return { groups: res.data }
         })
         //エラー処理
         .catch((e => {
