@@ -80,9 +80,13 @@
                             v-model="dialog"
                             width="500">
                                 <template v-slot:activator="{ on, attrs }">
-                                    <v-card @click.stop="dialog = true">   
-                                    <v-card-title>{{event.title}}({{event.starts_at}}-{{event.ends_at}})</v-card-title>
-                                </v-card>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <v-card @click.stop="dialog = true">   
+                                                <v-card-title>{{event.title}}({{event.starts_at}}-{{event.ends_at}})</v-card-title>
+                                            </v-card>
+                                        </v-col>
+                                    </v-row>
                                 </template>
                                 <v-card>
                                     <v-card-title>この公演を選択しますか？</v-card-title>
@@ -107,7 +111,6 @@
                                 </v-card>
                                 
                         </v-dialog>
-
                         </div>
                     </div>
                 </v-col>
