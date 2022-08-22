@@ -12,63 +12,71 @@
                         <!--タイトル，団体，お気に入り，映像で鑑賞ボタン-->
                         <v-card>
                             <!--<v-img :src="group.thumbnail"></v-img>-->
-                            <div>
-                                <v-card-title>{{group.title}}</v-card-title>
-                                <v-card-subtitle>{{group.groupname}}</v-card-subtitle>
-                                <!--
-                                <v-btn icon>
-                                    <v-icon>mdi-heart</v-icon>
-                                </v-btn> -->
-                                <v-card-actions class="text-center">
-                                        <v-dialog
-                                        v-model="videoViewer"
-                                        fullscreen
-                                        >
-                                        <template v-slot:activator="{ on, attrs }">
-                                            <v-row justify="center">
-                                            <v-col>
-                                                <v-btn
-                                                color="primary"
-                                                dark
-                                                v-bind="attrs"
-                                                v-on="on"
-                                                rounded
-                                                >
-                                                <v-icon>mdi-play</v-icon>
-                                                映像で鑑賞
-                                                </v-btn>
-                                            </v-col>
-                                            </v-row>
-                                        </template>
-                                        <v-card dark>
-                                            <v-toolbar
-                                            dark
-                                            color="primary"
-                                            >
+                            <v-card-title>{{group.title}}</v-card-title>
+                            <v-card-subtitle>{{group.groupname}}</v-card-subtitle>
+                            <!--
+                            お気に入り機能は未実装
+                            <v-btn icon>
+                                <v-icon>mdi-heart</v-icon>
+                            </v-btn> -->
+
+                            <v-card-actions>
+                                <v-chip-group column>
+                                <v-chip v-for="tag in tags" disabled>
+                                    {{tag.tagname}}
+                                </v-chip>
+                                </v-chip-group>
+                            </v-card-actions>
+
+                            <v-card-actions class="text-center">
+                                    <v-dialog
+                                    v-model="videoViewer"
+                                    fullscreen
+                                    >
+                                    <template v-slot:activator="{ on, attrs }">
+                                        <v-row justify="center">
+                                        <v-col>
                                             <v-btn
-                                                icon
-                                                dark
-                                                @click="videoViewer = false"
+                                            color="primary"
+                                            dark
+                                            v-bind="attrs"
+                                            v-on="on"
+                                            rounded
                                             >
-                                                <v-icon>mdi-close</v-icon>
+                                            <v-icon>mdi-play</v-icon>
+                                            映像で鑑賞
                                             </v-btn>
-                                            <v-toolbar-title>{{group.title}}/{{group.groupname}}</v-toolbar-title>
-                                            </v-toolbar>
-                                            <v-row justify="center" align-content="center">
-                                                <v-col cols="12">
-                                                    <iframe height="400px" width="100%" v-bind:src="'https://web.microsoftstream.com/embed/video/'+streamVideoId+'?autoplay=false&showinfo=false'" allowfullscreen></iframe>
-                                                </v-col>
-                                                <v-card-text>※映像鑑賞には，学校で配布されたMicrosoftアカウントへのログインが必要です。</v-card-text>
-                                                <v-col cols="12">
-                                                    <v-row justify="center">
-                                                        <v-btn color="primary" v-bind:href="group.stream_url" target="_blank">再生できない場合（Streamで再生）＞</v-btn> 
-                                                    </v-row>
-                                                </v-col>
-                                            </v-row>
-                                        </v-card>
-                                        </v-dialog>
-                                </v-card-actions>
-                            </div>
+                                        </v-col>
+                                        </v-row>
+                                    </template>
+                                    <v-card dark>
+                                        <v-toolbar
+                                        dark
+                                        color="primary"
+                                        >
+                                        <v-btn
+                                            icon
+                                            dark
+                                            @click="videoViewer = false"
+                                        >
+                                            <v-icon>mdi-close</v-icon>
+                                        </v-btn>
+                                        <v-toolbar-title>{{group.title}}/{{group.groupname}}</v-toolbar-title>
+                                        </v-toolbar>
+                                        <v-row justify="center" align-content="center">
+                                            <v-col cols="12">
+                                                <iframe height="400px" width="100%" v-bind:src="'https://web.microsoftstream.com/embed/video/'+streamVideoId+'?autoplay=false&showinfo=false'" allowfullscreen></iframe>
+                                            </v-col>
+                                            <v-card-text>※映像鑑賞には，学校で配布されたMicrosoftアカウントへのログインが必要です。</v-card-text>
+                                            <v-col cols="12">
+                                                <v-row justify="center">
+                                                    <v-btn color="primary" v-bind:href="group.stream_url" target="_blank">再生できない場合（Streamで再生）＞</v-btn> 
+                                                </v-row>
+                                            </v-col>
+                                        </v-row>
+                                    </v-card>
+                                    </v-dialog>
+                            </v-card-actions>
                         </v-card>
                     </div>
                 </v-col>
@@ -122,10 +130,6 @@
                 </v-col>
             </v-row>
         </v-conteiner>
-
-
-
-        
     </v-app>
 </template>
 
@@ -137,25 +141,28 @@ export default {
         videoViewer: false,
         group:{},
         events:[],
-        streamVideoId:[]
-        
+        streamVideoId:[],
+        tags:[]
       }
     },
     async asyncData({params,error,$axios}){
     let res_group;
     let res_streamVideoId;
     let res_events;
+    let res_tags;
     await $axios.get("/groups/"+params.groupId)
     .then(function (response) {
       console.log(response)
       res_group=response.data
+
+      //正規表現によって，groupの中に含まれる"stream_url"の末尾のスラッシュ（/）以降の文字列を取得
       res_streamVideoId=/[^/]*$/.exec(response.data.stream_url)[0]
     })
     .catch((e => {
         error({ statusCode:404,message: e.message })
     }))
   
-    await $axios.get("/groups/"+params.groupId+"/events")
+     await $axios.get("/groups/"+params.groupId+"/events")
     .then(function (response) {
       console.log(response)
       res_events=response.data
@@ -163,7 +170,18 @@ export default {
     .catch((e => {
         error({ statusCode:404,message: e.message })
     }))
-    return {group:res_group,events:res_events,streamVideoId:res_streamVideoId}
+
+    //groupと結びついたTagを取得
+    await $axios.get("/groups/"+params.groupId+"/tags")
+    .then(function (response) {
+      console.log(response)
+      res_tags=response.data
+    })
+    .catch((e => {
+        error({ statusCode:404,message: e.message })
+    }))
+
+    return {group:res_group,events:res_events,streamVideoId:res_streamVideoId,tags:res_tags}
     }
 }
 </script>
