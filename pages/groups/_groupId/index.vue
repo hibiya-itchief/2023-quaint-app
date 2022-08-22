@@ -74,46 +74,51 @@
                 </v-col>
                 <v-col cols="10" sm="5">
                     <!--公演時間の選択-->
-                    <div>
-                        <p>公演を選択してください</p>
-                        <div v-for="event in events">
-                        <v-dialog
-                            v-model="dialog"
-                            width="500">
-                                <template v-slot:activator="{ on, attrs }">
-                                    <v-row>
-                                        <v-col cols="12">
-                                            <v-card @click.stop="dialog = true">   
-                                                <v-card-title>{{event.title}}({{event.starts_at}}-{{event.ends_at}})</v-card-title>
-                                            </v-card>
-                                        </v-col>
-                                    </v-row>
-                                </template>
-                                <v-card>
-                                    <v-card-title>この公演を選択しますか？</v-card-title>
-                                    <v-card-text>選択した公演:{{event.title}}({{event.starts_at}}-{{event.ends_at}})</v-card-text>
-                                <v-card-actions>
-                                        <v-spacer></v-spacer>
-                                        <v-btn
-                                            color="primary"
-                                            text
-                                            @click="dialog = false"
-                                        >
-                                            はい
-                                        </v-btn>
-                                        <v-btn
-                                            color="red"
-                                            text
-                                            @click="dialog = false"
-                                        >
-                                            いいえ
-                                        </v-btn>
-                                    </v-card-actions>
-                                </v-card>
-                                
-                        </v-dialog>
-                        </div>
-                    </div>
+                    
+                        <v-card>
+                            <v-card-title>
+                            <v-icon>mdi-ticket</v-icon>
+                            観劇予約
+                            </v-card-title>
+                            <v-card-text>現地で見たい公演の整理券を取得できます。</v-card-text>
+                            <div v-for="event in events">
+                                    <v-dialog
+                                    v-model="dialog"
+                                    width="500">
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-row justify="center">
+                                                <v-col cols="11">
+                                                    <v-card @click.stop="dialog = true">   
+                                                        <v-card-title>{{event.title}}({{event.starts_at}}-{{event.ends_at}})</v-card-title>
+                                                    </v-card>
+                                                </v-col>
+                                            </v-row>
+                                        </template>
+                                        <v-card>
+                                            <v-card-title>この公演を選択しますか？</v-card-title>
+                                            <v-card-text>選択した公演:{{event.title}}({{event.starts_at}}-{{event.ends_at}})</v-card-text>
+                                        <v-card-actions>
+                                                <v-spacer></v-spacer>
+                                                <v-btn
+                                                    color="primary"
+                                                    text
+                                                    @click="dialog = false"
+                                                >
+                                                    はい
+                                                </v-btn>
+                                                <v-btn
+                                                    color="red"
+                                                    text
+                                                    @click="dialog = false"
+                                                >
+                                                    いいえ
+                                                </v-btn>
+                                            </v-card-actions>
+                                        </v-card>
+                                    </v-dialog>
+                            </div>
+                       </v-card>
+                       
                 </v-col>
             </v-row>
         </v-conteiner>
