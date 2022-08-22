@@ -55,8 +55,14 @@
                                             <v-toolbar-title>{{group.title}}/{{group.groupname}}</v-toolbar-title>
                                             </v-toolbar>
                                             <v-row justify="center" align-content="center">
-                                                    <iframe height="1920px" width="1080px" v-bind:src="'https://web.microsoftstream.com/embed/video/'+streamVideoId+'?autoplay=false&showinfo=false'" allowfullscreen></iframe>
-                                                    <v-btn v-bind:href="group.stream_url" target="_blank">Streamで閲覧する＞</v-btn> 
+                                                <v-col cols="12">
+                                                    <iframe height="400px" width="100%" v-bind:src="'https://web.microsoftstream.com/embed/video/'+streamVideoId+'?autoplay=false&showinfo=false'" allowfullscreen></iframe>
+                                                </v-col>
+                                                <v-col cols="12">
+                                                    <v-row justify="center">
+                                                        <v-btn v-bind:href="group.stream_url" target="_blank">Streamで閲覧する＞</v-btn> 
+                                                    </v-row>
+                                                </v-col>
                                             </v-row>
                                         </v-card>
                                         </v-dialog>
