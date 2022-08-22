@@ -47,8 +47,8 @@
               <v-card-text>{{group.description}}</v-card-text>
               <v-card-actions>
                 <v-chip-group column>
-                  <v-chip v-for="tag in group.tags" disabled>
-                    {{tag}}
+                  <v-chip v-for="tag in tags" disabled>
+                    {{tag.tagname}}
                   </v-chip>
                 </v-chip-group>
               </v-card-actions>
@@ -76,133 +76,50 @@ export default {
   auth:false,
   data(){
     return {
-      tags:[
-        {
-          "tagname": "1年生",
-          "id": "3"
-        },
-        {
-          "tagname": "2年生",
-          "id": "4"
-        },
-        {
-          "tagname": "クラス劇",
-          "id": "5"
-        },
-        {
-          "tagname": "オンライン配信",
-          "id": "6"
-        },
-        {
-          "tagname": "ミュージカル",
-          "id": "7"
-        },
-        {
-          "tagname": "コント",
-          "id": "8"
-        },
-      ],
-      groups:　[
-        {
-          "groupname": "東京",
-          "title": "江戸時代",
-          "description": "江戸時代の説明",
-          "page_content": "string",
-          "enable_vote": true,
-          "twitter_url": "http://twitter.com/8zyMkZHxzUYOc_Q",
-          "instagram_url": "https://instagram.com/AKWqFZ2JSm2RreTip",
-          "stream_url": "https://web#microsoftstream.com/video/CKk3?+*cO'[n@,'$B.DXv*l3KYJB_VplDoi6cl5fgsh]x3#M-L]cG4UGSdg*@#kfLYS$s~#x(",
-          "id": "string",
-          "tags": [
-            "1年生","クラス劇","ミュージカル"
-          ],
-          "events": [
-              {
-                  "title": "string",
-                  "description": "string",
-                  "sell_at": "2022-08-20T01:49:40.936Z",
-                  "sell_ends": "2022-08-20T01:49:40.936Z",
-                  "starts_at": "2022-08-20T01:49:40.936Z",
-                  "ends_at": "2022-08-20T01:49:40.936Z",
-                  "ticket_stock": 0,
-                  "lottery": false,
-                  "id": "string",
-                  "group_id": "string"
-                },
-                {
-                  "title": "string",
-                  "description": "string",
-                  "sell_at": "2022-08-20T01:49:40.936Z",
-                  "sell_ends": "2022-08-20T01:49:40.936Z",
-                  "starts_at": "2022-08-20T01:49:40.936Z",
-                  "ends_at": "2022-08-20T01:49:40.936Z",
-                  "ticket_stock": 0,
-                  "lottery": false,
-                  "id": "string",
-                  "group_id": "string"
-                },
-          ]
-        },
-        {
-          "groupname": "京都",
-          "title": "平安時代",
-          "description": "平安時代の説明",
-          "page_content": "string",
-          "enable_vote": true,
-          "twitter_url": "http://twitter.com/8zyMkZHxzUYOc_Q",
-          "instagram_url": "https://instagram.com/AKWqFZ2JSm2RreTip",
-          "stream_url": "https://web#microsoftstream.com/video/CKk3?+*cO'[n@,'$B.DXv*l3KYJB_VplDoi6cl5fgsh]x3#M-L]cG4UGSdg*@#kfLYS$s~#x(",
-          "id": "string",
-          "tags": [
-            "2年生","クラス劇","コント"
-          ],
-          "events": [
-              {
-                  "title": "string",
-                  "description": "string",
-                  "sell_at": "2022-08-20T01:49:40.936Z",
-                  "sell_ends": "2022-08-20T01:49:40.936Z",
-                  "starts_at": "2022-08-20T01:49:40.936Z",
-                  "ends_at": "2022-08-20T01:49:40.936Z",
-                  "ticket_stock": 0,
-                  "lottery": false,
-                  "id": "string",
-                  "group_id": "string"
-                },
-                {
-                  "title": "string",
-                  "description": "string",
-                  "sell_at": "2022-08-20T01:49:40.936Z",
-                  "sell_ends": "2022-08-20T01:49:40.936Z",
-                  "starts_at": "2022-08-20T01:49:40.936Z",
-                  "ends_at": "2022-08-20T01:49:40.936Z",
-                  "ticket_stock": 0,
-                  "lottery": false,
-                  "id": "string",
-                  "group_id": "string"
-                },
-          ]
-        }
-      ],
+      tags:[],
+      groups:[],
       selectedTag:""
-      //groups:{}
     }
   },
-/*
-  asyncData({ params, error,$axios }) {
-    return $axios.get("/groups")
-      .then((res) => {
-        return { groups: res.data }
-      })
-      //エラー処理
-      .catch((e => {
-        error({ message: e.message })
-      }))
+
+  async asyncData({params,error,$axios}){
+  let res_tags;
+  let res_groups;
+  let res_groupTags;
+  await $axios.get("/tags/")
+  .then(function (response) {
+    console.log(response)
+    res_tags=response.data
+  })
+  .catch((e => {
+      error({ statusCode:404,message: e.message })
+  }))
+  
+  await $axios.get("/groups/")
+  .then(function (response) {
+    console.log(response)
+    res_groups=response.data
+  })
+  .catch((e => {
+      error({ statusCode:404,message: e.message })
+  }))
+
+  await $axios.get("/groups/"+this.groups.groupname+"/tags")
+  .then(function (response) {
+    console.log(response)
+    res_groupTags=response.data
+  })
+  .catch((e => {
+      error({ statusCode:404,message: e.message })
+  }))
+
+  return {tags:res_tags,groups:res_groups,res_groupTags:groups}
   },
-*/
+
+
   methods:{
     filterGroups(group){
-      if (this.selectedTag==='' || group.tags.some(i => i === this.selectedTag.tagname)){
+      if (this.selectedTag==='' || group./*ここ変更の必要あり→*/tags.some(i => i === this.selectedTag.tagname)){
         return true;
       }else{
       return false
