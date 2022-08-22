@@ -58,7 +58,7 @@
                                                 <v-col cols="12">
                                                     <iframe height="400px" width="100%" v-bind:src="'https://web.microsoftstream.com/embed/video/'+streamVideoId+'?autoplay=false&showinfo=false'" allowfullscreen></iframe>
                                                 </v-col>
-                                                <v-card-text>※学校で配布されたMicrosoft365アカウントへのログインが必要です。</v-card-text>
+                                                <v-card-text>※学校で配布されたMicrosoftアカウントへのログインが必要です。</v-card-text>
                                                 <v-col cols="12">
                                                     <v-row justify="center">
                                                         <v-btn color="primary" v-bind:href="group.stream_url" target="_blank">再生できない場合（Streamで再生）＞</v-btn> 
