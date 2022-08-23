@@ -92,33 +92,36 @@
                         <v-card-text>現地で見たい公演の整理券を取得できます。</v-card-text>
                         <div v-for="event in events">
                                 <v-dialog
-                                v-model="dialog"
+                                v-model="event.dialog"
                                 width="500">
                                     <template v-slot:activator="{ on, attrs }">
                                         <v-row justify="center">
                                             <v-col cols="11">
-                                                <v-card @click.stop="dialog = true">   
-                                                    <v-card-title>{{event.title}}({{event.starts_at}}-{{event.ends_at}})</v-card-title>
+                                                <v-card @click.stop="event.dialog = true">   
+                                                    <v-card-title>{{event.timetable.timetablename}}</v-card-title>
+                                                    <v-card-subtitle>{{event.timetable.starts_at}}-{{event.timetable.ends_at}}</v-card-subtitle>
                                                 </v-card>
                                             </v-col>
                                         </v-row>
                                     </template>
                                     <v-card>
                                         <v-card-title>この公演を選択しますか？</v-card-title>
-                                        <v-card-text>選択した公演:{{event.title}}({{event.starts_at}}-{{event.ends_at}})</v-card-text>
-                                    <v-card-actions>
+                                        <v-card-title>{{event.timetable.timetablename}}</v-card-title>
+                                        <v-card-subtitle>（{{event.timetable.starts_at}}-{{event.timetable.ends_at}}）</v-card-subtitle>
+                                        <v-card-actions>
                                             <v-spacer></v-spacer>
+                                            
                                             <v-btn
                                                 color="primary"
                                                 text
-                                                @click="dialog = false"
+                                                @click="event.dialog=false"
                                             >
                                                 はい
                                             </v-btn>
                                             <v-btn
                                                 color="red"
                                                 text
-                                                @click="dialog = false"
+                                                @click="event.dialog = false"
                                             >
                                                 いいえ
                                             </v-btn>
@@ -126,6 +129,11 @@
                                     </v-card>
                                 </v-dialog>
                         </div>
+                        <v-col cols="11" v-if="events.length===0">
+                            <v-card disabled>
+                                <v-card-title>現在選択できる公演はありません。</v-card-title>
+                            </v-card>
+                        </v-col>
                     </v-card>
                 </v-col>
             </v-row>
@@ -137,14 +145,16 @@
 export default {
     data () {
       return {
-        dialog: false,
         videoViewer: false,
         group:{},
         events:[],
         streamVideoId:[],
-        tags:[]
+        tags:[],
+        ticketResult:[]
       }
     },
+
+
     async asyncData({params,error,$axios}){
     let res_group;
     let res_streamVideoId;
@@ -166,11 +176,27 @@ export default {
     .then(function (response) {
       console.log(response)
       res_events=response.data
+      //各eventの中に，"'dialog':'false'"という情報を格納することで，公演をクリックした時に，公演に対応したモーダルウィンドウが表示されるようにしている。
+      for (var i=0; i < res_events.length; i++){
+        res_events[i].dialog=false
+      }
     })
     .catch((e => {
         error({ statusCode:404,message: e.message })
     }))
 
+    //timetable_idからtimetableの情報取得し，,eventsの中の各eventの中にプロパティ名"timetable"として格納する。
+    for (var i=0; i < res_events.length; i++){
+        await $axios.get("/timetable/"+res_events[i].timetable_id)
+        .then(function (response) {
+        console.log(response)
+        res_events[i].timetable=response.data
+        })
+        .catch((e => {
+            error({ statusCode:404,message: e.message })
+        }))
+    }
+        
     //groupと結びついたTagを取得
     await $axios.get("/groups/"+params.groupId+"/tags")
     .then(function (response) {
@@ -182,6 +208,6 @@ export default {
     }))
 
     return {group:res_group,events:res_events,streamVideoId:res_streamVideoId,tags:res_tags}
-    }
+    },
 }
 </script>
