@@ -111,11 +111,10 @@
                                         <v-card-actions>
                                             <v-spacer></v-spacer>
                                             
-                                            <!--クリック時にmethods内のgetTiketに引数eventを渡す-->
                                             <v-btn
                                                 color="primary"
                                                 text
-                                                @click="getTicket(event); event.dialog=false"
+                                                @click="event.dialog=false"
                                             >
                                                 はい
                                             </v-btn>
@@ -210,23 +209,5 @@ export default {
 
     return {group:res_group,events:res_events,streamVideoId:res_streamVideoId,tags:res_tags}
     },
-
-    /*
-    Ticketを取得するmethodsがどうしても書けないので任せたいです...
-
-    methods:{
-        getTicket(event){
-            this.ticketResult=""
-            this.$axios.$post("/groups/"+params.groupId+"/events/"+event.id+"/tickets?person=1")
-                .then(function (response) {
-                    console.log(response)
-                    this.ticketResult=response.data
-                })                
-                .catch((e => {
-                    error({ statusCode:404,message: e.message })
-                }))
-        }
-    },
-    */
 }
 </script>
