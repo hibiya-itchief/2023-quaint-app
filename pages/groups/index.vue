@@ -1,5 +1,5 @@
 <template>
-    <v-app>
+  <v-app>
       <h1>
           <v-icon>mdi-magnify</v-icon>
           探す
