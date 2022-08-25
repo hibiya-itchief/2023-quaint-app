@@ -3,7 +3,7 @@
         <v-btn icon fab to="/groups/">
             <v-icon>mdi-chevron-left</v-icon>
         </v-btn>
-        <v-conteiner>
+        <v-container>
             <v-row justify="center">
                 <v-col cols="10" sm="5">
                     <!--作品情報-->
@@ -83,7 +83,6 @@
             </v-col>
             <v-col cols="10" sm="5">
                 <!--公演時間の選択-->
-                
                     <v-card>
                         <v-card-title>
                         <v-icon>mdi-ticket</v-icon>
@@ -137,11 +136,12 @@
                     </v-card>
                 </v-col>
             </v-row>
-        </v-conteiner>
+        </v-container>
     </v-app>
 </template>
 
 <script>
+import axios from 'axios'
 export default {
     data () {
       return {
@@ -154,6 +154,48 @@ export default {
       }
     },
 
+    
+    methods:{
+        /*
+        3パターン試したがどれもダメだった(2022/08/25)
+        createTicket:async function(event){
+           try{
+               const res=await axios.post("/groups/"+this.$route.params.groupId+"/events/"+event.id+"/tickets",{person: 1});
+               this.ticketResult=res.data;
+           }catch(err){
+               console.log(err.response);
+           }
+        }
+        */
+
+       /*
+       422エラーを返される。原因不明なので諦めた。
+        async createTicket(event) {
+            await this.$axios.$post("/groups/"+this.$route.params.groupId+"/events/"+event.id+"/tickets",{
+                person: parseInt(1)
+            })
+            
+            .then(function (response) {
+                this.ticketResult=response.data
+            })
+            .catch((e => {
+                error({ statusCode:404,message: e.message })
+            }))
+        }
+        */
+
+       /*
+        async createTicket(event) {
+            const res = await this.$axios.$post("/groups/"+this.$route.params.groupId+"/events/"+event.id+"/tickets",{
+                person: parseInt(1)
+            })
+            this.ticketResult = res
+            
+        },
+        */
+        
+    },
+    
 
     async asyncData({params,error,$axios}){
     let res_group;
