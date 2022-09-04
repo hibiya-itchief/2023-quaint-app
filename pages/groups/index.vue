@@ -78,32 +78,32 @@ export default {
   async asyncData({error,$axios}){
   let res_tags;
   let res_groups;
-  await $axios.get("/tags/")
-  .then(function (response) {
-    res_tags=response.data
+  await Promise.all([
+    $axios.get("/tags/"),
+    $axios.get("/groups/")
+  ])
+  .then((response)=>{
+    res_tags=response[0].data
+    res_groups=response[1].data
   })
   .catch((e => {
-      error({ statusCode:404,message: e.message })
-  }))
-  
-  await $axios.get("/groups/")
-  .then(function (response) {
-    res_groups=response.data
-  })
-  .catch((e => {
-      error({ statusCode:404,message: e.message })
+    error({ statusCode:404,message: e.message })
   }))
 
+  let tag_promise=[]
   //各groupが有しているtagをAPIから取得し，groups配列の中のオブジェクトに"tags"というキーを設けてgroupsとtagsの情報を結びつけている。
   for (var i = 0; i < res_groups.length; i++){
-    await $axios.get("/groups/"+res_groups[i].id+"/tags")
-    .then(function (response) {
-      res_groups[i].tags=response.data
-    })
-    .catch((e => {
-        error({ statusCode:404,message: e.message })
-    }))
+    tag_promise.push($axios.get("/groups/"+res_groups[i].id+"/tags"))
   }
+  await Promise.all(tag_promise)
+  .then((response) =>{
+    for (let i = 0; i < res_groups.length; i++) {
+      res_groups[i].tags=response[i].data
+    }
+  })
+  .catch((e => {
+      error({ statusCode:404,message: e.message })
+  }))
   
   return {tags:res_tags,groups:res_groups}
   },

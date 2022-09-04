@@ -199,68 +199,54 @@ export default {
     let res_streamVideoId;
     let res_events;
     let res_tags;
-    await $axios.get("/groups/"+params.groupId)
-    .then(function (response) {
-      console.log(response)
-      res_group=response.data
-
-      //正規表現によって，groupの中に含まれる"stream_url"の末尾のスラッシュ（/）以降の文字列を取得
-      res_streamVideoId=/[^/]*$/.exec(response.data.stream_url)[0]
-    })
-    .catch((e => {
-        error({ statusCode:404,message: e.message })
-    }))
-  
-     await $axios.get("/groups/"+params.groupId+"/events")
-    .then(function (response) {
-      console.log(response)
-      res_events=response.data
-      //各eventの中に，"'dialog':'false'"という情報を格納することで，公演をクリックした時に，公演に対応したモーダルウィンドウが表示されるようにしている。
-      for (var i=0; i < res_events.length; i++){
-        res_events[i].dialog=false
-      }
-    })
-    .catch((e => {
-        error({ statusCode:404,message: e.message })
-    }))
-
-    //timetable_idからtimetableの情報取得し，,eventsの中の各eventの中にプロパティ名"timetable"として格納する。
-    for (var i=0; i < res_events.length; i++){
-        await $axios.get("/timetable/"+res_events[i].timetable_id)
-        .then(function (response) {
-        console.log(response)
-        res_events[i].timetable=response.data
-        })
-        .catch((e => {
-            error({ statusCode:404,message: e.message })
-        }))
-    }
-        
-    //groupと結びついたTagを取得
-    await $axios.get("/groups/"+params.groupId+"/tags")
-    .then(function (response) {
-      console.log(response)
-      res_tags=response.data
-    })
-    .catch((e => {
-        error({ statusCode:404,message: e.message })
-    }))
-
     let user_authority;
     let editable=false;
-    await $axios.get("/users/me/authority")
-    .then((res) => {
-        user_authority = res.data
+    
+    await Promise.all([
+        $axios.get("/groups/"+params.groupId),
+        $axios.get("/groups/"+params.groupId+"/events"),
+        $axios.get("/users/me/authority"),
+        $axios.get("/groups/"+params.groupId+"/tags")
+    ])
+    .then((response)=>{
+        res_group=response[0].data
+        res_events=response[1].data
+        user_authority = response[2].data
+        res_tags=response[3].data
     })
     .catch((e => {
-        error({ message: e.message })
+        error({ statusCode:404,message: e.message })
     }))
+
+    //正規表現によって，groupの中に含まれる"stream_url"の末尾のスラッシュ（/）以降の文字列を取得
+    res_streamVideoId=/[^/]*$/.exec(res_group.stream_url)[0]
+    //各eventの中に，"'dialog':'false'"という情報を格納することで，公演をクリックした時に，公演に対応したモーダルウィンドウが表示されるようにしている。
+    for (var i=0; i < res_events.length; i++){
+    res_events[i].dialog=false
+    }
+
     if(user_authority.is_admin==true || user_authority.owner_of.includes(res_group.id)){
         editable=true;
     }
 
+
+
+    let timetable_promise=[];
+    //timetable_idからtimetableの情報取得し，,eventsの中の各eventの中にプロパティ名"timetable"として格納する。
+    for (var i=0; i < res_events.length; i++){
+        timetable_promise.push($axios.get("/timetable/"+res_events[i].timetable_id))
+    }
+    await Promise.all(timetable_promise)
+    .then((response)=>{
+        for (var i = 0; i < res_events.length; i++) {
+            res_events[i].timetable=response[i].data
+        }
+    }
+    )
+
     return {group:res_group,events:res_events,streamVideoId:res_streamVideoId,tags:res_tags,editable:editable}
     },
+
     methods:{
         DateFormatter(date_str){
             let input_date=new Date(date_str)
