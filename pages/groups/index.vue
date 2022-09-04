@@ -80,7 +80,6 @@ export default {
   let res_groups;
   await $axios.get("/tags/")
   .then(function (response) {
-    console.log(response)
     res_tags=response.data
   })
   .catch((e => {
@@ -89,7 +88,6 @@ export default {
   
   await $axios.get("/groups/")
   .then(function (response) {
-    console.log(response)
     res_groups=response.data
   })
   .catch((e => {
@@ -100,7 +98,6 @@ export default {
   for (var i = 0; i < res_groups.length; i++){
     await $axios.get("/groups/"+res_groups[i].id+"/tags")
     .then(function (response) {
-      console.log(response)
       res_groups[i].tags=response.data
     })
     .catch((e => {
@@ -127,7 +124,6 @@ export default {
       for (let i = 0; i < text.length; i++) {//文字列をUnicodeの和に変換
         index+=text.codePointAt(i)
       }
-      console.log(text+":"+index)
       index=index%colors.length
       return colors[index]
     }
