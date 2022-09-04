@@ -90,7 +90,7 @@ export default {
           property:false
         },
         endpoints:{
-          login:{url:"token/",method:'post',headers: { 'Content-Type': 'application/x-www-form-urlencoded' }},
+          login:{url:"/users/me/login",method:'post',headers: { 'Content-Type': 'application/x-www-form-urlencoded' }},
           user:false
         }
       }
