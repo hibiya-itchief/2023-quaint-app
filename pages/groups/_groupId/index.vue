@@ -9,7 +9,7 @@
                     <!--作品情報-->
                     <!--タイトル，団体，お気に入り，映像で鑑賞ボタン-->
                     <v-card>
-                        <v-img v-if="group.thumbnail_image_url!=null" :src="group.thumbnail_image_url"></v-img>
+                        <v-img v-if="group.cover_image_url!=null" maxHeight="500px" :src="group.thumbnail_image_url"></v-img>
                         <v-img v-else v-bind:class="HashColor(group.id)" height="180px"></v-img>
                         <v-card-title clsss="pb-0">{{group.title}}</v-card-title>
                         <v-card-subtitle class="pb-0">{{group.groupname}}</v-card-subtitle>
@@ -41,7 +41,7 @@
                         </v-card-actions>
                         <v-card-actions>
                             <v-btn v-if="group.twitter_url!=null" icon :href="group.twitter_url" target="_blank"><v-icon>mdi-twitter</v-icon></v-btn>
-                            <v-btn v-if="group.twitter_url!=null" icon :href="group.instagram_url" target="_blank"><v-icon>mdi-instagram</v-icon></v-btn>
+                            <v-btn v-if="group.instagram_url!=null" icon :href="group.instagram_url" target="_blank"><v-icon>mdi-instagram</v-icon></v-btn>
                             <v-spacer></v-spacer>
                             <v-btn
                                 color="primary"
@@ -104,7 +104,7 @@
                         <v-card-text class="ma-0 px-3 py-2">現地で見たい公演の整理券を取得できます。</v-card-text>
                         
                         <v-expand-transition>
-                            <div v-show="events_show" class="ma-0 pa-0 ">
+                            <div v-show="events_show" class="ma-0 pb-4 ">
                             <v-divider class="mb-3"></v-divider>
                                 <div class="px-3 py-2">
                                     <span class="d-inline-flex text-caption">
@@ -112,7 +112,7 @@
                                         ：配布時間外
                                     </span>
                                     <span class="d-inline-flex text-caption">
-                                        <v-badge color="lime" inline></v-badge>
+                                        <v-badge color="green" inline></v-badge>
                                         ：席数に余裕あり
                                     </span>
                                     <span class="d-inline-flex text-caption">
@@ -129,12 +129,22 @@
                                 v-model="event.dialog"
                                 width="500">
                                     <template v-slot:activator="{ on, attrs }">
-                                        <v-row justify="center">
-                                            <v-col cols="11">
-                                                <v-card @click.stop="event.dialog = true">
-                                                    
-                                                    <v-card-title>{{event.timetable.timetablename}}<v-spacer></v-spacer><v-badge color="lime" content="" inline></v-badge></v-card-title>
-                                                    <v-card-subtitle>{{DateFormatter(event.timetable.starts_at)}}-{{DateFormatter(event.timetable.ends_at)}}</v-card-subtitle>
+                                        <v-row justify="center" class="ma-0 pa-0">
+                                            <v-col cols="11" class="mx-0 ma-1 pa-0">
+                                                <v-card @click.stop="event.dialog = true" class="ma-0">
+                                                    <v-card-title class="py-2">
+                                                        {{event.timetable.timetablename}}
+                                                        <v-spacer></v-spacer>
+                                                        <v-badge v-if="Date.now()<event.timetable.sell_at.getTime()||event.timetable.sell_ends.getTime()<Date.now()" color="grey" inline></v-badge>
+                                                        <v-badge v-else-if="event.ticket_number_data.taken_tickets/event.ticket_number_data.stock<0.8" color="green" inline></v-badge>
+                                                        <!--8割以上で黄色になる-->
+                                                        <v-badge v-else-if="event.ticket_number_data.taken_tickets/event.ticket_number_data.stock>=0.8 && event.ticket_number_data.taken_tickets<event.ticket_number_data.stock" color="amber" inline></v-badge>
+                                                        <v-badge v-else-if="event.ticket_number_data.taken_tickets>=event.ticket_number_data.stock" color="red" inline></v-badge>
+                                                    </v-card-title>
+                                                    <v-card-subtitle class="pb-2">
+                                                        <p class="ma-0 pa-0">配布時間：{{DateFormatter(event.timetable.sell_at)}} ~ {{DateFormatter(event.timetable.sell_ends)}}</p>
+                                                        <p class="ma-0 pa-0">公演時間：{{DateFormatter(event.timetable.starts_at)}} ~ {{DateFormatter(event.timetable.ends_at)}}</p>
+                                                    </v-card-subtitle>
                                                 </v-card>
                                             </v-col>
                                         </v-row>
@@ -189,7 +199,7 @@ export default {
         tags:[],
         ticketResult:[],
         editable:false,//権限を持つユーザーがアクセスするとtrueになりページを編集できる
-        events_show:false
+        events_show:true
       }
     },
 
@@ -232,24 +242,59 @@ export default {
 
 
     let timetable_promise=[];
+    let countticket_promise=[];
     //timetable_idからtimetableの情報取得し，,eventsの中の各eventの中にプロパティ名"timetable"として格納する。
     for (var i=0; i < res_events.length; i++){
         timetable_promise.push($axios.get("/timetable/"+res_events[i].timetable_id))
+        countticket_promise.push($axios.get("/groups/"+res_group.id+"/events/"+res_events[i].id+"/tickets"))
     }
     await Promise.all(timetable_promise)
     .then((response)=>{
         for (var i = 0; i < res_events.length; i++) {
             res_events[i].timetable=response[i].data
+            //Dateオブジェクトにする
+            res_events[i].timetable.sell_at=new Date(res_events[i].timetable.sell_at)
+            res_events[i].timetable.sell_ends=new Date(res_events[i].timetable.sell_ends)
+            res_events[i].timetable.starts_at=new Date(res_events[i].timetable.starts_at)
+            res_events[i].timetable.ends_at=new Date(res_events[i].timetable.ends_at)
         }
     }
     )
+    await Promise.all(countticket_promise)
+    .then((response)=>{
+        for (var i = 0; i < res_events.length; i++) {
+            res_events[i].ticket_number_data=response[i].data
+        }
+    })
 
-    return {group:res_group,events:res_events,streamVideoId:res_streamVideoId,tags:res_tags,editable:editable}
+    // 配布時間中の公演(公演開始の早い順)→配布時間外の公演(公演開始の早い順) という並び順になるようにする
+    let available_events=[];
+    let unavailable_events=[];
+    for (let i = 0; i < res_events.length; i++) {
+        if(res_events[i].timetable.sell_at.getTime()<=Date.now() && Date.now()<=res_events[i].timetable.sell_ends.getTime()){
+            available_events.push(res_events[i])
+        }
+        else{
+            unavailable_events.push(res_events[i])
+        }
+    }
+    available_events.sort((first,second)=>{
+        if(first.timetable.starts_at.getTime()<second.timetable.starts_at.getTime()) return -1
+        else if (first.timetable.starts_at.getTime()>second.timetable.starts_at.getTime()) return 1
+        else return 0
+    })
+    unavailable_events.sort((first,second)=>{
+        if(first.timetable.starts_at.getTime()<second.timetable.starts_at.getTime()) return -1
+        else if (first.timetable.starts_at.getTime()>second.timetable.starts_at.getTime()) return 1
+        else return 0
+    })
+    let events=available_events.concat(unavailable_events)
+
+    return {group:res_group,events:events,streamVideoId:res_streamVideoId,tags:res_tags,editable:editable}
     },
 
     methods:{
-        DateFormatter(date_str){
-            let input_date=new Date(date_str)
+        DateFormatter(input_date){
             return (input_date.getMonth()+1)+"月"+(input_date.getDate())+"日 "+input_date.getHours().toString().padStart(2, "0")+":"+input_date.getMinutes().toString().padStart(2, "0")
         },
         HashColor(text){//group.idを色数で割った余りでデフォルトの色を決定
