@@ -1,16 +1,20 @@
 <template>
   <v-app>
-      <h1>
-          <v-icon>mdi-magnify</v-icon>
-          探す
-      </h1>
       <v-container>
         <v-row justify="center">
           <v-col cols="12">
+            <v-text-field
+              solo
+              label="検索"
+              @input="SearchGroups($event)"
+              prepend-inner-icon="mdi-magnify"
+            ></v-text-field>
+            <p class="ma-0 pa-0 text-caption" v-show="search_result">"{{search_query}}"の検索結果({{search_result_number}}件)</p>
             <v-chip-group
               active-class="primary--text"
               column
               mandatory
+              v-show="tag_selector"
             >
               <v-chip 
                 @click="selectedTag=''"
@@ -71,10 +75,14 @@ export default {
     return {
       tags:[],
       groups:[],
-      selectedTag:""
+      all_groups:[],
+      selectedTag:"",
+      search_query:"",
+      search_result_number:0,
+      search_result:false,
+      tag_selector:true
     }
   },
-
   async asyncData({error,$axios}){
   let res_tags;
   let res_groups;
@@ -118,7 +126,7 @@ export default {
   }
   res_groups=shuffleArray(res_groups)//毎回同じ順番で表示されないようにgroupsの配列をランダムな順番にする
   
-  return {tags:res_tags,groups:res_groups}
+  return {tags:res_tags,groups:res_groups,all_groups:res_groups}
   },
 
 
@@ -139,6 +147,44 @@ export default {
       }
       index=index%colors.length
       return colors[index]
+    },
+    SearchGroups(input){
+      if(input==""){
+        this.tag_selector=true
+        this.search_result=false
+        this.groups=this.all_groups
+      }
+      else{
+        this.selectedTag=""
+        this.tag_selector=false
+        this.search_query=input
+        this.search_result=true
+        this.$axios.get("/search?q="+input)
+        .then((response)=>{
+          let res_groups=[];
+          res_groups=response.data
+          let tag_promise=[]
+          //各groupが有しているtagをAPIから取得し，groups配列の中のオブジェクトに"tags"というキーを設けてgroupsとtagsの情報を結びつけている。
+          for (var i = 0; i < res_groups.length; i++){
+            tag_promise.push(this.$axios.get("/groups/"+res_groups[i].id+"/tags"))
+          }
+          Promise.all(tag_promise)
+          .then((response) =>{
+            for (let i = 0; i < res_groups.length; i++) {
+              res_groups[i].tags=response[i].data
+            }
+            this.groups=res_groups
+            this.search_result_number=this.groups.length
+          })
+          .catch((e => {
+            console.error(e)
+          }))
+        })
+        .catch((e)=>{
+          console.error(e)
+        })
+      }
+      
     }
   }
 }
