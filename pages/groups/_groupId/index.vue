@@ -9,7 +9,7 @@
                     <!--作品情報-->
                     <!--タイトル，団体，お気に入り，映像で鑑賞ボタン-->
                     <v-card>
-                        <v-img v-if="group.cover_image_url!=null" maxHeight="500px" :src="group.thumbnail_image_url"></v-img>
+                        <v-img v-if="group.cover_image_url!=null" maxHeight="500px" :src="group.cover_image_url"></v-img>
                         <v-img v-else v-bind:class="HashColor(group.id)" height="180px"></v-img>
                         <v-card-title clsss="pb-0">{{group.title}}</v-card-title>
                         <v-card-subtitle class="pb-0">{{group.groupname}}</v-card-subtitle>
@@ -127,7 +127,7 @@
                             <div v-for="event in events">
                                 <v-dialog
                                 v-model="event.dialog"
-                                width="500">
+                                width="100%">
                                     <template v-slot:activator="{ on, attrs }">
                                         <v-row justify="center" class="ma-0 pa-0">
                                             <v-col cols="11" class="mx-0 ma-1 pa-0">
@@ -149,26 +149,44 @@
                                             </v-col>
                                         </v-row>
                                     </template>
-                                    <v-card>
-                                        <v-card-title>この公演を選択しますか？</v-card-title>
-                                        <v-card-title>{{event.timetable.timetablename}}</v-card-title>
-                                        <v-card-subtitle>（{{DateFormatter(event.timetable.starts_at)}}-{{DateFormatter(event.timetable.ends_at)}}）</v-card-subtitle>
-                                        <v-card-actions>
-                                            <v-spacer></v-spacer>
-                                            
-                                            <v-btn
-                                                color="primary"
-                                                text
-                                                @click="event.dialog=false"
+                                    <v-card class="pa-2">
+                                        <v-card-title class="px-1">{{group.title}} / {{group.groupname}} - {{event.timetable.timetablename}}</v-card-title>
+                                        <v-card-subtitle class="px-1">
+                                            <p class="ma-0 pa-0">この公演の整理券をとりますか？</p>
+                                            <p class="ma-0 pa-0">公演時間：{{DateFormatter(event.timetable.starts_at)}} ~ {{DateFormatter(event.timetable.ends_at)}}</p>
+                                        </v-card-subtitle>
+                                        <div class="px-1">
+                                            <p v-if="user_me.is_student" class="ma-0 pa-0 text-subtitle-2">席数：1席</p>
+                                            <p v-else class="ma-0 pa-0 text-subtitle-2"><v-icon>mdi-account-plus</v-icon>同時に入場する人数(ご家族など)</p>
+                                            <v-slider
+                                                v-model="ticket_person"
+                                                :tick-labels="person_labels"
+                                                min="1"
+                                                max="3"
+                                                v-if="!user_me.is_student"
                                             >
-                                                はい
-                                            </v-btn>
+                                                <template v-slot:thumb-label="props">
+                                                <v-icon dark>
+                                                    {{ person_icons[props.value-1] }}
+                                                </v-icon>
+                                                </template>
+                                            </v-slider>
+                                        </div>
+                                        <v-card-actions class="px-1">
+                                            <v-spacer></v-spacer>
+
                                             <v-btn
                                                 color="red"
                                                 text
                                                 @click="event.dialog = false"
                                             >
                                                 いいえ
+                                            </v-btn>
+                                            <v-btn
+                                                color="primary"
+                                                @click="CreateTicket(event,ticket_person)"
+                                            >
+                                                はい
                                             </v-btn>
                                         </v-card-actions>
                                     </v-card>
@@ -184,12 +202,47 @@
                     </v-card>
                 </v-col>
             </v-row>
+            <v-snackbar
+                v-model="success_alert"
+                color="success"
+                elevation="2"
+            >
+                {{success_message}}
+                <template v-slot:action="{ attrs }">
+                    <v-btn
+                    color="white"
+                    icon
+                    v-bind="attrs"
+                    @click="success_alert = false"
+                    >
+                    <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                </template>
+            </v-snackbar>
+            <v-snackbar
+                v-model="error_alert"
+                color="red"
+                elevation="2"
+            >
+                {{error_message}}
+                <template v-slot:action="{ attrs }">
+                    <v-btn
+                    color="white"
+                    icon
+                    v-bind="attrs"
+                    @click="error_alert = false"
+                    >
+                    <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                </template>
+            </v-snackbar>
         </v-conteiner>
     </v-app>
 </template>
 
 <script>
 export default {
+    name: 'IndivisualGroupPage',
     data () {
       return {
         videoViewer: false,
@@ -199,7 +252,22 @@ export default {
         tags:[],
         ticketResult:[],
         editable:false,//権限を持つユーザーがアクセスするとtrueになりページを編集できる
-        events_show:true
+        events_show:true,
+        ticket_person:1,
+        person_labels: [
+            '1人',
+            '2人',
+            '3人'
+        ],
+        person_icons: [
+            'mdi-account',
+            'mdi-account-multiple',
+            'mdi-account-group',
+        ],
+        success_alert:false,
+        error_alert:false,
+        success_message:"",
+        error_message:""
       }
     },
 
@@ -209,20 +277,23 @@ export default {
     let res_streamVideoId;
     let res_events;
     let res_tags;
+    let user_me;
     let user_authority;
     let editable=false;
     
     await Promise.all([
         $axios.get("/groups/"+params.groupId),
         $axios.get("/groups/"+params.groupId+"/events"),
+        $axios.get("/users/me"),
         $axios.get("/users/me/authority"),
         $axios.get("/groups/"+params.groupId+"/tags")
     ])
     .then((response)=>{
         res_group=response[0].data
         res_events=response[1].data
-        user_authority = response[2].data
-        res_tags=response[3].data
+        user_me=response[2].data
+        user_authority = response[3].data
+        res_tags=response[4].data
     })
     .catch((e => {
         error({ statusCode:404,message: e.message })
@@ -238,8 +309,6 @@ export default {
     if(user_authority.is_admin==true || user_authority.owner_of.includes(res_group.id)){
         editable=true;
     }
-
-
 
     let timetable_promise=[];
     let countticket_promise=[];
@@ -290,7 +359,7 @@ export default {
     })
     let events=available_events.concat(unavailable_events)
 
-    return {group:res_group,events:events,streamVideoId:res_streamVideoId,tags:res_tags,editable:editable}
+    return {group:res_group,events:events,streamVideoId:res_streamVideoId,tags:res_tags,editable:editable,user_me:user_me}
     },
 
     methods:{
@@ -303,11 +372,26 @@ export default {
             for (let i = 0; i < text.length; i++) {//文字列をUnicodeの和に変換
                 index+=text.codePointAt(i)
             }
-            console.log(text+":"+index)
             index=index%colors.length
             return colors[index]
         },
-        CreateTicket(event){
+        async CreateTicket(event,person){
+            event.dialog=false
+            if(this.user_me.is_student) person=1;
+            await this.$axios.post("/groups/"+event.group_id+"/events/"+event.id+"/tickets?person="+person)
+            .then((response)=>{
+                this.success_message="整理券を取得できました！「整理券」タブから確認してください"
+                this.success_alert=true
+            })
+            .catch((e)=>{
+                if(e.response){
+                    this.error_message=e.response.data.detail
+                }
+                else{
+                    this.error_message="予期せぬエラーが発生しました。IT部隊にお声がけください🙇‍♂️"
+                }
+                this.error_alert=true
+            })
 
         }
     }
