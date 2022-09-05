@@ -162,7 +162,8 @@
 <script>
 import QRCode from 'qrcode'
 export default {
-   data(){
+  name:"UsersTicketsPage",
+  data(){
     return {
       user:{},
       userdata_qr:"",

@@ -69,7 +69,7 @@
 
 <script>
 export default {
-  name: 'IndexPage',
+  name: 'GroupsPage',
   auth:false,
   data(){
     return {
