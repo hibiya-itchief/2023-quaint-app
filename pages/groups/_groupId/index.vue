@@ -92,7 +92,7 @@
             <v-col cols="12" sm="6" lg="4" class="mx-0 my-2 px-0 py-0 px-sm-3">
                 <!--公演時間の選択-->
                 
-                    <v-card>
+                    <v-card class="mb-4">
                         <v-card-title @click="events_show=!events_show" class="ma-0 px-3 pb-2 pt-4" >
                         <v-icon>mdi-ticket</v-icon>
                         観劇予約
@@ -200,9 +200,7 @@
                     </div>
                     </v-expand-transition>
                     </v-card>
-                </v-col>
-                <v-col cols="12" sm="6" lg="4" class="mx-0 my-2 px-0 py-0 px-sm-3">
-                    <v-card>
+                    <v-card class="mb-4">
                         <v-card-text>
                             {{group.description}}
                         </v-card-text>
