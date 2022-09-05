@@ -201,6 +201,13 @@
                     </v-expand-transition>
                     </v-card>
                 </v-col>
+                <v-col cols="12" sm="6" lg="4" class="mx-0 my-2 px-0 py-0 px-sm-3">
+                    <v-card>
+                        <v-card-text>
+                            {{group.description}}
+                        </v-card-text>
+                    </v-card>
+                </v-col>
             </v-row>
             <v-snackbar
                 v-model="success_alert"
