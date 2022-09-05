@@ -1,6 +1,6 @@
 <template>
     <v-app>
-        <v-conteiner name="ticket_container" class="px-1">
+        <v-container name="ticket_container" class="px-1">
           <v-row justify="center" align-content="center">
             <v-col col="6" md="6" sm="12">
               <v-card
@@ -43,7 +43,7 @@
                               <v-list-item-title  class="text-h7 mb-1">{{unused_ticket.group.title}} - {{unused_ticket.group.groupname}}</v-list-item-title>
                               <v-list-item-subtitle>{{unused_ticket.timetable.timetablename}}</v-list-item-subtitle>
                             </v-list-item-content>
-                            <v-card-action>                        
+                            <v-card-actions>                        
 
                             <v-btn
                               icon
@@ -51,7 +51,7 @@
                             >
                               <v-icon>{{ unused_ticket.detail_show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
                             </v-btn>
-                          </v-card-action>
+                          </v-card-actions>
                         </v-list-item>
                         <v-expand-transition>
                             <div v-show="unused_ticket.detail_show" class="pa-1">
@@ -63,7 +63,7 @@
                                 <p class="text-body-2 mx-0 my-0 pa-0"><span class="grey--text text--darken-2">ID：</span>{{unused_ticket.ticket.id}}</p>
                                 <v-btn @click="cancel_dialog=true">
                                   <v-icon>mdi-close</v-icon>
-                                  <v-text>このチケットをキャンセル</v-text>
+                                  <p class="pa-0 ma-0">このチケットをキャンセル</p>
                                 </v-btn>
                               </v-card-text>
                             </div>
@@ -152,7 +152,7 @@
           >
             {{error_message}}
           </v-snackbar>
-        </v-conteiner>
+        </v-container>
         
         
         
