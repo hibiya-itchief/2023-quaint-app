@@ -228,14 +228,15 @@
             <v-card-title class="ma-0 pa-0">
                 <p class="mx-0 my-1 pa-0 grey--text text--darken-2 text-subtitle-2">
                 <v-icon color="light-blue" class="mr-2">mdi-image</v-icon>
-                サムネイル画像</p>
+                パブリック サムネイル画像</p>
                 <v-spacer></v-spacer>
                 <a v-show="!change_thumbnail_image_form" class="mx-0 my-2 pa-0 text-body-2" @click="change_thumbnail_image_form=!change_thumbnail_image_form">編集</a>
                 <a v-show="change_thumbnail_image_form" class="mx-0 my-2 pa-0 text-body-2" @click="change_thumbnail_image_form=!change_thumbnail_image_form">キャンセル</a>
             </v-card-title>
             <v-card-text class="ma-0 pa-0 ">
-                <p class="text-caption grey--text text--darken-3">団体一覧のページに表示されます</p>
-                <v-img :src="group.thumbnail_image_url" contain maxHeight="300px" ></v-img>
+                <p class="ma-0 pa-0 text-caption grey--text text--darken-3">インターネット上の誰でも表示できることに注意してください。</p>
+                <p class="ma-0 pa-0 text-caption grey--text text--darken-3">顔が写っている写真などはアップロードしないでください</p>
+                <v-img :src='"data:image/jpeg;base64,"+group.thumbnail_image' contain maxHeight="300px" ></v-img>
             </v-card-text>
             <div v-show="change_thumbnail_image_form">
             <v-card-text class="mx-0 px-0 py-2 ">
@@ -269,14 +270,15 @@
             <v-card-title class="ma-0 pa-0">
                 <p class="mx-0 my-1 pa-0 grey--text text--darken-2 text-subtitle-2">
                 <v-icon color="light-blue" class="mr-2">mdi-image</v-icon>
-                カバー画像</p>
+                プライベート サムネイル画像</p>
                 <v-spacer></v-spacer>
                 <a v-show="!change_cover_image_form" class="mx-0 my-2 pa-0 text-body-2" @click="change_cover_image_form=!change_cover_image_form">編集</a>
                 <a v-show="change_cover_image_form" class="mx-0 my-2 pa-0 text-body-2" @click="change_cover_image_form=!change_cover_image_form">キャンセル</a>
             </v-card-title>
             <v-card-text class="ma-0 pa-0 ">
-                <p class="text-caption grey--text text--darken-3">各団体の個別ページに表示されます</p>
-                <v-img :src="group.cover_image_url" contain maxHeight="300px" ></v-img>
+                <p class="ma-0 pa-0 text-caption grey--text text--darken-3">生徒用・保護者用のアカウントでログインした場合のみ表示されます。</p>
+                <p class="ma-0 pa-0 text-caption grey--text text--darken-3">顔が写っている写真なども団体内で確認が取れればアップロードできます。</p>
+                <v-img :src='"data:image/jpeg;base64,"+group.cover_image' contain maxHeight="300px" ></v-img>
             </v-card-text>
             <div v-show="change_cover_image_form">
             <v-card-text class="mx-0 px-0 py-2 ">

@@ -9,7 +9,8 @@
                     <!--作品情報-->
                     <!--タイトル，団体，お気に入り，映像で鑑賞ボタン-->
                     <v-card>
-                        <v-img v-if="group.cover_image_url!=null" maxHeight="500px" :src="group.cover_image_url"></v-img>
+                        <v-img v-if="group.cover_image!=null" maxHeight="500px" :src='"data:image/jpeg;base64,"+group.cover_image'></v-img>
+                        <v-img v-else-if="group.thumbnail_image!=null" maxHeight="500px" :src='"data:image/jpeg;base64,"+group.thumbnail_image'></v-img>
                         <v-img v-else v-bind:class="HashColor(group.id)" height="180px"></v-img>
                         <v-card-title clsss="pb-0">{{group.title}}</v-card-title>
                         <v-card-subtitle class="pb-0">{{group.groupname}}</v-card-subtitle>
