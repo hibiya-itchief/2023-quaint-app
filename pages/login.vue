@@ -78,14 +78,8 @@ export default {
       params.append('username', this.login.username);
       params.append('password', this.login.password);
       try {
-        let response = await this.$auth.loginWith('local', {data:params})
-        if (typeof this.$route.query.to !== 'undefined') {
-          this.$router.push(this.$route.to)
-        }
-        else{
-          this.$router.push("/")
-        }
-        
+        await this.$auth.loginWith('local', {data:params})
+        location.reload()        
       } catch (err) {
         this.loginerror=true
       }

@@ -75,7 +75,7 @@ export default {
     redirect:{
       login:"/login",
       logout:"/login?logout",
-      home:"/tickets"
+      home:"/"
     },
     watchLoggedIn:true,
     localStorage:false,
@@ -91,6 +91,7 @@ export default {
         },
         endpoints:{
           login:{url:"/users/me/login",method:'post',headers: { 'Content-Type': 'application/x-www-form-urlencoded' }},
+          logout:false,
           user:false
         }
       }
