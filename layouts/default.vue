@@ -9,10 +9,14 @@
       elevate-on-scroll
     >
       <v-app-bar-nav-icon  @click="drawer = true"></v-app-bar-nav-icon>
-      <v-toolbar-title><NuxtLink to="/" class="ma-0 pa-0" tag="div">seiryofes.com</NuxtLink></v-toolbar-title>
+      <v-toolbar-title><NuxtLink to="/" class="ma-0 pa-0" tag="div">星陵祭2022</NuxtLink></v-toolbar-title>
     <v-spacer></v-spacer>
       <v-btn icon>
-        <v-icon>mdi-help-circle-outline</v-icon>
+        <a style="text-decoration: none;color:inherit" href="https://docs.seiryofes.com">
+          <v-icon>
+            mdi-help-circle-outline
+          </v-icon>
+        </a>
       </v-btn>
     </v-app-bar>
     </v-card>
@@ -21,6 +25,7 @@
       v-model="drawer"
       absolute
       temporary
+      height="100vh"
     >
       <v-list
         nav
@@ -33,24 +38,6 @@
             <v-card-title class="px-2 py-1"><v-icon class="mr-4">mdi-account-circle</v-icon>{{user_me.username}}</v-card-title>
             <v-card-text class="px-2 py-1">
               <v-chip-group column >
-                <v-chip 
-                  v-show="user_me.is_student"
-                  outlined
-                >
-                  生徒用アカウント
-                </v-chip>
-                <v-chip
-                  v-show="user_me.is_family"
-                  outlined
-                >
-                  家族用アカウント
-                </v-chip>
-                <v-chip 
-                  v-show="user_me.is_active"
-                  outlined
-                >
-                  校内入場処理済み
-                </v-chip>
                 <v-chip
                   v-show="user_me_authority.is_admin"
                   outlined
@@ -75,7 +62,26 @@
                 >
                   Authorizer
                 </v-chip>
+                <v-chip 
+                  v-show="user_me.is_student"
+                  outlined
+                >
+                  生徒用アカウント
+                </v-chip>
+                <v-chip
+                  v-show="user_me.is_family"
+                  outlined
+                >
+                  家族用アカウント
+                </v-chip>
+                <v-chip 
+                  v-show="user_me.is_active"
+                  outlined
+                >
+                  校内入場処理済み
+                </v-chip>
               </v-chip-group>
+              <p class="ma-0 pa-0 text-caption grey--text">ユーザーID：{{user_me.id}}</p>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -97,29 +103,41 @@
             </v-card-actions>
           </v-card>
           
+          <v-divider></v-divider>
           
-
-          <v-divider></v-divider>
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>mdi-home</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>ホーム</v-list-item-title>
-          </v-list-item>
-
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>mdi-file-document</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>使い方</v-list-item-title>
-          </v-list-item>
-
-          <v-spacer></v-spacer>
-          <v-divider></v-divider>
-          <p class="ma-0 pa-0 text-caption">ユーザーID：{{user_me.id}}</p>
+          
 
         </v-list-item-group>
       </v-list>
+      <template v-slot:append>
+            <div class="pa-0">
+              <v-list
+                nav
+                dense
+              >
+              <v-list-item-group
+                active-class="light-blue--text text--accent-4"
+              >
+              <v-list-item>
+                <v-list-item-icon>
+                  <v-icon>mdi-file-document</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title><a style="text-decoration: none;color:inherit" href="https://docs.seiryofes.com" >このサイトの使い方</a></v-list-item-title>
+              </v-list-item>
+
+              <v-list-item>
+                <v-list-item-icon>
+                  <v-icon>mdi-github</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title><a style="text-decoration: none;color:inherit" href="https://github.com/hibiya-itchief" >GitHub</a></v-list-item-title>
+              </v-list-item>
+
+              <v-divider></v-divider>
+              <p class="ma-0 pa-0 text-caption grey--text">© 2022 東京都立日比谷高校 星陵祭チーフ会 IT部隊 | SeiryoFes IT Chief Tokyo Metropolitan Hibiya High School</p>
+              </v-list-item-group>
+              </v-list>
+            </div>
+          </template>
     </v-navigation-drawer>
 
     <v-main>
@@ -146,6 +164,16 @@
         <span>整理券</span>
         <v-icon>mdi-ticket</v-icon>
       </v-btn>
+
+      <v-btn v-show="user_me_authority.is_entry" to="/scan/entry">
+        <span>QR</span>
+        <v-icon>mdi-qrcode</v-icon>
+      </v-btn>
+
+      <v-btn v-show="user_me_authority.is_admin" to="/admin">
+        <span>👑Admin</span>
+        <v-icon>mdi-crown</v-icon>
+      </v-btn>
     </v-bottom-navigation>
   </v-app>
 </template>
@@ -155,7 +183,7 @@ export default {
   name: 'DefaultLayout',
   data () {
     return {
-      drawer: false,
+      drawer: null,
       user_me:{},
       user_me_authority:{owner_of:[],authorizer_of:[]},
       logged_in:false
