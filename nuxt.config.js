@@ -7,6 +7,11 @@ export default {
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
 
+  router:{
+    base:'/quaint-app/',
+    middleware:['auth']
+  },
+
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: '%s - quaint-app',
@@ -18,7 +23,8 @@ export default {
       { name: 'format-detection', content: 'telephone=no' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      {rel:'stylesheet',href:'https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap'}
     ]
   },
 
@@ -47,12 +53,49 @@ export default {
     '@nuxtjs/axios',
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
+    // https://auth.nuxtjs.org
+    '@nuxtjs/auth-next'
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    baseURL: '/',
+    baseURL: 'http://192.168.1.20:8000/',
+    common:{
+      'Accept':'application/json, text/plain, */*'
+    },
+    post:{
+      'Content-Type':'application/json;charset=utf-8',
+      'Access-Control-Allow-Origin':'*'
+    }
+  },
+
+  //Authorization
+  auth: {
+    redirect:{
+      login:"/login",
+      logout:"/login?logout",
+      home:"/"
+    },
+    watchLoggedIn:true,
+    localStorage:false,
+    strategies:{
+      local:{
+        token:{
+          type:'Bearer',
+          property:'access_token',
+          global:true
+        },
+        user:{
+          property:false
+        },
+        endpoints:{
+          login:{url:"/users/me/login",method:'post',headers: { 'Content-Type': 'application/x-www-form-urlencoded' }},
+          logout:false,
+          user:false
+        }
+      }
+    }
   },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
@@ -65,8 +108,9 @@ export default {
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
+    treeShake:true,
     theme: {
-      dark: true,
+      dark: false,
       themes: {
         dark: {
           primary: colors.blue.darken2,
@@ -83,5 +127,8 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-  }
+  },
+  generate: {
+    dir: 'docs'
+  },
 }
