@@ -60,7 +60,7 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    baseURL: 'http://oci-sub1.ekke.jp/',
+    baseURL: 'https://oci-sub1.ekke.jp/',
     common:{
       'Accept':'application/json, text/plain, */*'
     },
