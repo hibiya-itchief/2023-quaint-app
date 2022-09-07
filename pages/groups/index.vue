@@ -44,11 +44,9 @@
           >
             <!-- <class="d-flex flex-column">で，「もっと見る」が常に最下部に -->
             <v-card height="100%"  class="d-flex flex-column" v-bind:to="'/groups/' + group.id">
-              <v-img
-                height="180px"
-                v-bind:src="group.thumbnail_image_url"
-                v-bind:class="HashColor(group.id)"
-              ></v-img>
+              <v-img v-if="group.cover_image!=null" maxHeight="180px" :src='"data:image/jpeg;base64,"+group.cover_image'></v-img>
+              <v-img v-else-if="group.thumbnail_image!=null" maxHeight="180px" :src='"data:image/jpeg;base64,"+group.thumbnail_image'></v-img>
+              <v-img v-else v-bind:class="HashColor(group.id)" height="180px"></v-img>
               <v-card-title>{{group.title}}/{{group.groupname}}</v-card-title>
               <v-card-text>{{group.description}}</v-card-text>
               <v-card-actions>
