@@ -394,12 +394,13 @@
                     v-model="timetable_selector"
                     :items=timetable
                     item-text="timetablename"
-                    item-value="sell_at"
                     label="公演の時間帯を選択"
                     filled
                     return-object
                 >
                 </v-select>
+                <p v-if="timetable_selector" class="ma-0 pa-0 text-caption">配布時間：{{DateFormatter(timetable_selector.sell_at)}} ~ {{DateFormatter(timetable_selector.sell_ends)}}</p>
+                <p v-if="timetable_selector" class="ma-0 pa-0 text-caption">公演時間：{{DateFormatter(timetable_selector.starts_at)}} ~ {{DateFormatter(timetable_selector.ends_at)}}</p>
                 <v-text-field
                     v-model="ticket_stock_input"
                     label="座席数を入力"
@@ -544,6 +545,13 @@ export default {
             timetable=response[3].data
         })
         .catch((e)=>{})
+        timetable.forEach(t=>{
+            t.sell_at=new Date(t.sell_at)
+            t.sell_ends=new Date(t.sell_ends)
+            t.starts_at=new Date(t.starts_at)
+            t.ends_at=new Date(t.ends_at)
+        });
+
         let events_timetable_promise=[];
         events.forEach(e => {
             events_timetable_promise.push($axios.get("/timetable/"+e.timetable_id))
