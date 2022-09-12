@@ -23,8 +23,8 @@
 
     <v-navigation-drawer
       v-model="drawer"
-      absolute
       temporary
+      fixed
       height="100vh"
     >
       <v-list
