@@ -25,7 +25,7 @@
                             <v-chip v-for="tag in tags" disabled>
                                 {{tag.tagname}}
                             </v-chip>
-                            </v-chip-group>  
+                            </v-chip-group>
                         </v-card-actions>
                         <v-card-actions v-if="editable==true">
                             <v-btn
@@ -43,6 +43,9 @@
                         <v-card-actions>
                             <v-btn v-if="group.twitter_url!=null" icon :href="group.twitter_url" target="_blank"><v-icon>mdi-twitter</v-icon></v-btn>
                             <v-btn v-if="group.instagram_url!=null" icon :href="group.instagram_url" target="_blank"><v-icon>mdi-instagram</v-icon></v-btn>
+                            <v-btn v-if="!me_liked" icon @click="CreateLike()"><v-icon>mdi-heart-outline</v-icon></v-btn>
+                            <v-btn v-if="me_liked" icon class="pink--text" @click="DeleteLike()"><v-icon>mdi-heart</v-icon></v-btn>
+                            <p class="ma-0 pa-0 text--caption">{{group.like_num}}</p>
                             <v-spacer></v-spacer>
                             <v-btn
                                 color="primary"
@@ -82,7 +85,7 @@
                                     <v-card-text>※映像鑑賞には，学校で配布されたMicrosoftアカウントへのログインが必要です。</v-card-text>
                                     <v-col cols="12" v-if="group.stream_url!=null">
                                         <v-row justify="center">
-                                            <v-btn color="primary" v-bind:href="group.stream_url" target="_blank">再生できない場合（Streamで再生）＞</v-btn> 
+                                            <v-btn color="primary" v-bind:href="group.stream_url" target="_blank">再生できない場合（Streamで再生）＞</v-btn>
                                         </v-row>
                                     </v-col>
                                 </v-row>
@@ -92,7 +95,7 @@
             </v-col>
             <v-col cols="12" sm="6" lg="4" class="mx-0 my-2 px-0 py-0 px-sm-3">
                 <!--公演時間の選択-->
-                
+
                     <v-card class="mb-4">
                         <v-card-title @click="events_show=!events_show" class="ma-0 px-3 pb-2 pt-4" >
                         <v-icon>mdi-ticket</v-icon>
@@ -102,12 +105,13 @@
                             <v-icon>{{ events_show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
                         </v-btn>
                         </v-card-title>
-                        <v-card-text class="ma-0 px-3 py-2">現地で見たい公演の整理券を取得できます。</v-card-text>
-                        
+                        <v-card-text class="ma-0 px-3 py-1">現地で見たい公演の整理券を取得できます。</v-card-text>
+                        <v-card-text v-show="!this.$auth.loggedIn" class="red--text ma-0 px-3 py-1">整理券の取得には<NuxtLink to="/login">ログイン</NuxtLink>が必要です。</v-card-text>
+
                         <v-expand-transition>
                             <div v-show="events_show" class="ma-0 pb-4 ">
                             <v-divider class="mb-3"></v-divider>
-                                <div class="px-3 py-2">
+                                <div class="px-3 pt-2">
                                     <span class="d-inline-flex text-caption">
                                         <v-badge color="grey" inline></v-badge>
                                         ：配布時間外
@@ -125,6 +129,7 @@
                                         ：在庫切れ
                                     </span>
                                 </div>
+                                <a class="px-3 pb-1" @click="$nuxt.refresh()">最新の状態に更新</a>
                             <div v-for="event in events">
                                 <v-dialog
                                 v-model="event.dialog"
@@ -249,6 +254,7 @@
 <script>
 export default {
     name: 'IndivisualGroupPage',
+    auth:false,
     data () {
       return {
         videoViewer: false,
@@ -278,28 +284,36 @@ export default {
     },
 
 
-    async asyncData({params,error,$axios}){
+    async asyncData({params,error,$axios,$auth}){
     let res_group;
     let res_streamVideoId;
     let res_events;
     let res_tags;
-    let user_me;
-    let user_authority;
+    let user_me={is_student:false,is_family:false,is_active:false};
+    let user_authority={is_admin:false,is_entry:false,owner_of:[],authorizer_of:[]};
+    let me_liked=false;
     let editable=false;
     
-    await Promise.all([
+    let initial_promise=[
         $axios.get("/groups/"+params.groupId),
         $axios.get("/groups/"+params.groupId+"/events"),
-        $axios.get("/users/me"),
-        $axios.get("/users/me/authority"),
         $axios.get("/groups/"+params.groupId+"/tags")
-    ])
+    ];
+    if($auth.loggedIn){
+        initial_promise.push($axios.get("/users/me"))
+        initial_promise.push($axios.get("/users/me/authority"))
+        initial_promise.push($axios.get("/groups/"+params.groupId+"/me_liked"))
+    }
+    await Promise.all(initial_promise)
     .then((response)=>{
         res_group=response[0].data
         res_events=response[1].data
-        user_me=response[2].data
-        user_authority = response[3].data
-        res_tags=response[4].data
+        res_tags=response[2].data
+        if($auth.loggedIn){
+            user_me=response[3].data
+            user_authority = response[4].data
+            me_liked = response[5].data.me_liked
+        }
     })
     .catch((e => {
         error({ statusCode:404,message: e.message })
@@ -312,7 +326,7 @@ export default {
     res_events[i].dialog=false
     }
 
-    if(user_authority.is_admin==true || user_authority.owner_of.includes(res_group.id)){
+    if($auth.loggedIn && (user_authority.is_admin==true || user_authority.owner_of.includes(res_group.id))){
         editable=true;
     }
 
@@ -365,7 +379,7 @@ export default {
     })
     let events=available_events.concat(unavailable_events)
 
-    return {group:res_group,events:events,streamVideoId:res_streamVideoId,tags:res_tags,editable:editable,user_me:user_me}
+    return {group:res_group,events:events,streamVideoId:res_streamVideoId,tags:res_tags,editable:editable,user_me:user_me,me_liked}
     },
 
     methods:{
@@ -382,6 +396,11 @@ export default {
             return colors[index]
         },
         async CreateTicket(event,person){
+            if(!this.$auth.loggedIn){
+                this.error_message='整理券の取得にはログインが必要です';
+                this.error_alert=true
+                return 1
+            }
             event.dialog=false
             if(this.user_me.is_student) person=1;
             await this.$axios.post("/groups/"+event.group_id+"/events/"+event.id+"/tickets?person="+person)
@@ -399,6 +418,30 @@ export default {
                 this.error_alert=true
             })
 
+        },
+        CreateLike(){
+            if(!this.$auth.loggedIn){
+                this.error_message='「いいね！」するにはログインが必要です';
+                this.error_alert=true
+                return 1
+            }
+            this.$axios.post("/groups/"+this.group.id+"/like")
+            .then(()=>{
+                this.$nuxt.refresh()
+            })
+            .catch((e)=>{})
+        },
+        DeleteLike(){
+            if(!this.$auth.loggedIn){
+                this.error_message='「いいね！」するにはログインが必要です';
+                this.error_alert=true
+                return 1
+            }
+            this.$axios.delete("/groups/"+this.group.id+"/like")
+            .then(()=>{
+                this.$nuxt.refresh()
+            })
+            .catch((e)=>{})
         }
     }
 }
