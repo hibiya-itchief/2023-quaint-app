@@ -41,12 +41,6 @@
                             </v-btn>
                         </v-card-actions>
                         <v-card-actions>
-                            <v-btn v-if="group.twitter_url!=null" icon :href="group.twitter_url" target="_blank"><v-icon>mdi-twitter</v-icon></v-btn>
-                            <v-btn v-if="group.instagram_url!=null" icon :href="group.instagram_url" target="_blank"><v-icon>mdi-instagram</v-icon></v-btn>
-                            <v-btn v-if="!me_liked" icon @click="CreateLike()"><v-icon>mdi-heart-outline</v-icon></v-btn>
-                            <v-btn v-if="me_liked" icon class="pink--text" @click="DeleteLike()"><v-icon>mdi-heart</v-icon></v-btn>
-                            <p class="ma-0 pa-0 text--caption">{{group.like_num}}</p>
-                            <v-spacer></v-spacer>
                             <v-btn
                                 color="primary"
                                 dark
@@ -56,7 +50,12 @@
                                 <v-icon>mdi-play</v-icon>
                                 映像で鑑賞
                             </v-btn>
-
+                            <v-btn v-if="group.twitter_url!=null" icon :href="group.twitter_url" target="_blank"><v-icon>mdi-twitter</v-icon></v-btn>
+                            <v-btn v-if="group.instagram_url!=null" icon :href="group.instagram_url" target="_blank"><v-icon>mdi-instagram</v-icon></v-btn>
+                            <v-spacer></v-spacer>
+                            <v-btn v-if="!me_liked" icon @click="CreateLike()"><v-icon>mdi-heart-outline</v-icon></v-btn>
+                            <v-btn v-if="me_liked" icon class="pink--text" @click="DeleteLike()"><v-icon>mdi-heart</v-icon></v-btn>
+                            <p class="ma-0 pa-0 text--caption">{{group.like_num}}</p>
                             </v-card-actions>
 
                         <v-dialog
