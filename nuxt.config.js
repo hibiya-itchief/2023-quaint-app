@@ -2,20 +2,20 @@ import colors from 'vuetify/es5/util/colors'
 
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
-  ssr: false,
+  ssr: true,
 
   // Target: https://go.nuxtjs.dev/config-target
-  target: 'static',
+  target: 'server',
 
   router:{
-    base:'/quaint-app/',
+    base:'/',
     middleware:['auth']
   },
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - quaint-app',
-    title: 'quaint-app',
+    titleTemplate: '星陵祭2022',
+    title: '星陵祭2022',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
