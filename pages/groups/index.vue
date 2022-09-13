@@ -38,6 +38,7 @@
           cols="12"
           md="4"
           sm="6"
+          xs="6"
           class="my-1"
           v-for="group in groups"
           v-show="filterGroups(group)"
