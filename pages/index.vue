@@ -1,11 +1,10 @@
 <template>
-  <v-carousel v-model="model">
+  <v-carousel v-model="model" hide-delimiters>
     <v-carousel-item
       v-for="slide in slides"
       :key="slide"
     >
-      <p>{{id}}</p>
-      <v-img :src='"/home/slide"+slide.id+".png"' :alt="slide.alt" width="100%" height="100%">
+      <v-img :src='"/home/slide"+slide.id+".jpg"' :alt="slide.alt" contain height="100%">
       </v-img>
     </v-carousel-item>
   </v-carousel>
