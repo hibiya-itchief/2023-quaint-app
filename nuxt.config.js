@@ -8,14 +8,14 @@ export default {
   target: 'server',
 
   router:{
-    base:'/quaint-app/',
+    base:'/',
     middleware:['auth']
   },
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - quaint-app',
-    title: 'quaint-app',
+    titleTemplate: '星陵祭2022',
+    title: '星陵祭2022',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -60,7 +60,7 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    baseURL: 'https://oci-sub1.ekke.jp/',
+    baseURL: 'https://api.2022.seiryofes.com/',
     common:{
       'Accept':'application/json, text/plain, */*'
     },
@@ -101,7 +101,10 @@ export default {
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
     manifest: {
-      lang: 'en'
+      lang: 'ja'
+    },
+    meta:{
+      nativeUI:true
     }
   },
 
