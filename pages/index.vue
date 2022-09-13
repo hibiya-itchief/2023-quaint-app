@@ -2,7 +2,6 @@
   <v-carousel v-model="model" hide-delimiters>
     <v-carousel-item
       v-for="slide in slides"
-      :key="slide"
     >
       <v-img :src='"/home/slide"+slide.id+".jpg"' :alt="slide.alt" contain height="100%">
       </v-img>
