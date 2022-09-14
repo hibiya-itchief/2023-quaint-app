@@ -85,8 +85,8 @@ export default {
   let res_tags;
   let res_groups;
   await Promise.all([
-    $axios.get("/tags/"),
-    $axios.get("/groups/")
+    $axios.get("/tags"),
+    $axios.get("/groups")
   ])
   .then((response)=>{
     res_tags=response[0].data

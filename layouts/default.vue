@@ -10,14 +10,6 @@
     >
       <v-app-bar-nav-icon  @click="drawer = true"></v-app-bar-nav-icon>
       <v-toolbar-title><NuxtLink to="/" class="ma-0 pa-0" tag="div">星陵祭2022</NuxtLink></v-toolbar-title>
-    <v-spacer></v-spacer>
-      <v-btn icon>
-        <a style="text-decoration: none;color:inherit" href="https://docs.seiryofes.com">
-          <v-icon>
-            mdi-help-circle-outline
-          </v-icon>
-        </a>
-      </v-btn>
     </v-app-bar>
     </v-card>
 
@@ -118,12 +110,6 @@
               <v-list-item-group
                 active-class="light-blue--text text--accent-4"
               >
-              <v-list-item>
-                <v-list-item-icon>
-                  <v-icon>mdi-file-document</v-icon>
-                </v-list-item-icon>
-                <v-list-item-title><a style="text-decoration: none;color:inherit" href="https://docs.seiryofes.com" >このサイトの使い方</a></v-list-item-title>
-              </v-list-item>
 
               <v-list-item>
                 <v-list-item-icon>

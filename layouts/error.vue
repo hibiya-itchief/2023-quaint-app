@@ -24,8 +24,8 @@ export default {
   },
   data () {
     return {
-      pageNotFound: '404 Not Found',
-      otherError: 'An error occurred'
+      pageNotFound: '404 お探しのページは見つかりません。指定したURLがあっているか確認の上再読み込みをお試しください',
+      otherError: '不明なエラーが発生しました。ブラウザのリロードボタンを押して再読み込みをお試しください。それでも直らない場合はIT部隊にお声がけください🙇‍♂️'
     }
   },
   head () {
