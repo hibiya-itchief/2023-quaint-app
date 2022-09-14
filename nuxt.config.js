@@ -67,7 +67,8 @@ export default {
     post:{
       'Content-Type':'application/json;charset=utf-8',
       'Access-Control-Allow-Origin':'*'
-    }
+    },
+    retry: true
   },
 
   //Authorization
@@ -130,7 +131,6 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    analyze: true
   },
   generate: {
     dir: 'docs'
