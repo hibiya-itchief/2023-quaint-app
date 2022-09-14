@@ -113,6 +113,12 @@
 
               <v-list-item>
                 <v-list-item-icon>
+                  <v-icon>mdi-clipboard-text</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title><a style="text-decoration: none;color:inherit" href="https://forms.gle/aRv81UtSCSgS2gHq8" >フィードバック</a></v-list-item-title>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-icon>
                   <v-icon>mdi-github</v-icon>
                 </v-list-item-icon>
                 <v-list-item-title><a style="text-decoration: none;color:inherit" href="https://github.com/hibiya-itchief" >GitHub</a></v-list-item-title>

@@ -7,8 +7,9 @@
       {{ otherError }}
     </h1>
     <NuxtLink to="/">
-      Home page
+      ホーム
     </NuxtLink>
+    <a href="https://forms.gle/aRv81UtSCSgS2gHq8">フィードバックを送信(GoogleForm)</a>
   </v-app>
 </template>
 
