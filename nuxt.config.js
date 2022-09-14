@@ -54,7 +54,9 @@ export default {
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
     // https://auth.nuxtjs.org
-    '@nuxtjs/auth-next'
+    '@nuxtjs/auth-next',
+    // https://google-analytics.nuxtjs.org
+    '@nuxtjs/google-analytics'
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -127,6 +129,9 @@ export default {
         }
       }
     }
+  },
+  googleAnalytics:{
+    id:'G-7WQEH2NRMJ'
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
