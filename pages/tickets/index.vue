@@ -1,8 +1,8 @@
 <template>
     <v-app>
-        <v-container name="ticket_container" class="px-1">
-          <v-row justify="center" align-content="center">
-            <v-col col="6" md="6" sm="12">
+        <v-container name="ticket_container" class="ma-0 pa-0">
+          <v-row class="ma-0 pa-0" justify="center" align-content="center">
+            <v-col class="ma-0 pa-0" col="6" md="6" sm="12">
               <v-card
               outlined
               v-if="user.is_active==false"
@@ -19,6 +19,8 @@
                 </div>
               </v-card>
               <div class="my-3"/>
+              <p class="mx-1 my-0 py-0 text-caption grey--text">この画面を観劇したいクラスの受付担当に見せてください</p>
+              <p class="mx-1 my-0 py-0 text-caption grey--text">受付担当者は公演時間と入場人数を確認してください</p>
                 <v-tabs
                 centered>
                   <v-tab>
