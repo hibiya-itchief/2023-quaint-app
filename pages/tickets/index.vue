@@ -105,7 +105,7 @@
                               <v-list-item-subtitle>{{used_ticket.timetable.timetablename}}</v-list-item-subtitle>
                             </v-list-item-content>
                             <v-card-action>                        
-                            <v-btn to="/vote" v-show="used_ticket.group.enable_vote">
+                            <v-btn v-show="used_ticket.group.enable_vote">
                               <v-icon>mdi-vote</v-icon>
                               <v-text>投票</v-text>
                             </v-btn>
