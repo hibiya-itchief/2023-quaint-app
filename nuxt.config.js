@@ -135,4 +135,8 @@ export default {
   generate: {
     dir: 'docs'
   },
+  loading: {
+    color: 'yellow',
+    height: '5px'
+  }
 }
