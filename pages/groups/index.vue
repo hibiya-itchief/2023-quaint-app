@@ -2,7 +2,7 @@
   <v-app>
       <v-container>
         <v-row justify="center">
-          <v-col cols="12">
+          <v-col class="mt-2 mb-0 py-0 " cols="12">
             <v-text-field
               solo
               label="検索"
@@ -31,25 +31,29 @@
               </v-chip>
             </v-chip-group>
           </v-col>
-          <v-col cols="12">
-            <v-divider></v-divider>
+          <v-col class="my-0 py-0" cols="12">
+            <v-divider class="my-0 py-0 "></v-divider>
+            <div v-show="nowloading">
+            <p class="my-0 py-1 text-body-1 grey--text">読み込み中...</p>
+            <p class="my-0 py-1 text-caption grey--text">時間がかかることがあります(学校のWi-Fi使用中など)</p>
+            </div>
           </v-col>
           <v-col
           cols="12"
           md="4"
           sm="6"
-          class="my-1"
+          class="my-0"
           v-for="group in groups"
           v-show="filterGroups(group)"
           >
             <!-- <class="d-flex flex-column">で，「もっと見る」が常に最下部に -->
-            <v-card height="100%"  class="d-flex flex-column" v-bind:to="'/groups/' + group.id">
+            <v-card height="100%"  class="d-flex flex-column my-1 " v-bind:to="'/groups/' + group.id">
               <v-img v-if="group.cover_image!=null" maxHeight="180px" :src='"data:image/jpeg;base64,"+group.cover_image'></v-img>
               <v-img v-else-if="group.thumbnail_image!=null" maxHeight="180px" :src='"data:image/jpeg;base64,"+group.thumbnail_image'></v-img>
               <v-img v-else v-bind:class="HashColor(group.id)" height="180px"></v-img>
-              <v-card-title>{{group.title}}/{{group.groupname}}</v-card-title>
-              <v-card-text>{{group.description}}</v-card-text>
-              <v-card-actions>
+              <v-card-title class="my-1 py-1">{{group.title}}/{{group.groupname}}</v-card-title>
+              <v-card-text class="my-1 py-1">{{group.description}}</v-card-text>
+              <v-card-actions class="my-0 py-0">
                 <v-chip-group column>
                   <v-chip v-for="tag in group.tags" disabled>
                     {{tag.tagname}}
@@ -78,59 +82,67 @@ export default {
       search_query:"",
       search_result_number:0,
       search_result:false,
-      tag_selector:true
+      tag_selector:true,
+      nowloading:true
     }
   },
-  async asyncData({error,$axios}){
-  let res_tags;
-  let res_groups;
-  await Promise.all([
-    $axios.get("/tags"),
-    $axios.get("/groups")
-  ])
-  .then((response)=>{
-    res_tags=response[0].data
-    res_groups=response[1].data
-  })
-  .catch((e => {
-    error({ statusCode:404,message: e.message })
-  }))
+  asyncData({error,$axios}){
+  },
+  created(){
+    let res_tags;
+    let res_groups;
+    Promise.all([
+      this.$axios.get("/tags"),
+      this.$axios.get("/groups")
+    ])
+    .then((response)=>{
+      res_tags=response[0].data
+      res_groups=response[1].data
 
-  let tag_promise=[]
-  //各groupが有しているtagをAPIから取得し，groups配列の中のオブジェクトに"tags"というキーを設けてgroupsとtagsの情報を結びつけている。
-  for (var i = 0; i < res_groups.length; i++){
-    tag_promise.push($axios.get("/groups/"+res_groups[i].id+"/tags"))
-  }
-  await Promise.all(tag_promise)
-  .then((response) =>{
-    for (let i = 0; i < res_groups.length; i++) {
-      res_groups[i].tags=response[i].data
-    }
-  })
-  .catch((e => {
-      error({ statusCode:404,message: e.message })
-  }))
+      //毎回同じ順番で表示されないようにgroupsの配列をランダムな順番にする
+      const shuffleArray = (array) => {
+        const cloneArray = [...array]
+        for (let i = cloneArray.length - 1; i >= 0; i--) {
+          let rand = Math.floor(Math.random() * (i + 1))
+          // 配列の要素の順番を入れ替える
+          let tmpStorage = cloneArray[i]
+          cloneArray[i] = cloneArray[rand]
+          cloneArray[rand] = tmpStorage
+        }
+        return cloneArray}
+      this.groups=shuffleArray(res_groups)
+      this.all_groups=this.groups
 
-  const shuffleArray = (array) => {
-    const cloneArray = [...array]
-    for (let i = cloneArray.length - 1; i >= 0; i--) {
-      let rand = Math.floor(Math.random() * (i + 1))
-      // 配列の要素の順番を入れ替える
-      let tmpStorage = cloneArray[i]
-      cloneArray[i] = cloneArray[rand]
-      cloneArray[rand] = tmpStorage
-    }
-    return cloneArray
-  }
-  res_groups=shuffleArray(res_groups)//毎回同じ順番で表示されないようにgroupsの配列をランダムな順番にする
-  
-  return {tags:res_tags,groups:res_groups,all_groups:res_groups}
+      let tag_promise=[]
+      //各groupが有しているtagをAPIから取得し，groups配列の中のオブジェクトに"tags"というキーを設けてgroupsとtagsの情報を結びつけている。
+      for (var i = 0; i < this.groups.length; i++){
+        tag_promise.push(this.$axios.get("/groups/"+this.groups[i].id+"/tags"))
+      }
+      Promise.all(tag_promise)
+      .then((response) =>{
+        for (let i = 0; i < this.groups.length; i++) {
+          this.groups[i].tags=response[i].data
+          this.all_groups[i].tags=response[i].data
+        }
+        this.tags=res_tags
+        this.nowloading=false
+
+      })
+      .catch((e => {
+        console.error(e.message)
+        this.$nuxt.error({ message: e.message })
+      }))
+    })
+    .catch((e => {
+      console.error(e.message)
+      this.nuxt.error({ message: e.message })
+    }))
   },
 
 
   methods:{
     filterGroups(group){
-      if (this.selectedTag==='' || group.tags.some(i => i.id === this.selectedTag.id)){
+      if (this.selectedTag==='' || (typeof group.tags!='undefined'&&group.tags.some(i => i.id === this.selectedTag.id))){
         return true;
       //tag全体（{id:hogehoge, tagname:honyohonyo}の形）を用いると，tagが一致している判定がうまく行えなかったので，idを用いてtagの一致を判定している
       }else{
