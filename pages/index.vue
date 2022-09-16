@@ -88,6 +88,22 @@
               星陵祭IT部隊
             </v-card-text>
           </v-card>
+          <v-col></v-col>
+          <v-card>
+              <v-card-title>【星陵祭をもっと楽しむ！】</v-card-title>
+              <v-card-actions>
+                <v-col>
+                  <v-row
+                    align="center"
+                    justify="space-around"
+                  >
+                    <v-btn color="primary" href="https://web.microsoftstream.com/channel/3809d2a3-c6e8-4dbe-b1a5-d8191e7f5d00" target="_blank"><v-icon>mdi-television-classic</v-icon>映像配信サイト</v-btn>
+                    <v-btn href="https://forms.gle/aRv81UtSCSgS2gHq8" target="_blank"><v-icon>mdi-list-box</v-icon>フィードバックフォーム</v-btn>
+                  </v-row>
+                </v-col>
+              </v-card-actions>
+
+          </v-card>
           </v-col>
         </v-row>
       </v-container>
