@@ -85,7 +85,7 @@
               星陵祭，オンライン配信，後夜祭，片付け，全てを楽しんでいきましょう！
             </v-card-text>
             <v-card-text>
-              星陵祭IT部隊
+              星陵祭企画委員会IT部隊
             </v-card-text>
             <v-divider></v-divider>
             <v-col></v-col>
