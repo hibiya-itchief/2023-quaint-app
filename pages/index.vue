@@ -82,27 +82,22 @@
             <v-card-text>
               この整理券サイトには至らぬ点も多くありました。しかし，本年度の経験，そして皆様からいただいたご意見は大切に受け止め，最大限に活かして参ります。これまでいただいた皆様のご協力に感謝します。
               これからも「みんなの使いやすい」を実現すべく，我々は善処して参ります。これからのIT部隊の活動に，ご理解・ご協力，並びにご期待をいただけると幸せます。<br>
-              星陵祭，オンライン配信，後夜祭，片付け，全て楽しんでいきましょう！
+              星陵祭，オンライン配信，後夜祭，片付け，全てを楽しんでいきましょう！
             </v-card-text>
             <v-card-text>
               星陵祭IT部隊
             </v-card-text>
-          </v-card>
-          <v-col></v-col>
-          <v-card>
-              <v-card-title>【星陵祭をもっと楽しむ！】</v-card-title>
-              <v-card-actions>
-                <v-col>
-                  <v-row
-                    align="center"
-                    justify="space-around"
-                  >
-                    <v-btn color="primary" href="https://web.microsoftstream.com/channel/3809d2a3-c6e8-4dbe-b1a5-d8191e7f5d00" target="_blank"><v-icon>mdi-television-classic</v-icon>映像配信サイト</v-btn>
-                    <v-btn href="https://forms.gle/aRv81UtSCSgS2gHq8" target="_blank"><v-icon>mdi-list-box</v-icon>フィードバックフォーム</v-btn>
-                  </v-row>
-                </v-col>
+            <v-divider></v-divider>
+            <v-col></v-col>
+            <v-card-actions>
+                <v-row
+                  align="center"
+                  justify="space-around"
+                >
+                    <v-btn color="primary" href="https://web.microsoftstream.com/channel/3809d2a3-c6e8-4dbe-b1a5-d8191e7f5d00" target="_blank"><v-icon>mdi-television-classic</v-icon>映像配信サイトはこちら</v-btn>
+                </v-row>
               </v-card-actions>
-
+              <v-col></v-col>
           </v-card>
           </v-col>
         </v-row>
