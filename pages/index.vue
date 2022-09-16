@@ -42,13 +42,14 @@
             </v-card-text>
             <v-spacer></v-spacer>
             <v-card-title>● 配布場所</v-card-title>
+            <v-card-subtitle>例）11Rの生徒が25Rの劇を見たい→理科ホールで整理券を取得</v-card-subtitle>
             <v-card-text>
               <v-simple-table>
                 <template v-slot:default>
                   <thead>
                     <tr>
                       <th class="text-left">
-                        配布対象クラス
+                        配布対象
                       </th>
                       <th class="text-left">
                         配布場所
@@ -57,11 +58,11 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>11~14R・21~24R・31~34R</td>
+                      <td>11~14R・21~24R・31~34Rの生徒</td>
                       <td>理科ホール（1階，地学室前）</td>
                     </tr>
                     <tr>
-                      <td>15~18R・25~28R・35~38R</td>
+                      <td>15~18R・25~28R・35~38Rの生徒</td>
                       <td>社会科ホール（3階，社会科職員室隣）</td>
                     </tr>
                   </tbody>
@@ -107,7 +108,7 @@
 
 <script>
   export default {
-  name: 'ByeBye,Quaint',
+  name: 'IndexPage',
   auth:false,
   data(){
     return {
