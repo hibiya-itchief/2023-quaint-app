@@ -4,11 +4,11 @@
   justify="center" align-content="center"
   class="ma-4"
 >
-<v-col cols="11" md="6" lg="4">
+<v-col cols="11" md="6" lg="4" class="ma-0 pa-0">
 <v-sheet
   color="white"
   elevation="4"
-  class="pa-4"
+  class="py-4 px-2"
 >
  <form>
     <h2 align="center" class="text-h5 ma-3">ログイン</h2>
@@ -39,14 +39,38 @@
 </v-col>
 </v-row>
 <v-snackbar
-  v-model="loginerror"
+    v-model="success_alert"
+    color="success"
+    elevation="2"
 >
-  ユーザー名またはパスワードが違います。
+    {{success_message}}
+    <template v-slot:action="{ attrs }">
+        <v-btn
+        color="white"
+        icon
+        v-bind="attrs"
+        @click="success_alert = false"
+        >
+        <v-icon>mdi-close</v-icon>
+        </v-btn>
+    </template>
 </v-snackbar>
 <v-snackbar
-  v-model="logout"
+    v-model="error_alert"
+    color="red"
+    elevation="2"
 >
-  ログアウトしました。
+    {{error_message}}
+    <template v-slot:action="{ attrs }">
+        <v-btn
+        color="white"
+        icon
+        v-bind="attrs"
+        @click="error_alert = false"
+        >
+        <v-icon>mdi-close</v-icon>
+        </v-btn>
+    </template>
 </v-snackbar>
 </div>
 </template>
@@ -64,7 +88,11 @@ export default {
       password:"",
       pw_visible:false,
       loginerror:false,
-      logout:false
+      logout:false,
+      success_alert:false,
+      error_alert:false,
+      success_message:"",
+      error_message:"",
     }
   },
   mounted(){
@@ -80,8 +108,23 @@ export default {
       try {
         await this.$auth.loginWith('local', {data:params})
         location.reload()        
-      } catch (err) {
-        this.loginerror=true
+      } catch (e) {
+        if(e.response){
+          if(e.response.status==401){
+            this.error_message=e.response.data.detail
+            this.error_alert=true
+          }
+          else if(e.response.status==400){
+            this.error_message=e.response.data.detail
+            this.error_alert=true
+            setTimeout(()=>{this.$router.push('/user/changepassword')},2500)
+          }
+        }
+        else{
+          this.error_message="予期せぬエラーが発生しました。IT部隊にお声がけください🙇‍♂️";
+          this.error_alert=true;
+          console.error(e.response.status)
+        }
       }
     }
   }

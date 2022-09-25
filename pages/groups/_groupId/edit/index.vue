@@ -189,6 +189,7 @@
                 <v-icon color="light-blue" class="mr-2">mdi-play-box</v-icon>
                 動画配信 Stream URL</p>
                 <v-spacer></v-spacer>
+                <p class="ma-0 pa-0 text-caption">Adminのみ</p>
                 <a v-show="!change_stream_url_form" class="mx-0 my-2 pa-0 text-body-2" @click="change_stream_url_form=!change_stream_url_form">編集</a>
                 <a v-show="change_stream_url_form" class="mx-0 my-2 pa-0 text-body-2" @click="change_stream_url_form=!change_stream_url_form">キャンセル</a>
             </v-card-title>
@@ -308,7 +309,7 @@
             </div>
         </v-card>
 
-        <v-card v-show="user_me_authority.is_admin" class="mx-1 my-1 px-2 py-2" elevation="1">
+        <v-card class="mx-1 my-1 px-2 py-2" elevation="1">
             <v-card-title class="ma-0 pa-0">
                 <p class="mx-0 my-1 pa-0 grey--text text--darken-2 text-subtitle-2">
                 <v-icon color="light-blue" class="mr-2">mdi-tag</v-icon>
@@ -364,12 +365,13 @@
             </div>
         </v-card>
 
-        <v-card class="mx-1 my-1 px-2 py-2" elevation="1">
+        <v-card v-show="user_me_authority.is_admin" class="mx-1 my-1 px-2 py-2" elevation="1">
             <v-card-title class="ma-0 pa-0">
                 <p class="mx-0 my-1 pa-0 grey--text text--darken-2 text-subtitle-2">
                 <v-icon color="light-blue" class="mr-2">mdi-calendar</v-icon>
                 公演</p>
                 <v-spacer></v-spacer>
+                <p class="ma-0 pa-0 text-caption">Adminのみ</p>
                 <a v-show="!change_events_form" class="mx-0 my-2 pa-0 text-body-2" @click="change_events_form=!change_events_form">編集</a>
                 <a v-show="change_events_form" class="mx-0 my-2 pa-0 text-body-2" @click="change_events_form=!change_events_form">キャンセル</a>
             </v-card-title>
@@ -431,6 +433,7 @@
             </v-card>
         </v-dialog>
         <v-btn
+            v-show="user_me_authority.is_admin"
             color="red"
             outlined
             @click="delete_group_dialog=true"

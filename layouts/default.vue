@@ -94,6 +94,15 @@
               </v-btn>
             </v-card-actions>
           </v-card>
+
+          <v-divider></v-divider>
+          
+          <v-list-item v-show="logged_in">
+            <v-list-item-icon>
+              <v-icon>mdi-form-textbox-password</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title><NuxtLink style="text-decoration: none;color:inherit" to="/user/changepassword" >パスワードを変更</NuxtLink></v-list-item-title>
+          </v-list-item>
           
           <v-divider></v-divider>
           
@@ -111,6 +120,12 @@
                 active-class="light-blue--text text--accent-4"
               >
 
+              <v-list-item>
+                <v-list-item-icon>
+                  <v-icon>mdi-clipboard-text</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title><a style="text-decoration: none;color:inherit" href="https://forms.gle/aRv81UtSCSgS2gHq8" >フィードバック</a></v-list-item-title>
+              </v-list-item>
               <v-list-item>
                 <v-list-item-icon>
                   <v-icon>mdi-github</v-icon>
