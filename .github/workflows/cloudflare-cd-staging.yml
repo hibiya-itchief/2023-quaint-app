@@ -28,4 +28,4 @@ jobs:
         with:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          command: pages publish dist
+          command: pages publish --project-name=quaint-app-stg dist
