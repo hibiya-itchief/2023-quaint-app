@@ -1,40 +1,27 @@
 import colors from 'vuetify/es5/util/colors'
 
 export default {
-  // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
-  ssr: true,
-
   // Target: https://go.nuxtjs.dev/config-target
-  target: 'server',
-
-  router:{
-    base:'/',
-    middleware:['auth']
-  },
+  target: 'static',
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '星陵祭2022',
-    title: '星陵祭2022',
+    titleTemplate: '%s - quaint-app',
+    title: 'quaint-app',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: '' },
-      { name: 'format-detection', content: 'telephone=no' }
+      { name: 'format-detection', content: 'telephone=no' },
     ],
-    link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      {rel:'stylesheet',href:'https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap'}
-    ]
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [
-  ],
+  css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [
-  ],
+  plugins: [],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -43,6 +30,8 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/typescript
     '@nuxt/typescript-build',
+    // https://go.nuxtjs.dev/stylelint
+    '@nuxtjs/stylelint-module',
     // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
   ],
@@ -53,70 +42,31 @@ export default {
     '@nuxtjs/axios',
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
-    // https://auth.nuxtjs.org
-    '@nuxtjs/auth-next',
-    // https://google-analytics.nuxtjs.org
-    '@nuxtjs/google-analytics'
+    // https://go.nuxtjs.dev/content
+    '@nuxt/content',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    baseURL: 'https://seiryofes2022api.azurewebsites.net/',
-    common:{
-      'Accept':'application/json, text/plain, */*'
-    },
-    post:{
-      'Content-Type':'application/json;charset=utf-8',
-      'Access-Control-Allow-Origin':'*'
-    },
-    retry: true
-  },
-
-  //Authorization
-  auth: {
-    redirect:{
-      login:"/login",
-      logout:"/login?logout",
-      home:"/"
-    },
-    watchLoggedIn:true,
-    localStorage:false,
-    strategies:{
-      local:{
-        token:{
-          type:'Bearer',
-          property:'access_token',
-          global:true
-        },
-        user:{
-          property:false
-        },
-        endpoints:{
-          login:{url:"/users/me/login",method:'post',headers: { 'Content-Type': 'application/x-www-form-urlencoded' }},
-          logout:false,
-          user:false
-        }
-      }
-    }
+    baseURL: '/',
   },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
     manifest: {
-      lang: 'ja'
+      lang: 'en',
     },
-    meta:{
-      nativeUI:true
-    }
   },
+
+  // Content module configuration: https://go.nuxtjs.dev/config-content
+  content: {},
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
-    treeShake:true,
     theme: {
-      dark: false,
+      dark: true,
       themes: {
         dark: {
           primary: colors.blue.darken2,
@@ -125,23 +75,12 @@ export default {
           info: colors.teal.lighten1,
           warning: colors.amber.base,
           error: colors.deepOrange.accent4,
-          success: colors.green.accent3
-        }
-      }
-    }
-  },
-  googleAnalytics:{
-    id:'G-7WQEH2NRMJ'
+          success: colors.green.accent3,
+        },
+      },
+    },
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {
-  },
-  generate: {
-    dir: 'docs'
-  },
-  loading: {
-    color: 'yellow',
-    height: '5px'
-  }
+  build: {},
 }

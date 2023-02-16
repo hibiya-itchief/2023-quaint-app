@@ -1,216 +1,92 @@
 <template>
-  <v-app>
-    <v-card class="overflow-hidden">
-    <v-app-bar
-      fixed
-      color="light-blue"
-      dark
-      app
-      elevate-on-scroll
-    >
-      <v-app-bar-nav-icon  @click="drawer = true"></v-app-bar-nav-icon>
-      <v-toolbar-title><NuxtLink to="/" class="ma-0 pa-0" tag="div">星陵祭2022</NuxtLink></v-toolbar-title>
-    </v-app-bar>
-    </v-card>
-
+  <v-app dark>
     <v-navigation-drawer
       v-model="drawer"
-      temporary
+      :mini-variant="miniVariant"
+      :clipped="clipped"
       fixed
-      height="100vh"
+      app
     >
-      <v-list
-        nav
-        dense
-      >
-        <v-list-item-group
-          active-class="light-blue--text text--accent-4"
+      <v-list>
+        <v-list-item
+          v-for="(item, i) in items"
+          :key="i"
+          :to="item.to"
+          router
+          exact
         >
-          <v-card v-show="logged_in" elevation="0">
-            <v-card-title class="px-2 py-1"><v-icon class="mr-4">mdi-account-circle</v-icon>{{user_me.username}}</v-card-title>
-            <v-card-text class="px-2 py-1">
-              <v-chip-group column >
-                <v-chip
-                  v-show="user_me_authority.is_admin"
-                  outlined
-                >
-                  👑Admin
-                </v-chip>
-                <v-chip
-                  v-show="user_me_authority.is_Entry"
-                  outlined
-                >
-                  Entry
-                </v-chip>
-                <v-chip
-                  v-show="user_me_authority.owner_of.length!=0"
-                  outlined
-                >
-                  Owner
-                </v-chip>
-                <v-chip
-                  v-show="user_me_authority.authorizer_of.length!=0"
-                  outlined
-                >
-                  Authorizer
-                </v-chip>
-                <v-chip 
-                  v-show="user_me.is_student"
-                  outlined
-                >
-                  生徒用アカウント
-                </v-chip>
-                <v-chip
-                  v-show="user_me.is_family"
-                  outlined
-                >
-                  家族用アカウント
-                </v-chip>
-                <v-chip 
-                  v-show="user_me.is_active"
-                  outlined
-                >
-                  校内入場処理済み
-                </v-chip>
-              </v-chip-group>
-              <p class="ma-0 pa-0 text-caption grey--text">ユーザーID：{{user_me.id}}</p>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn outlined color="primary" @click="logOut()">
-                ログアウト
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-
-          <v-card v-show="!logged_in" elevation="0">
-            <v-card-title class="px-2 py-1"><v-icon class="mr-4">mdi-account-circle</v-icon><span class="grey--text text-caption">ログインしていません</span></v-card-title>
-            <v-card-text class="px-2 py-1">
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn outlined color="primary" to="/login">
-                ログイン
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-
-          <v-divider></v-divider>
-          
-          <v-list-item v-show="logged_in">
-            <v-list-item-icon>
-              <v-icon>mdi-form-textbox-password</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title><NuxtLink style="text-decoration: none;color:inherit" to="/user/changepassword" >パスワードを変更</NuxtLink></v-list-item-title>
-          </v-list-item>
-          
-          <v-divider></v-divider>
-          
-          
-
-        </v-list-item-group>
+          <v-list-item-action>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
-      <template v-slot:append>
-            <div class="pa-0">
-              <v-list
-                nav
-                dense
-              >
-              <v-list-item-group
-                active-class="light-blue--text text--accent-4"
-              >
-
-              <v-list-item>
-                <v-list-item-icon>
-                  <v-icon>mdi-clipboard-text</v-icon>
-                </v-list-item-icon>
-                <v-list-item-title><a style="text-decoration: none;color:inherit" href="https://forms.gle/aRv81UtSCSgS2gHq8" >フィードバック</a></v-list-item-title>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-icon>
-                  <v-icon>mdi-github</v-icon>
-                </v-list-item-icon>
-                <v-list-item-title><a style="text-decoration: none;color:inherit" href="https://github.com/hibiya-itchief" >GitHub</a></v-list-item-title>
-              </v-list-item>
-
-              <v-divider></v-divider>
-              <p class="ma-0 pa-0 text-caption grey--text">© 2022 東京都立日比谷高校 星陵祭チーフ会 IT部隊 | SeiryoFes IT Chief Tokyo Metropolitan Hibiya High School</p>
-              </v-list-item-group>
-              </v-list>
-            </div>
-          </template>
     </v-navigation-drawer>
-
+    <v-app-bar :clipped-left="clipped" fixed app>
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+      <v-btn icon @click.stop="miniVariant = !miniVariant">
+        <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
+      </v-btn>
+      <v-btn icon @click.stop="clipped = !clipped">
+        <v-icon>mdi-application</v-icon>
+      </v-btn>
+      <v-btn icon @click.stop="fixed = !fixed">
+        <v-icon>mdi-minus</v-icon>
+      </v-btn>
+      <v-toolbar-title>{{ title }}</v-toolbar-title>
+      <v-spacer />
+      <v-btn icon @click.stop="rightDrawer = !rightDrawer">
+        <v-icon>mdi-menu</v-icon>
+      </v-btn>
+    </v-app-bar>
     <v-main>
-    <Nuxt />
+      <v-container>
+        <Nuxt />
+      </v-container>
     </v-main>
-    
-    
-    <v-bottom-navigation
-    color="light-blue"
-    fixed
-    app
-    >
-      <v-btn to="/">
-        <span>ホーム</span>
-        <v-icon>mdi-home</v-icon>
-      </v-btn>
-
-      <v-btn to="/groups">
-        <span>探す</span>
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
-
-      <v-btn to="/tickets">
-        <span>整理券</span>
-        <v-icon>mdi-ticket</v-icon>
-      </v-btn>
-
-      <v-btn v-show="user_me_authority.is_entry" to="/scan/entry">
-        <span>QR</span>
-        <v-icon>mdi-qrcode</v-icon>
-      </v-btn>
-
-      <v-btn v-show="user_me_authority.is_admin" to="/admin">
-        <span>👑Admin</span>
-        <v-icon>mdi-crown</v-icon>
-      </v-btn>
-    </v-bottom-navigation>
+    <v-navigation-drawer v-model="rightDrawer" :right="right" temporary fixed>
+      <v-list>
+        <v-list-item @click.native="right = !right">
+          <v-list-item-action>
+            <v-icon light> mdi-repeat </v-icon>
+          </v-list-item-action>
+          <v-list-item-title>Switch drawer (click me)</v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+    <v-footer :absolute="!fixed" app>
+      <span>&copy; {{ new Date().getFullYear() }}</span>
+    </v-footer>
   </v-app>
 </template>
 
 <script>
 export default {
   name: 'DefaultLayout',
-  data () {
+  data() {
     return {
-      drawer: null,
-      user_me:{},
-      user_me_authority:{owner_of:[],authorizer_of:[]},
-      logged_in:false
+      clipped: false,
+      drawer: false,
+      fixed: false,
+      items: [
+        {
+          icon: 'mdi-apps',
+          title: 'Welcome',
+          to: '/',
+        },
+        {
+          icon: 'mdi-chart-bubble',
+          title: 'Inspire',
+          to: '/inspire',
+        },
+      ],
+      miniVariant: false,
+      right: true,
+      rightDrawer: false,
+      title: 'Vuetify.js',
     }
   },
-  async fetch(){
-    let user_me=[];
-    let logged_in=false;
-    await Promise.all([
-      this.$axios.get("/users/me"),
-      this.$axios.get("/users/me/authority")
-    ])
-    .then((response)=>{
-      this.user_me=response[0].data;
-      this.user_me_authority=response[1].data;
-      this.logged_in=true;
-    })
-    .catch(()=>{
-      logged_in=false
-    })
-  },
-  methods:{
-    async logOut(){
-      await this.$auth.logout()
-      location.reload()
-    }
-  }
 }
 </script>
