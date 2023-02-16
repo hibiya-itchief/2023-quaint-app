@@ -4,8 +4,9 @@
       <v-app-bar fixed color="light-blue" dark app elevate-on-scroll>
         <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
         <v-toolbar-title
-          ><NuxtLink to="/" class="ma-0 pa-0" tag="div"
-            >星陵祭2023</NuxtLink
+          ><NuxtLink to="/" class="ma-0 pa-0" tag="span">星陵祭2023</NuxtLink>
+          <span v-if="app_env !== 'production'"
+            >@ {{ app_env }}</span
           ></v-toolbar-title
         >
       </v-app-bar>
@@ -152,6 +153,7 @@ export default Vue.extend({
   data() {
     return {
       drawer: false,
+      app_env: process.env.QUAINT_ENV,
     }
   },
   async fetch() {},

@@ -33,8 +33,7 @@ export default Vue.extend({
     }
   },
   head() {
-    const title =
-      this.error.statusCode === 404 ? this.pageNotFound : this.otherError
+    const title = 'Error'
     return {
       title,
     }
