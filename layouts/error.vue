@@ -6,37 +6,40 @@
     <h1 v-else>
       {{ otherError }}
     </h1>
-    <NuxtLink to="/">
-      ホーム
-    </NuxtLink>
-    <a href="https://forms.gle/aRv81UtSCSgS2gHq8">フィードバックを送信(GoogleForm)</a>
+    <NuxtLink to="/"> ホーム </NuxtLink>
+    <a href="https://forms.gle/aRv81UtSCSgS2gHq8"
+      >フィードバックを送信(GoogleForm)</a
+    >
   </v-app>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue'
+export default Vue.extend({
   name: 'EmptyLayout',
   layout: 'empty',
   props: {
     error: {
       type: Object,
-      default: null
-    }
+      default: null,
+    },
   },
-  data () {
+  data() {
     return {
-      pageNotFound: '404 お探しのページは見つかりません。指定したURLがあっているか確認の上再読み込みをお試しください',
-      otherError: '不明なエラーが発生しました。ブラウザのリロードボタンを押して再読み込みをお試しください。それでも直らない場合はIT部隊にお声がけください🙇‍♂️'
+      pageNotFound:
+        '404 お探しのページは見つかりません。指定したURLがあっているか確認の上再読み込みをお試しください',
+      otherError:
+        '不明なエラーが発生しました。ブラウザのリロードボタンを押して再読み込みをお試しください。それでも直らない場合はIT部隊にお声がけください🙇‍♂️',
     }
   },
-  head () {
+  head() {
     const title =
       this.error.statusCode === 404 ? this.pageNotFound : this.otherError
     return {
-      title
+      title,
     }
-  }
-}
+  },
+})
 </script>
 
 <style scoped>
