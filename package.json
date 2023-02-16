@@ -35,7 +35,7 @@
     "@nuxtjs/pwa": "^3.3.5",
     "core-js": "^3.25.3",
     "cross-env": "^7.0.3",
-    "nuxt": "^2.15.8",
+    "nuxt": "^3.2.0",
     "vue": "^2.7.10",
     "vue-server-renderer": "^2.7.10",
     "vue-template-compiler": "^2.7.10",
