@@ -1,5 +1,8 @@
 import colors from 'vuetify/es5/util/colors'
 
+const environment = process.env.QUAINT_ENV || 'development'
+const envSet = require(`./env.${environment}.js`)
+
 export default {
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
@@ -16,6 +19,9 @@ export default {
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
+
+  // cross-env
+  env: envSet,
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [],
