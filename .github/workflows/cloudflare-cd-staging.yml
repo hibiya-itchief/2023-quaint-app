@@ -8,6 +8,9 @@ jobs:
   deploy:
     name: deploy to cloudflare
     runs-on: ubuntu-latest
+    environment:
+      name: 'Staging'
+      url: dev.seiryofes.com
     steps:
       - name: Checkout
         uses: actions/checkout@master
@@ -28,4 +31,4 @@ jobs:
         with:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          command: pages publish --project-name=quaint-app-stg dist
+          command: pages publish --project-name=quaint-app-dev dist
