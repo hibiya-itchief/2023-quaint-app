@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: 'Staging'
-      url: dev.seiryofes.com
+      url: https://dev.seiryofes.com/
     steps:
       - name: Checkout
         uses: actions/checkout@master
