@@ -1,0 +1,34 @@
+name: cloudflare-deploy-production
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  deploy:
+    name: deploy to cloudflare
+    runs-on: ubuntu-latest
+    environment:
+      name: 'Production'
+      url: https://seiryofes.com/
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Setup node env
+        uses: actions/setup-node@v2.1.2
+        with:
+          node-version: 16
+
+      - name: Install dependencies
+        run: yarn
+
+      - name: Generate
+        run: yarn run generate:prod
+
+      - name: Publish
+        uses: cloudflare/wrangler-action@2.0.0
+        with:
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          command: pages publish --project-name=seiryofes dist
