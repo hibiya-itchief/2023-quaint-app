@@ -4,6 +4,7 @@ const environment = process.env.QUAINT_ENV || 'development'
 const envSet = require(`./env.${environment}.js`)
 
 export default {
+  ssr: false,
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
 
@@ -22,6 +23,11 @@ export default {
 
   // cross-env
   env: envSet,
+
+  router: {
+    base: '/',
+    middleware: ['auth'],
+  },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [],
@@ -50,6 +56,8 @@ export default {
     '@nuxtjs/pwa',
     // https://go.nuxtjs.dev/content
     '@nuxt/content',
+    // https://auth.nuxtjs.org/
+    '@nuxtjs/auth-next',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -67,6 +75,66 @@ export default {
 
   // Content module configuration: https://go.nuxtjs.dev/config-content
   content: {},
+
+  auth: {
+    watchLoggedIn: true,
+    token: {
+      prefix: '_token.',
+      global: true,
+    },
+    redirect: {
+      login: '/login',
+      logout: '/',
+      callback: '/callback',
+      home: '/',
+    },
+    strategies: {
+      b2c: {
+        scheme: 'oauth2',
+        clientId: envSet.AZURE_B2C_CLIENTID,
+        endpoints: {
+          authorization: envSet.AZURE_B2C_ENDPOINT_AUTHORIZATION,
+          token: envSet.AZURE_B2C_ENDPOINT_TOKEN,
+          userInfo: undefined,
+          logout: envSet.AZURE_B2C_ENDPOINT_LOGOUT,
+        },
+        // ライブラリはthis.option.tokenで読んでるからここは絶対に"token"
+        token: {
+          property: 'id_token', // ここは /tokenエンドポイントをたたいた時に返ってくるjsonに合わせる
+          type: 'Bearer',
+          maxAge: 1800,
+        },
+        // ライブラリはthis.option.refreshTokenで読んでるからここは絶対に"refreshToken"
+        refreshToken: {
+          property: 'refresh_token',
+          maxAge: 60 * 60 * 24 * 60,
+        },
+        responseType: 'code',
+        grantType: 'authorization_code',
+        accessType: 'offline',
+        codeChallengeMethod: 'S256',
+        scope: ['openid', 'profile', 'offline_access'],
+      },
+      ad: {
+        scheme: 'openIDConnect',
+        clientId: envSet.AZURE_AD_CLIENTID, // seiryofes.onmicrosoft.com
+        endpoints: {
+          configuration: envSet.AZURE_AD_OPENIDCONFIGURATION,
+        },
+        token: {
+          property: 'id_token',
+          maxAge: 60 * 60 * 24 * 30,
+          type: 'Bearer',
+          prefix: '_id_token.',
+          expirationPrefix: '_id_token_expiration.',
+        },
+        responseType: 'code',
+        grantType: 'authorization_code',
+        scope: ['openid', 'profile', 'offline_access'],
+        codeChallengeMethod: 'S256',
+      },
+    },
+  },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
@@ -88,5 +156,7 @@ export default {
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {},
+  build: {
+    transpile: ['defu'],
+  },
 }
