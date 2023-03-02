@@ -37,7 +37,7 @@
     "@nuxtjs/pwa": "^3.3.5",
     "core-js": "^3.25.3",
     "cross-env": "^7.0.3",
-    "nuxt": "^2.15.8",
+    "nuxt": "^3.2.3",
     "patch-package": "^6.5.1",
     "postinstall-postinstall": "^2.1.0",
     "vue": "^2.7.10",
