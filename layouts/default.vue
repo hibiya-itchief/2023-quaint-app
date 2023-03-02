@@ -15,32 +15,47 @@
     <v-navigation-drawer v-model="drawer" temporary fixed height="100vh">
       <v-list nav dense>
         <v-list-item-group active-class="light-blue--text text--accent-4">
-          <v-card elevation="0">
+          <v-card v-if="$auth.loggedIn" elevation="0">
             <v-card-title class="px-2 py-1"
               ><v-icon class="mr-4">mdi-account-circle</v-icon
-              >アカウント名</v-card-title
+              >{{ $auth.user?.name }}</v-card-title
             >
             <v-card-text class="px-2 py-1">
               <v-chip-group column>
-                <v-chip outlined> 👑Admin </v-chip>
+                <v-chip
+                  v-if="$auth.user?.groups?.includes(userGroups.admin)"
+                  outlined
+                >
+                  👑Admin
+                </v-chip>
+                <!--
                 <v-chip outlined> Entry </v-chip>
                 <v-chip outlined> Owner </v-chip>
                 <v-chip outlined> Authorizer </v-chip>
-                <v-chip outlined> 生徒用アカウント </v-chip>
-                <v-chip outlined> 家族用アカウント </v-chip>
-                <v-chip outlined> 校内入場処理済み </v-chip>
+                <v-chip outlined> 家族用アカウント </v-chip>-->
+                <v-chip
+                  v-if="$auth.user?.jobTitle?.includes('Visited')"
+                  outlined
+                >
+                  校内入場処理済み
+                </v-chip>
+                <v-chip v-if="$auth.$state.strategy == 'ad'" outlined>
+                  生徒用アカウント
+                </v-chip>
               </v-chip-group>
               <p class="ma-0 pa-0 text-caption grey--text">
-                ユーザーID：ユーザーID
+                ユーザーID：{{ $auth.user?.sub }}
               </p>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn outlined color="primary"> ログアウト </v-btn>
+              <v-btn outlined color="primary" @click="logout()">
+                ログアウト
+              </v-btn>
             </v-card-actions>
           </v-card>
 
-          <v-card elevation="0">
+          <v-card v-else elevation="0">
             <v-card-title class="px-2 py-1"
               ><v-icon class="mr-4">mdi-account-circle</v-icon
               ><span class="grey--text text-caption"
@@ -153,10 +168,15 @@ export default Vue.extend({
   data() {
     return {
       drawer: false,
+      userGroups: { admin: process.env.AZURE_AD_GROUPS_QUAINT_ADMIN },
       app_env: process.env.QUAINT_ENV,
     }
   },
   async fetch() {},
-  methods: {},
+  methods: {
+    async logout() {
+      await this.$auth.logout()
+    },
+  },
 })
 </script>
