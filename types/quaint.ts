@@ -17,3 +17,17 @@ export type Group = {
 
   tags: Tag[]
 }
+export type Event = {
+  id: string
+  group_id: string
+  eventname: string
+
+  starts_at: Date
+  ends_at: Date
+  sell_at: Date
+  sell_ends: Date
+
+  target: string
+  ticket_stock: number
+  lottery: boolean
+}
