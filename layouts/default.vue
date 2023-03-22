@@ -44,7 +44,8 @@
                 </v-chip>
               </v-chip-group>
               <p class="ma-0 pa-0 text-caption grey--text">
-                ユーザーID：{{ $auth.user?.sub }}
+                ユーザーID：{{ $auth.user?.oid ?? $auth.user?.sub }}
+                <!--ADの場合ユーザーオブジェクトIDはoidに入ってる-->
               </p>
             </v-card-text>
             <v-card-actions>
@@ -168,7 +169,7 @@ export default Vue.extend({
   data() {
     return {
       drawer: false,
-      userGroups: { admin: process.env.AZURE_AD_GROUPS_QUAINT_ADMIN },
+      userGroups: { admin: process.env.AZURE_AD_GROUPS_QUAINT_ADMIN as string },
       app_env: process.env.QUAINT_ENV,
     }
   },
