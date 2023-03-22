@@ -41,3 +41,13 @@ export type Event = {
   ticket_stock: number
   lottery: boolean
 }
+export type Ticket = {
+  group_id: string
+  event_id: string
+  owner_id: string
+  is_family_ticket: boolean
+  person: number
+  id: string
+  created_at: string
+  is_used: boolean
+}

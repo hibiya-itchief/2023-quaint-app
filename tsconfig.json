@@ -20,7 +20,8 @@
       "@nuxtjs/axios",
       "@nuxt/content",
       "@types/node",
-      "@nuxtjs/auth-next"
+      "@nuxtjs/auth-next",
+      "@types/qrcode"
     ]
   },
   "exclude": ["node_modules", ".nuxt", "dist"]
