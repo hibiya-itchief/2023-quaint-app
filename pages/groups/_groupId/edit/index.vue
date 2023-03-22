@@ -4,9 +4,13 @@
       <v-row justify="center" class="ma-0 pa-0">
         <v-col cols="12" sm="8" md="6" class="ma-0 pa-0">
           <h2 class="mx-1 px-0">
-            <v-icon color="blue-grey">mdi-pencil</v-icon>{{ group.groupname }}
+            <v-icon color="blue-grey">mdi-pencil</v-icon>{{ group?.groupname }}
             <span class="grey--text text-subtitle-1">団体情報の編集</span>
           </h2>
+          <p class="pa-2">
+            <span class="red--text">編集内容は毎日0:00に反映されます。</span>
+            <span>緊急で変更する必要がある場合はIT委員会に伝えて下さい</span>
+          </p>
 
           <v-card class="mx-1 my-1 px-2 py-2" elevation="1">
             <v-card-title class="ma-0 pa-0">
@@ -20,7 +24,7 @@
             </v-card-title>
             <v-card-text class="ma-0 pa-0">
               <span class="mx-0 my-2 pa-0 text-body-1">{{
-                group.groupname
+                group?.groupname
               }}</span>
             </v-card-text>
           </v-card>
@@ -40,8 +44,27 @@
               <span class="mx-0 my-2 pa-0 text-body-1"
                 ><span class="grey--text text--darken-2"
                   >https://{{ hostname }}/groups/</span
-                >{{ group.id }}</span
+                >{{ group?.id }}</span
               >
+            </v-card-text>
+          </v-card>
+
+          <v-card class="mx-1 my-1 px-2 py-2" elevation="1">
+            <v-card-title class="ma-0 pa-0">
+              <p
+                class="mx-0 my-1 pa-0 grey--text text--darken-2 text-subtitle-2"
+              >
+                <v-icon color="light-blue" class="mr-2">mdi-link</v-icon>
+                来場者からの投票
+              </p>
+              <v-spacer></v-spacer>
+              <a class="mx-0 my-2 pa-0 text-body-2">編集できません</a>
+            </v-card-title>
+            <v-card-text class="ma-0 pa-0">
+              <span v-if="group?.enable_vote" class="mx-0 my-2 pa-0 text-body-1"
+                >有効</span
+              >
+              <span v-else class="mx-0 my-2 pa-0 text-body-1">無効</span>
             </v-card-text>
           </v-card>
 
@@ -68,7 +91,7 @@
               >
             </v-card-title>
             <v-card-text class="ma-0 pa-0">
-              <span class="mx-0 my-2 pa-0 text-body-1">{{ group.title }}</span>
+              <span class="mx-0 my-2 pa-0 text-body-1">{{ group?.title }}</span>
             </v-card-text>
             <div v-show="change_title_form">
               <v-card-text class="mx-0 px-0 py-2">
@@ -84,7 +107,15 @@
               </v-card-text>
               <v-card-actions class="ma-0 px-0 py-0">
                 <v-spacer></v-spacer>
-                <v-btn color="primary" @click="ChangeTitle()"> 適用 </v-btn>
+                <v-btn
+                  color="primary"
+                  @click="
+                    groupEdit.title = change_title_input
+                    UpdateGroup()
+                  "
+                >
+                  適用
+                </v-btn>
               </v-card-actions>
             </div>
           </v-card>
@@ -113,7 +144,7 @@
             </v-card-title>
             <v-card-text class="ma-0 pa-0">
               <span class="mx-0 my-2 pa-0 text-body-1">{{
-                group.description
+                group?.description
               }}</span>
             </v-card-text>
             <div v-show="change_description_form">
@@ -130,7 +161,13 @@
               </v-card-text>
               <v-card-actions class="ma-0 px-0 py-0">
                 <v-spacer></v-spacer>
-                <v-btn color="primary" @click="ChangeDescription()">
+                <v-btn
+                  color="primary"
+                  @click="
+                    groupEdit.description = change_description_input
+                    UpdateGroup()
+                  "
+                >
                   適用
                 </v-btn>
               </v-card-actions>
@@ -161,7 +198,7 @@
             </v-card-title>
             <v-card-text class="ma-0 pa-0">
               <span class="mx-0 my-2 pa-0 text-body-1">{{
-                group.twitter_url
+                group?.twitter_url
               }}</span>
             </v-card-text>
             <div v-show="change_twitter_url_form">
@@ -176,10 +213,24 @@
               </v-card-text>
               <v-card-actions class="ma-0 px-0 py-0">
                 <v-spacer></v-spacer>
-                <v-btn color="primary" outlined @click="DeleteTwitterUrl()">
+                <v-btn
+                  color="primary"
+                  outlined
+                  @click="
+                    groupEdit.twitter_url = null
+                    UpdateGroup()
+                  "
+                >
                   URLを削除
                 </v-btn>
-                <v-btn color="primary" @click="ChangeTwitterUrl()">
+                <v-btn
+                  color="primary"
+                  @click="
+                    groupEdit.twitter_url =
+                      'https://twitter.com/' + change_twitter_url_input
+                    UpdateGroup()
+                  "
+                >
                   適用
                 </v-btn>
               </v-card-actions>
@@ -210,7 +261,7 @@
             </v-card-title>
             <v-card-text class="ma-0 pa-0">
               <span class="mx-0 my-2 pa-0 text-body-1">{{
-                group.instagram_url
+                group?.instagram_url
               }}</span>
             </v-card-text>
             <div v-show="change_instagram_url_form">
@@ -225,21 +276,31 @@
               </v-card-text>
               <v-card-actions class="ma-0 px-0 py-0">
                 <v-spacer></v-spacer>
-                <v-btn color="primary" outlined @click="DeleteInstagramUrl()">
+                <v-btn
+                  color="primary"
+                  outlined
+                  @click="
+                    groupEdit.instagram_url = null
+                    UpdateGroup()
+                  "
+                >
                   URLを削除
                 </v-btn>
-                <v-btn color="primary" @click="ChangeInstagramUrl()">
+                <v-btn
+                  color="primary"
+                  @click="
+                    groupEdit.instagram_url =
+                      'https://instagram.com/' + change_instagram_url_input
+                    UpdateGroup()
+                  "
+                >
                   適用
                 </v-btn>
               </v-card-actions>
             </div>
           </v-card>
 
-          <v-card
-            v-show="user_me_authority.is_admin"
-            class="mx-1 my-1 px-2 py-2"
-            elevation="1"
-          >
+          <v-card v-show="true" class="mx-1 my-1 px-2 py-2" elevation="1">
             <v-card-title class="ma-0 pa-0">
               <p
                 class="mx-0 my-1 pa-0 grey--text text--darken-2 text-subtitle-2"
@@ -248,7 +309,6 @@
                 動画配信 Stream URL
               </p>
               <v-spacer></v-spacer>
-              <p class="ma-0 pa-0 text-caption">Adminのみ</p>
               <a
                 v-show="!change_stream_url_form"
                 class="mx-0 my-2 pa-0 text-body-2"
@@ -264,7 +324,7 @@
             </v-card-title>
             <v-card-text class="ma-0 pa-0">
               <span class="mx-0 my-2 pa-0 text-body-1">{{
-                group.stream_url
+                group?.stream_url
               }}</span>
             </v-card-text>
             <div v-show="change_stream_url_form">
@@ -279,10 +339,27 @@
               </v-card-text>
               <v-card-actions class="ma-0 px-0 py-0">
                 <v-spacer></v-spacer>
-                <v-btn color="primary" outlined @click="DeleteStreamUrl()">
+                <v-btn
+                  color="primary"
+                  outlined
+                  @click="
+                    groupEdit.stream_url = null
+                    UpdateGroup()
+                  "
+                >
                   URLを削除
                 </v-btn>
-                <v-btn color="primary" @click="ChangeStreamUrl()"> 適用 </v-btn>
+                <v-btn
+                  color="primary"
+                  @click="
+                    groupEdit.stream_url =
+                      'https://web.microsoftstream.com/video/' +
+                      change_stream_url_input
+                    UpdateGroup()
+                  "
+                >
+                  適用
+                </v-btn>
               </v-card-actions>
             </div>
           </v-card>
@@ -293,7 +370,7 @@
                 class="mx-0 my-1 pa-0 grey--text text--darken-2 text-subtitle-2"
               >
                 <v-icon color="light-blue" class="mr-2">mdi-image</v-icon>
-                パブリック サムネイル画像
+                サムネイル画像
               </p>
               <v-spacer></v-spacer>
               <a
@@ -321,7 +398,7 @@
                 顔が写っている写真などはアップロードしないでください
               </p>
               <v-img
-                :src="'data:image/jpeg;base64,' + group.thumbnail_image"
+                :src="group?.public_thumbnail_image_url"
                 contain
                 max-height="300px"
               ></v-img>
@@ -337,66 +414,18 @@
               </v-card-text>
               <v-card-actions class="ma-0 px-0 py-0">
                 <v-spacer></v-spacer>
-                <v-btn color="primary" outlined @click="DeleteThumbnailImage()">
+                <v-btn
+                  color="primary"
+                  outlined
+                  @click="
+                    groupEdit.public_thumbnail_image_url =
+                      change_thumbnail_image_input
+                    UpdateGroup()
+                  "
+                >
                   画像を削除
                 </v-btn>
                 <v-btn color="primary" @click="ChangeThumbnailImage()">
-                  適用
-                </v-btn>
-              </v-card-actions>
-            </div>
-          </v-card>
-
-          <v-card class="mx-1 my-1 px-2 py-2" elevation="1">
-            <v-card-title class="ma-0 pa-0">
-              <p
-                class="mx-0 my-1 pa-0 grey--text text--darken-2 text-subtitle-2"
-              >
-                <v-icon color="light-blue" class="mr-2">mdi-image</v-icon>
-                プライベート サムネイル画像
-              </p>
-              <v-spacer></v-spacer>
-              <a
-                v-show="!change_cover_image_form"
-                class="mx-0 my-2 pa-0 text-body-2"
-                @click="change_cover_image_form = !change_cover_image_form"
-                >編集</a
-              >
-              <a
-                v-show="change_cover_image_form"
-                class="mx-0 my-2 pa-0 text-body-2"
-                @click="change_cover_image_form = !change_cover_image_form"
-                >キャンセル</a
-              >
-            </v-card-title>
-            <v-card-text class="ma-0 pa-0">
-              <p class="ma-0 pa-0 text-caption grey--text text--darken-3">
-                生徒用・保護者用のアカウントでログインした場合のみ表示されます。
-              </p>
-              <p class="ma-0 pa-0 text-caption grey--text text--darken-3">
-                顔が写っている写真なども団体内で確認が取れればアップロードできます。
-              </p>
-              <v-img
-                :src="'data:image/jpeg;base64,' + group.cover_image"
-                contain
-                max-height="300px"
-              ></v-img>
-            </v-card-text>
-            <div v-show="change_cover_image_form">
-              <v-card-text class="mx-0 px-0 py-2">
-                <v-file-input
-                  v-model="change_cover_image_input"
-                  label="画像をアップロード"
-                  filled
-                  prepend-icon="mdi-image"
-                ></v-file-input>
-              </v-card-text>
-              <v-card-actions class="ma-0 px-0 py-0">
-                <v-spacer></v-spacer>
-                <v-btn color="primary" outlined @click="DeleteCoverImage()">
-                  画像を削除
-                </v-btn>
-                <v-btn color="primary" @click="ChangeCoverImage()">
                   適用
                 </v-btn>
               </v-card-actions>
@@ -430,13 +459,13 @@
                 団体を見つけやすくするためにタグをつけます
               </p>
               <p
-                v-if="group_tags.length == 0"
+                v-if="group?.tags.length == 0"
                 class="ma-0 pa-0 text-caption grey--text text--darken-3"
               >
                 タグがありません
               </p>
               <v-chip-group column>
-                <v-chip v-for="tag in group_tags">
+                <v-chip v-for="tag in group?.tags" :key="tag.id">
                   {{ tag.tagname }}
                 </v-chip>
               </v-chip-group>
@@ -445,7 +474,8 @@
               <v-card-text class="mx-0 px-0 py-2">
                 <v-chip-group column>
                   <v-chip
-                    v-for="tag in group_tags"
+                    v-for="tag in group?.tags"
+                    :key="tag.id"
                     close
                     @click:close="DeleteTag(tag)"
                   >
@@ -468,11 +498,7 @@
             </div>
           </v-card>
 
-          <v-card
-            v-show="user_me_authority.is_admin"
-            class="mx-1 my-1 px-2 py-2"
-            elevation="1"
-          >
+          <v-card v-show="true" class="mx-1 my-1 px-2 py-2" elevation="1">
             <v-card-title class="ma-0 pa-0">
               <p
                 class="mx-0 my-1 pa-0 grey--text text--darken-2 text-subtitle-2"
@@ -481,7 +507,6 @@
                 公演
               </p>
               <v-spacer></v-spacer>
-              <p class="ma-0 pa-0 text-caption">Adminのみ</p>
               <a
                 v-show="!change_events_form"
                 class="mx-0 my-2 pa-0 text-body-2"
@@ -498,11 +523,12 @@
             <v-card-text class="ma-0 pa-0">
               <v-card
                 v-for="event in events"
+                :key="event.id"
                 class="mx-0 my-1 px-0"
                 elevation="1"
               >
                 <v-card-title class="text-subtitle-1 py-2 px-1">
-                  {{ event.timetable.timetablename }}
+                  {{ event.eventname }}
                   <v-spacer></v-spacer>
                   <v-icon
                     v-show="change_events_form"
@@ -513,12 +539,12 @@
                 <v-card-text class="pb-2 px-1">
                   <p class="ma-0 pa-0">座席：{{ event.ticket_stock }}</p>
                   <p class="ma-0 pa-0">
-                    配布時間：{{ DateFormatter(event.timetable.sell_at) }} ~
-                    {{ DateFormatter(event.timetable.sell_ends) }}
+                    配布時間：{{ DateFormatter(event.sell_starts) }} ~
+                    {{ DateFormatter(event.sell_ends) }}
                   </p>
                   <p class="ma-0 pa-0">
-                    公演時間：{{ DateFormatter(event.timetable.starts_at) }} ~
-                    {{ DateFormatter(event.timetable.ends_at) }}
+                    公演時間：{{ DateFormatter(event.starts_at) }} ~
+                    {{ DateFormatter(event.ends_at) }}
                   </p>
                 </v-card-text>
               </v-card>
@@ -526,25 +552,49 @@
             <div v-show="change_events_form" class="mt-2">
               <v-card-text class="mx-0 px-0 py-2">
                 <p class="ma-0 pa-0 text-subtitle-1">公演の追加</p>
+                <v-text-field
+                  v-model="add_eventname"
+                  label="公演名"
+                  value="例)1日目第1公演"
+                ></v-text-field>
                 <v-select
-                  v-model="timetable_selector"
-                  :items="timetable"
-                  item-text="timetablename"
-                  label="公演の時間帯を選択"
+                  v-model="add_event_target"
+                  :items="add_event_target_list"
+                  item-text="text"
+                  label="公演の対象者を選択"
                   filled
                   return-object
                 >
                 </v-select>
-                <p v-if="timetable_selector" class="ma-0 pa-0 text-caption">
-                  配布時間：{{ DateFormatter(timetable_selector.sell_at) }} ~
-                  {{ DateFormatter(timetable_selector.sell_ends) }}
-                </p>
-                <p v-if="timetable_selector" class="ma-0 pa-0 text-caption">
-                  公演時間：{{ DateFormatter(timetable_selector.starts_at) }} ~
-                  {{ DateFormatter(timetable_selector.ends_at) }}
-                </p>
                 <v-text-field
-                  v-model="ticket_stock_input"
+                  v-model="add_event_starts_at"
+                  label="公演開始時刻"
+                  type="datetime-local"
+                  suffix="JST"
+                ></v-text-field>
+                <v-text-field
+                  v-model="add_event_ends_at"
+                  label="公演終了時刻"
+                  value="2023-09-16T10:30"
+                  type="datetime-local"
+                  suffix="JST"
+                ></v-text-field>
+                <v-text-field
+                  v-model="add_event_sell_starts"
+                  label="配布開始時刻"
+                  value="2023-09-16T08:30"
+                  type="datetime-local"
+                  suffix="JST"
+                ></v-text-field>
+                <v-text-field
+                  v-model="add_event_sell_ends"
+                  label="配布終了時刻"
+                  value="2023-09-16T09:30"
+                  type="datetime-local"
+                  suffix="JST"
+                ></v-text-field>
+                <v-text-field
+                  v-model="add_event_ticket_stock"
                   label="座席数を入力"
                   filled
                   class="ma-0 pt-1 pb-0"
@@ -573,7 +623,7 @@
             </v-card>
           </v-dialog>
           <v-btn
-            v-show="user_me_authority.is_admin"
+            v-show="$auth.user?.groups?.includes(userGroups.admin)"
             color="red"
             outlined
             class="ma-4"
@@ -608,78 +658,78 @@
   </v-app>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { AxiosResponse } from 'axios'
+import Vue from 'vue'
+import { Event, Group, GroupEdit, Tag } from '~/types/quaint'
+type Data = {
+  tags: Tag[]
+  group: Group | undefined
+  events: Event[]
+
+  groupEdit: GroupEdit
+
+  userGroups: { admin: string; owner: string }
+  hostname: string
+
+  success_alert: boolean
+  error_alert: boolean
+  success_message: string
+  error_message: string
+  change_title_form: boolean
+  change_title_input: string
+  change_description_form: boolean
+  change_description_input: string
+  change_twitter_url_form: boolean
+  change_twitter_url_input: string
+  change_instagram_url_form: boolean
+  change_instagram_url_input: string
+  change_stream_url_form: boolean
+  change_stream_url_input: string
+  change_thumbnail_image_form: boolean
+  change_thumbnail_image_input: any
+  change_tags_form: boolean
+  tag_selector: Tag
+  change_events_form: boolean
+  add_eventname: string
+  add_event_target_list: { text: string; target: string }[]
+  add_event_target: { text: string; target: string }
+  add_event_ticket_stock: number
+  add_event_starts_at: string
+  add_event_ends_at: string
+  add_event_sell_starts: string
+  add_event_sell_ends: string
+  delete_group_dialog: boolean
+}
+
+export default Vue.extend({
   name: 'IndivisualGroupPageEditer',
-  async asyncData({ params, error, $axios }) {
-    let group = {}
-    const user_me = {}
-    let user_me_authority = { owner_of: [], authorizer_of: [] }
-    let group_tags = []
-    let tags = []
-    let events = []
-    let timetable = []
-    await Promise.all([
-      $axios.get('/groups/' + params.groupId),
-      $axios.get('/users/me/authority'),
+  async asyncData({ params, $axios }): Promise<Partial<Data>> {
+    const res = await Promise.all([
+      $axios.$get('/tags'),
+      $axios.$get('/groups/' + params.groupId),
+      $axios.$get('/groups/' + params.groupId + '/events'),
     ])
-      .then((response) => {
-        group = response[0].data
-        user_me_authority = response[1].data
-      })
-      .catch((e) => {})
-    // 権限が無い場合は404
-    if (
-      user_me_authority.is_admin != true &&
-      !user_me_authority.owner_of.includes(group.id)
-    ) {
-      return error({ statusCode: 404, message: 'Not Found' })
-    }
-    await Promise.all([
-      $axios.get('/groups/' + group.id + '/tags'),
-      $axios.get('tags'),
-      $axios.get('/groups/' + group.id + '/events'),
-      $axios.get('/timetable'),
-    ])
-      .then((response) => {
-        group_tags = response[0].data
-        tags = response[1].data
-        events = response[2].data
-        timetable = response[3].data
-      })
-      .catch((e) => {})
-    timetable.forEach((t) => {
-      t.sell_at = new Date(t.sell_at)
-      t.sell_ends = new Date(t.sell_ends)
-      t.starts_at = new Date(t.starts_at)
-      t.ends_at = new Date(t.ends_at)
-    })
-
-    const events_timetable_promise = []
-    events.forEach((e) => {
-      events_timetable_promise.push($axios.get('/timetable/' + e.timetable_id))
-    })
-    await Promise.all(events_timetable_promise)
-      .then((response) => {
-        for (let i = 0; i < events.length; i++) {
-          events[i].timetable = response[i].data
-          // Dateオブジェクトにする
-          events[i].timetable.sell_at = new Date(events[i].timetable.sell_at)
-          events[i].timetable.sell_ends = new Date(
-            events[i].timetable.sell_ends
-          )
-          events[i].timetable.starts_at = new Date(
-            events[i].timetable.starts_at
-          )
-          events[i].timetable.ends_at = new Date(events[i].timetable.ends_at)
-        }
-      })
-      .catch((e) => {})
-
-    return { group, user_me_authority, group_tags, tags, events, timetable }
-  },
-  data() {
+    const { id, enable_vote, groupname, ...groupEdit } = res[1] as Group
     return {
+      tags: res[0],
+      group: res[1],
+      events: res[2],
+      groupEdit,
+      tag_selector: res[0][0],
+    }
+  },
+  data(): Data {
+    return {
+      tags: [],
+      group: undefined,
+      events: [],
+      tag_selector: { id: '', tagname: '' },
+      groupEdit: {},
+      userGroups: {
+        admin: process.env.AZURE_AD_GROUPS_QUAINT_ADMIN as string,
+        owner: process.env.AZURE_AD_GROUPS_QUAINT_OWNER as string,
+      },
       hostname: location.host,
       success_alert: false,
       error_alert: false,
@@ -698,43 +748,80 @@ export default {
       change_stream_url_input: '',
       change_thumbnail_image_form: false,
       change_thumbnail_image_input: null,
-      change_cover_image_form: false,
-      change_cover_image_input: null,
       change_tags_form: false,
-      tag_selector: null,
       change_events_form: false,
-      timetable_selector: null,
-      ticket_stock_input: 24,
+      add_eventname: '例)1日目第一公演',
+      add_event_target_list: [
+        {
+          target: 'visited',
+          text: '入校処理済みの一般客と学校関係者(通常はこれを選択してください)',
+        },
+        { target: 'school', text: '学校関係者(生徒や先生のみ)' },
+        {
+          target: 'guest',
+          text: 'すべての人(インターネット上の誰でも取れることに注意してください)',
+        },
+      ],
+      add_event_target: {
+        target: 'visited',
+        text: '入校処理済みの一般客と学校関係者(通常はこれを選択してください)',
+      },
+      add_event_ticket_stock: 24,
+      add_event_starts_at: '2023-09-17T09:30',
+      add_event_ends_at: '2023-09-17T10:30',
+      add_event_sell_starts: '2023-09-17T08:30',
+      add_event_sell_ends: '2023-09-17T09:30',
       delete_group_dialog: false,
     }
   },
+  created() {
+    if (
+      !(this.$auth.user?.groups as string[]).includes(this.userGroups.admin)
+    ) {
+      if (
+        (this.$auth.user?.groups as string[]).includes(this.userGroups.owner)
+      ) {
+        this.$axios
+          .get('/usres/me/owner_of')
+          .then((res: AxiosResponse<string[]>) => {
+            if (!res.data.includes(this.$route.params.groupId)) {
+              return this.$nuxt.error({ statusCode: 404, message: 'Not Found' })
+            }
+          })
+          .catch(() => {
+            return this.$nuxt.error({ statusCode: 404, message: 'Not Found' })
+          })
+      } else {
+        return this.$nuxt.error({ statusCode: 404, message: 'Not Found' })
+      }
+    }
+  },
   methods: {
-    DateFormatter(input_date) {
+    DateFormatter(inputDate: string) {
+      const d = new Date(inputDate)
       return (
-        input_date.getMonth() +
+        d.getMonth() +
         1 +
         '月' +
-        input_date.getDate() +
+        d.getDate() +
         '日 ' +
-        input_date.getHours().toString().padStart(2, '0') +
+        d.getHours().toString().padStart(2, '0') +
         ':' +
-        input_date.getMinutes().toString().padStart(2, '0')
+        d.getMinutes().toString().padStart(2, '0')
       )
     },
-    ChangeTitle() {
+    UpdateGroup() {
       this.$axios
-        .put(
-          '/groups/' + this.group.id + '/title?title=' + this.change_title_input
-        )
-        .then((response) => {
-          this.success_message = '演目名 が更新されました'
+        .$put('/groups/' + this.group?.id, this.groupEdit)
+        .then((res) => {
+          this.group = res
+          this.success_message = '団体情報が更新されました'
           this.success_alert = true
-          this.$nuxt.refresh()
         })
         .catch((e) => {
           if (e.response) {
             this.error_message = e.response.data.detail
-            if (e.response.status == 422) {
+            if (e.response.status === 422) {
               this.error_message = '入力された値の形式が不適切です'
             }
           } else {
@@ -742,286 +829,12 @@ export default {
               '予期しないエラーが発生しました。IT部隊にお声がけください🙇‍♂️'
           }
           this.error_alert = true
-          this.$nuxt.refresh()
         })
     },
-    ChangeDescription() {
+    DeleteTag(tag: Tag) {
       this.$axios
-        .put(
-          '/groups/' +
-            this.group.id +
-            '/description?description=' +
-            this.change_description_input
-        )
-        .then((response) => {
-          this.success_message = '説明文 が更新されました'
-          this.success_alert = true
-          this.$nuxt.refresh()
-        })
-        .catch((e) => {
-          if (e.response) {
-            this.error_message = e.response.data.detail
-            if (e.response.status == 422) {
-              this.error_message = '入力された値の形式が不適切です'
-            }
-          } else {
-            this.error_message =
-              '予期しないエラーが発生しました。IT部隊にお声がけください🙇‍♂️'
-          }
-          this.error_alert = true
-          this.$nuxt.refresh()
-        })
-    },
-    ChangeTwitterUrl() {
-      this.$axios
-        .put(
-          '/groups/' +
-            this.group.id +
-            '/twitter_url?twitter_url=' +
-            'https://twitter.com/' +
-            this.change_twitter_url_input
-        )
-        .then((response) => {
-          this.success_message = 'Twitter URL が更新されました'
-          this.success_alert = true
-          this.$nuxt.refresh()
-        })
-        .catch((e) => {
-          if (e.response) {
-            this.error_message = e.response.data.detail
-            if (e.response.status == 422) {
-              this.error_message = '入力された値の形式が不適切です'
-            }
-          } else {
-            this.error_message =
-              '予期しないエラーが発生しました。IT部隊にお声がけください🙇‍♂️'
-          }
-          this.error_alert = true
-          this.$nuxt.refresh()
-        })
-    },
-    DeleteTwitterUrl() {
-      this.$axios
-        .put('/groups/' + this.group.id + '/twitter_url')
-        .then((response) => {
-          this.success_message = 'Twitter URL が削除されました'
-          this.success_alert = true
-          this.$nuxt.refresh()
-        })
-        .catch((e) => {
-          if (e.response) {
-            this.error_message = e.response.data.detail
-            if (e.response.status == 422) {
-              this.error_message = '入力された値の形式が不適切です'
-            }
-          } else {
-            this.error_message =
-              '予期しないエラーが発生しました。IT部隊にお声がけください🙇‍♂️'
-          }
-          this.error_alert = true
-          this.$nuxt.refresh()
-        })
-    },
-    ChangeInstagramUrl() {
-      this.$axios
-        .put(
-          '/groups/' +
-            this.group.id +
-            '/instagram_url?instagram_url=' +
-            'https://instagram.com/' +
-            this.change_instagram_url_input
-        )
-        .then((response) => {
-          this.success_message = 'Instagram URL が更新されました'
-          this.success_alert = true
-          this.$nuxt.refresh()
-        })
-        .catch((e) => {
-          if (e.response) {
-            this.error_message = e.response.data.detail
-            if (e.response.status == 422) {
-              this.error_message = '入力された値の形式が不適切です'
-            }
-          } else {
-            this.error_message =
-              '予期しないエラーが発生しました。IT部隊にお声がけください🙇‍♂️'
-          }
-          this.error_alert = true
-          this.$nuxt.refresh()
-        })
-    },
-    DeleteInstagramUrl() {
-      this.$axios
-        .put('/groups/' + this.group.id + '/instagram_url')
-        .then((response) => {
-          this.success_message = 'Instagram URL が削除されました'
-          this.success_alert = true
-          this.$nuxt.refresh()
-        })
-        .catch((e) => {
-          if (e.response) {
-            this.error_message = e.response.data.detail
-            if (e.response.status == 422) {
-              this.error_message = '入力された値の形式が不適切です'
-            }
-          } else {
-            this.error_message =
-              '予期しないエラーが発生しました。IT部隊にお声がけください🙇‍♂️'
-          }
-          this.error_alert = true
-          this.$nuxt.refresh()
-        })
-    },
-    ChangeStreamUrl() {
-      this.$axios
-        .put(
-          '/groups/' +
-            this.group.id +
-            '/stream_url?stream_url=' +
-            'https://web.microsoftstream.com/video' +
-            this.change_stream_url_input
-        )
-        .then((response) => {
-          this.success_message = 'Stream URL が更新されました'
-          this.success_alert = true
-          this.$nuxt.refresh()
-        })
-        .catch((e) => {
-          if (e.response) {
-            this.error_message = e.response.data.detail
-            if (e.response.status == 422) {
-              this.error_message = '入力された値の形式が不適切です'
-            }
-          } else {
-            this.error_message =
-              '予期しないエラーが発生しました。IT部隊にお声がけください🙇‍♂️'
-          }
-          this.error_alert = true
-          this.$nuxt.refresh()
-        })
-    },
-    DeleteStreamUrl() {
-      this.$axios
-        .put('/groups/' + this.group.id + '/stream_url')
-        .then((response) => {
-          this.success_message = 'Stream URL が削除されました'
-          this.success_alert = true
-          this.$nuxt.refresh()
-        })
-        .catch((e) => {
-          if (e.response) {
-            this.error_message = e.response.data.detail
-            if (e.response.status == 422) {
-              this.error_message = '入力された値の形式が不適切です'
-            }
-          } else {
-            this.error_message =
-              '予期しないエラーが発生しました。IT部隊にお声がけください🙇‍♂️'
-          }
-          this.error_alert = true
-          this.$nuxt.refresh()
-        })
-    },
-    ChangeThumbnailImage() {
-      const params = new FormData()
-      params.append('file', this.change_thumbnail_image_input)
-      this.$axios
-        .put('/groups/' + this.group.id + '/thumbnail_image', params, {
-          headers: { 'content-type': 'multipart/form-data' },
-        })
-        .then((response) => {
-          this.success_message = 'サムネイル画像が変更されました'
-          this.success_alert = true
-          this.$nuxt.refresh()
-        })
-        .catch((e) => {
-          if (e.response) {
-            this.error_message = e.response.data.detail
-            if (e.response.status == 422) {
-              this.error_message = '入力された値の形式が不適切です'
-            }
-          } else {
-            this.error_message =
-              '予期しないエラーが発生しました。IT部隊にお声がけください🙇‍♂️'
-          }
-          this.error_alert = true
-          this.$nuxt.refresh()
-        })
-    },
-    DeleteThumbnailImage() {
-      this.$axios
-        .put('/groups/' + this.group.id + '/thumbnail_image')
-        .then((response) => {
-          this.success_message = 'サムネイル画像が削除されました'
-          this.success_alert = true
-          this.$nuxt.refresh()
-        })
-        .catch((e) => {
-          if (e.response) {
-            this.error_message = e.response.data.detail
-            if (e.response.status == 422) {
-              this.error_message = '入力された値の形式が不適切です'
-            }
-          } else {
-            this.error_message =
-              '予期しないエラーが発生しました。IT部隊にお声がけください🙇‍♂️'
-          }
-          this.error_alert = true
-          this.$nuxt.refresh()
-        })
-    },
-    ChangeCoverImage() {
-      const params = new FormData()
-      params.append('file', this.change_cover_image_input)
-      this.$axios
-        .put('/groups/' + this.group.id + '/cover_image', params, {
-          headers: { 'content-type': 'multipart/form-data' },
-        })
-        .then((response) => {
-          this.success_message = 'カバー画像が変更されました'
-          this.success_alert = true
-          this.$nuxt.refresh()
-        })
-        .catch((e) => {
-          if (e.response) {
-            this.error_message = e.response.data.detail
-            if (e.response.status == 422) {
-              this.error_message = '入力された値の形式が不適切です'
-            }
-          } else {
-            this.error_message =
-              '予期しないエラーが発生しました。IT部隊にお声がけください🙇‍♂️'
-          }
-          this.error_alert = true
-          this.$nuxt.refresh()
-        })
-    },
-    DeleteCoverImage() {
-      this.$axios
-        .put('/groups/' + this.group.id + '/cover_image')
-        .then((response) => {
-          this.success_message = 'カバー画像が削除されました'
-          this.success_alert = true
-          this.$nuxt.refresh()
-        })
-        .catch((e) => {
-          if (e.response) {
-            this.error_message = e.response.data.detail
-            if (e.response.status == 422) {
-              this.error_message = '入力された値の形式が不適切です'
-            }
-          } else {
-            this.error_message =
-              '予期しないエラーが発生しました。IT部隊にお声がけください🙇‍♂️'
-          }
-          this.error_alert = true
-          this.$nuxt.refresh()
-        })
-    },
-    DeleteTag(tag) {
-      this.$axios
-        .delete('/groups/' + this.group.id + '/tags/' + tag.id)
-        .then((response) => {
+        .delete('/groups/' + this.group?.id + '/tags/' + tag.id)
+        .then(() => {
           this.success_message = 'タグが削除されました'
           this.success_alert = true
           this.$nuxt.refresh()
@@ -1029,7 +842,7 @@ export default {
         .catch((e) => {
           if (e.response) {
             this.error_message = e.response.data.detail
-            if (e.response.status == 422) {
+            if (e.response.status === 422) {
               this.error_message = '入力された値の形式が不適切です'
             }
           } else {
@@ -1037,16 +850,15 @@ export default {
               '予期しないエラーが発生しました。IT部隊にお声がけください🙇‍♂️'
           }
           this.error_alert = true
-          this.$nuxt.refresh()
         })
     },
     AddTag() {
       if (this.tag_selector != null) {
         this.$axios
-          .put('/groups/' + this.group.id + '/tags', {
+          .put('/groups/' + this.group?.id + '/tags', {
             tag_id: this.tag_selector.id,
           })
-          .then((response) => {
+          .then(() => {
             this.success_message = 'タグが追加されました'
             this.success_alert = true
             this.$nuxt.refresh()
@@ -1054,7 +866,7 @@ export default {
           .catch((e) => {
             if (e.response) {
               this.error_message = e.response.data.detail
-              if (e.response.status == 422) {
+              if (e.response.status === 422) {
                 this.error_message = '入力された値の形式が不適切です'
               }
             } else {
@@ -1062,14 +874,13 @@ export default {
                 '予期しないエラーが発生しました。IT部隊にお声がけください🙇‍♂️'
             }
             this.error_alert = true
-            this.$nuxt.refresh()
           })
       }
     },
-    DeleteEvent(event) {
+    DeleteEvent(event: Event) {
       this.$axios
-        .delete('/groups/' + this.group.id + '/events/' + event.id)
-        .then((response) => {
+        .delete('/groups/' + this.group?.id + '/events/' + event.id)
+        .then(() => {
           this.success_message = '公演が削除されました'
           this.success_alert = true
           this.$nuxt.refresh()
@@ -1077,7 +888,7 @@ export default {
         .catch((e) => {
           if (e.response) {
             this.error_message = e.response.data.detail
-            if (e.response.status == 422) {
+            if (e.response.status === 422) {
               this.error_message = '入力された値の形式が不適切です'
             }
           } else {
@@ -1089,19 +900,19 @@ export default {
         })
     },
     CreateEvent() {
-      if (
-        this.timetable_selector != null &&
-        Number.isInteger(Number(this.ticket_stock_input))
-      ) {
+      if (Number.isInteger(Number(this.add_event_ticket_stock))) {
         this.$axios
-          .post('/groups/' + this.group.id + '/events', [
-            {
-              timetable_id: this.timetable_selector.id,
-              ticket_stock: Number(this.ticket_stock_input),
-              lottery: false,
-            },
-          ])
-          .then((response) => {
+          .post('/groups/' + this.group?.id + '/events', {
+            eventname: this.add_eventname,
+            lottery: false,
+            target: this.add_event_target.target,
+            ticket_stock: Number(this.add_event_ticket_stock),
+            starts_at: this.add_event_starts_at + '+09:00',
+            ends_at: this.add_event_ends_at + '+09:00',
+            sell_starts: this.add_event_sell_starts + '+09:00',
+            sell_ends: this.add_event_sell_ends + '+09:00',
+          })
+          .then(() => {
             this.success_message = '公演が追加されました'
             this.success_alert = true
             this.$nuxt.refresh()
@@ -1109,7 +920,7 @@ export default {
           .catch((e) => {
             if (e.response) {
               this.error_message = e.response.data.detail
-              if (e.response.status == 422) {
+              if (e.response.status === 422) {
                 this.error_message = '入力された値の形式が不適切です'
               }
             } else {
@@ -1126,8 +937,8 @@ export default {
     },
     DeleteGroup() {
       this.$axios
-        .delete('/groups/' + this.group.id)
-        .then((response) => {
+        .delete('/groups/' + this.group?.id)
+        .then(() => {
           this.success_message = '団体が削除されました'
           this.success_alert = true
           this.$router.push('/groups')
@@ -1135,7 +946,7 @@ export default {
         .catch((e) => {
           if (e.response) {
             this.error_message = e.response.data.detail
-            if (e.response.status == 422) {
+            if (e.response.status === 422) {
               this.error_message = '入力された値の形式が不適切です'
             }
           } else {
@@ -1147,5 +958,5 @@ export default {
         })
     },
   },
-}
+})
 </script>

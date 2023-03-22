@@ -5,24 +5,23 @@
     </v-btn>
     <v-conteiner>
       <v-row justify="center" class="ma-0 pa-0">
-        <v-col cols="12" sm="6" lg="4" class="mx-0 my-2 px-0 py-0 px-sm-3">
+        <v-col cols="12" sm="6" lg="6" class="mx-0 my-2 px-0 py-0 px-sm-3">
           <!--作品情報-->
           <!--タイトル，団体，お気に入り，映像で鑑賞ボタン-->
           <v-card>
             <v-img
-              v-if="group.cover_image != null"
+              v-if="group?.public_thumbnail_image_url != null"
               max-height="500px"
-              :src="'data:image/jpeg;base64,' + group.cover_image"
+              :src="group?.public_thumbnail_image_url"
             ></v-img>
             <v-img
-              v-else-if="group.thumbnail_image != null"
-              max-height="500px"
-              :src="'data:image/jpeg;base64,' + group.thumbnail_image"
+              v-else
+              :class="HashColor(group?.id ?? 'hashcolor')"
+              height="180px"
             ></v-img>
-            <v-img v-else :class="HashColor(group.id)" height="180px"></v-img>
-            <v-card-title clsss="pb-0">{{ group.title }}</v-card-title>
+            <v-card-title clsss="pb-0">{{ group?.title }}</v-card-title>
             <v-card-subtitle class="pb-0">{{
-              group.groupname
+              group?.groupname
             }}</v-card-subtitle>
             <!--
                         お気に入り機能は未実装
@@ -32,7 +31,7 @@
 
             <v-card-actions>
               <v-chip-group column>
-                <v-chip v-for="tag in tags" disabled>
+                <v-chip v-for="tag in group?.tags" :key="tag.id" disabled>
                   {{ tag.tagname }}
                 </v-chip>
               </v-chip-group>
@@ -44,7 +43,7 @@
                 outlined
                 rounded
                 width="100%"
-                :to="'/groups/' + group.id + '/edit'"
+                :to="'/groups/' + group?.id + '/edit'"
               >
                 <v-icon>mdi-pencil</v-icon>
                 団体情報を編集
@@ -56,31 +55,25 @@
                 映像で鑑賞
               </v-btn>
               <v-btn
-                v-if="group.twitter_url != null"
+                v-if="group?.twitter_url != null"
                 icon
                 :href="group.twitter_url"
                 target="_blank"
                 ><v-icon>mdi-twitter</v-icon></v-btn
               >
               <v-btn
-                v-if="group.instagram_url != null"
+                v-if="group?.instagram_url != null"
                 icon
                 :href="group.instagram_url"
                 target="_blank"
                 ><v-icon>mdi-instagram</v-icon></v-btn
               >
               <v-spacer></v-spacer>
-              <v-btn v-if="!me_liked" icon @click="CreateLike()"
-                ><v-icon>mdi-heart-outline</v-icon></v-btn
+              <v-btn v-if="true" icon><v-icon>mdi-star-outline</v-icon></v-btn>
+              <v-btn v-if="true" icon class="yellow--text"
+                ><v-icon>mdi-star</v-icon></v-btn
               >
-              <v-btn
-                v-if="me_liked"
-                icon
-                class="pink--text"
-                @click="DeleteLike()"
-                ><v-icon>mdi-heart</v-icon></v-btn
-              >
-              <p class="ma-0 pa-0 text--caption">{{ group.like_num }}</p>
+              <p class="ma-0 pa-0 text--caption">お気に入り機能(未実装)</p>
             </v-card-actions>
 
             <v-dialog v-model="videoViewer" fullscreen>
@@ -90,7 +83,8 @@
                     <v-icon>mdi-close</v-icon>
                   </v-btn>
                   <v-toolbar-title
-                    >{{ group.title }} - {{ group.groupname }}</v-toolbar-title
+                    >{{ group?.title }} -
+                    {{ group?.groupname }}</v-toolbar-title
                   >
                 </v-toolbar>
                 <v-row
@@ -100,7 +94,7 @@
                 >
                   <v-col cols="12">
                     <iframe
-                      v-if="group.stream_url != null"
+                      v-if="group?.stream_url != null"
                       class="ma-0 pa-0"
                       height="400px"
                       width="99%"
@@ -118,7 +112,7 @@
                   <v-card-text
                     >※映像鑑賞には，学校で配布されたMicrosoftアカウントへのログインが必要です。</v-card-text
                   >
-                  <v-col v-if="group.stream_url != null" cols="12">
+                  <v-col v-if="group?.stream_url != null" cols="12">
                     <v-row justify="center">
                       <v-btn
                         color="primary"
@@ -131,6 +125,12 @@
                 </v-row>
               </v-card>
             </v-dialog>
+          </v-card>
+
+          <v-card class="mb-4">
+            <v-card-text>
+              {{ group?.description }}
+            </v-card-text>
           </v-card>
         </v-col>
         <v-col cols="12" sm="6" lg="4" class="mx-0 my-2 px-0 py-0 px-sm-3">
@@ -184,93 +184,56 @@
                 <a class="px-3 pb-1" @click="$nuxt.refresh()"
                   >最新の状態に更新</a
                 >
-                <div v-for="event in events">
-                  <v-dialog v-model="event.dialog" width="100%">
-                    <template #activator="{ on, attrs }">
-                      <v-row justify="center" class="ma-0 pa-0">
-                        <v-col cols="11" class="mx-0 ma-1 pa-0">
-                          <v-card
-                            class="ma-0"
-                            @click.stop="event.dialog = true"
-                          >
-                            <v-card-title class="py-2">
-                              {{ event.timetable.timetablename }}
-                              <v-spacer></v-spacer>
-                              <v-badge
-                                v-if="
-                                  Date.now() <
-                                    event.timetable.sell_at.getTime() ||
-                                  event.timetable.sell_ends.getTime() <
-                                    Date.now()
-                                "
-                                color="grey"
-                                inline
-                              ></v-badge>
-                              <v-badge
-                                v-else-if="
-                                  event.ticket_number_data.taken_tickets /
-                                    event.ticket_number_data.stock <
-                                  0.8
-                                "
-                                color="green"
-                                inline
-                              ></v-badge>
-                              <!--8割以上で黄色になる-->
-                              <v-badge
-                                v-else-if="
-                                  event.ticket_number_data.taken_tickets /
-                                    event.ticket_number_data.stock >=
-                                    0.8 &&
-                                  event.ticket_number_data.taken_tickets <
-                                    event.ticket_number_data.stock
-                                "
-                                color="amber"
-                                inline
-                              ></v-badge>
-                              <v-badge
-                                v-else-if="
-                                  event.ticket_number_data.taken_tickets >=
-                                  event.ticket_number_data.stock
-                                "
-                                color="red"
-                                inline
-                              ></v-badge>
-                            </v-card-title>
-                            <v-card-subtitle class="pb-2">
-                              <p class="ma-0 pa-0">
-                                配布時間：{{
-                                  DateFormatter(event.timetable.sell_at)
-                                }}
-                                ~ {{ DateFormatter(event.timetable.sell_ends) }}
-                              </p>
-                              <p class="ma-0 pa-0">
-                                公演時間：{{
-                                  DateFormatter(event.timetable.starts_at)
-                                }}
-                                ~ {{ DateFormatter(event.timetable.ends_at) }}
-                              </p>
-                            </v-card-subtitle>
-                          </v-card>
-                        </v-col>
-                      </v-row>
-                    </template>
+                <div v-for="event in events" :key="event.id">
+                  <v-dialog v-model="dialog" width="100%">
+                    <v-row justify="center" class="ma-0 pa-0">
+                      <v-col cols="11" class="mx-0 ma-1 pa-0">
+                        <v-card class="ma-0" @click.stop="dialog = true">
+                          <v-card-title class="py-2">
+                            {{ event.eventname }}
+                            <v-spacer></v-spacer>
+                            <v-badge
+                              v-if="
+                                new Date() < new Date(event.sell_starts) ||
+                                new Date(event.sell_ends) < new Date()
+                              "
+                              color="grey"
+                              inline
+                            ></v-badge>
+                            <v-badge color="green" inline></v-badge>
+                            <!--8割以上で黄色になる-->
+                            <v-badge color="amber" inline></v-badge>
+                            <v-badge color="red" inline></v-badge>
+                          </v-card-title>
+                          <v-card-subtitle class="pb-2">
+                            <p class="ma-0 pa-0">
+                              配布時間：{{ DateFormatter(event.sell_starts) }}
+                              ~
+                              {{ DateFormatter(event.sell_ends) }}
+                            </p>
+                            <p class="ma-0 pa-0">
+                              公演時間：{{ DateFormatter(event.starts_at) }} ~
+                              {{ DateFormatter(event.ends_at) }}
+                            </p>
+                          </v-card-subtitle>
+                        </v-card>
+                      </v-col>
+                    </v-row>
                     <v-card class="pa-2">
                       <v-card-title class="px-1"
-                        >{{ group.title }} / {{ group.groupname }} -
-                        {{ event.timetable.timetablename }}</v-card-title
+                        >{{ group?.title }} / {{ group?.groupname }} -
+                        {{ event.eventname }}</v-card-title
                       >
                       <v-card-subtitle class="px-1">
                         <p class="ma-0 pa-0">この公演の整理券をとりますか？</p>
                         <p class="ma-0 pa-0">
-                          公演時間：{{
-                            DateFormatter(event.timetable.starts_at)
-                          }}
-                          ~ {{ DateFormatter(event.timetable.ends_at) }}
+                          公演時間：{{ DateFormatter(event.starts_at) }} ~
+                          {{ DateFormatter(event.ends_at) }}
                         </p>
                       </v-card-subtitle>
                       <div class="px-1">
                         <p
-                          v-if="user_me.is_student"
+                          v-if="$auth.$state.strategy == 'ad'"
                           class="ma-0 pa-0 text-subtitle-2"
                         >
                           席数：1席
@@ -280,7 +243,7 @@
                           >同時に入場する人数(ご家族など)
                         </p>
                         <v-slider
-                          v-if="!user_me.is_student"
+                          v-if="$auth.$state.strategy != 'ad'"
                           v-model="ticket_person"
                           :tick-labels="person_labels"
                           min="1"
@@ -296,7 +259,7 @@
                       <v-card-actions class="px-1">
                         <v-spacer></v-spacer>
 
-                        <v-btn color="red" text @click="event.dialog = false">
+                        <v-btn color="red" text @click="dialog = false">
                           いいえ
                         </v-btn>
                         <v-btn
@@ -318,11 +281,6 @@
                 </v-col>
               </div>
             </v-expand-transition>
-          </v-card>
-          <v-card class="mb-4">
-            <v-card-text>
-              {{ group.description }}
-            </v-card-text>
           </v-card>
         </v-col>
       </v-row>
@@ -351,165 +309,41 @@
   </v-app>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { Event, Group } from 'types/quaint'
+import Vue from 'vue'
+type Data = {
+  group: Group | undefined
+  events: Event[]
+  videoViewer: boolean
+  streamVideoId: string
+  editable: boolean
+  success_alert: boolean
+  error_alert: boolean
+  success_message: string
+  error_message: string
+  dialog: boolean
+  events_show: boolean
+  ticket_person: number
+  person_labels: any[]
+  person_icons: any[]
+}
+export default Vue.extend({
   name: 'IndivisualGroupPage',
   auth: false,
 
-  async asyncData({ params, error, $axios, $auth }) {
-    let res_group
-    let res_streamVideoId
-    let res_events
-    let res_tags
-    let user_me = { is_student: false, is_family: false, is_active: false }
-    let user_authority = {
-      is_admin: false,
-      is_entry: false,
-      owner_of: [],
-      authorizer_of: [],
-    }
-    let me_liked = false
-    let editable = false
-
-    const initial_promise = [
-      $axios.get('/groups/' + params.groupId),
-      $axios.get('/groups/' + params.groupId + '/events'),
-      $axios.get('/groups/' + params.groupId + '/tags'),
-    ]
-    if ($auth.loggedIn) {
-      initial_promise.push($axios.get('/users/me'))
-      initial_promise.push($axios.get('/users/me/authority'))
-      initial_promise.push(
-        $axios.get('/groups/' + params.groupId + '/me_liked')
-      )
-    }
-    await Promise.all(initial_promise)
-      .then((response) => {
-        res_group = response[0].data
-        res_events = response[1].data
-        res_tags = response[2].data
-        if ($auth.loggedIn) {
-          user_me = response[3].data
-          user_authority = response[4].data
-          me_liked = response[5].data.me_liked
-        }
-      })
-      .catch((e) => {
-        error({ statusCode: 404, message: e.message })
-      })
-
-    // 正規表現によって，groupの中に含まれる"stream_url"の末尾のスラッシュ（/）以降の文字列を取得
-    res_streamVideoId = /[^/]*$/.exec(res_group.stream_url)[0]
-    // 各eventの中に，"'dialog':'false'"という情報を格納することで，公演をクリックした時に，公演に対応したモーダルウィンドウが表示されるようにしている。
-    for (var i = 0; i < res_events.length; i++) {
-      res_events[i].dialog = false
-    }
-
-    if (
-      $auth.loggedIn &&
-      (user_authority.is_admin == true ||
-        user_authority.owner_of.includes(res_group.id))
-    ) {
-      editable = true
-    }
-
-    const timetable_promise = []
-    const countticket_promise = []
-    // timetable_idからtimetableの情報取得し，,eventsの中の各eventの中にプロパティ名"timetable"として格納する。
-    for (var i = 0; i < res_events.length; i++) {
-      timetable_promise.push(
-        $axios.get('/timetable/' + res_events[i].timetable_id)
-      )
-      countticket_promise.push(
-        $axios.get(
-          '/groups/' + res_group.id + '/events/' + res_events[i].id + '/tickets'
-        )
-      )
-    }
-    await Promise.all(timetable_promise).then((response) => {
-      for (let i = 0; i < res_events.length; i++) {
-        res_events[i].timetable = response[i].data
-        // Dateオブジェクトにする
-        res_events[i].timetable.sell_at = new Date(
-          res_events[i].timetable.sell_at
-        )
-        res_events[i].timetable.sell_ends = new Date(
-          res_events[i].timetable.sell_ends
-        )
-        res_events[i].timetable.starts_at = new Date(
-          res_events[i].timetable.starts_at
-        )
-        res_events[i].timetable.ends_at = new Date(
-          res_events[i].timetable.ends_at
-        )
-      }
-    })
-    await Promise.all(countticket_promise).then((response) => {
-      for (let i = 0; i < res_events.length; i++) {
-        res_events[i].ticket_number_data = response[i].data
-      }
-    })
-
-    // 配布時間中の公演(公演開始の早い順)→配布時間外の公演(公演開始の早い順) という並び順になるようにする
-    const available_events = []
-    const unavailable_events = []
-    for (let i = 0; i < res_events.length; i++) {
-      if (
-        res_events[i].timetable.sell_at.getTime() <= Date.now() &&
-        Date.now() <= res_events[i].timetable.sell_ends.getTime()
-      ) {
-        available_events.push(res_events[i])
-      } else {
-        unavailable_events.push(res_events[i])
-      }
-    }
-    available_events.sort((first, second) => {
-      if (
-        first.timetable.starts_at.getTime() <
-        second.timetable.starts_at.getTime()
-      )
-        return -1
-      else if (
-        first.timetable.starts_at.getTime() >
-        second.timetable.starts_at.getTime()
-      )
-        return 1
-      else return 0
-    })
-    unavailable_events.sort((first, second) => {
-      if (
-        first.timetable.starts_at.getTime() <
-        second.timetable.starts_at.getTime()
-      )
-        return -1
-      else if (
-        first.timetable.starts_at.getTime() >
-        second.timetable.starts_at.getTime()
-      )
-        return 1
-      else return 0
-    })
-    const events = available_events.concat(unavailable_events)
-
-    return {
-      group: res_group,
-      events,
-      streamVideoId: res_streamVideoId,
-      tags: res_tags,
-      editable,
-      user_me,
-      me_liked,
-    }
+  async asyncData({ params, $axios }): Promise<Partial<Data>> {
+    const group = await $axios.$get('/groups/' + params.groupId)
+    const events = await $axios.$get('/groups/' + params.groupId + '/events')
+    return { group, events }
   },
-  data() {
+  data(): Data {
     return {
       videoViewer: false,
-      group: {},
+      group: undefined,
       events: [],
-      streamVideoId: [],
-      tags: [],
-      ticketResult: [],
-      editable: false, // 権限を持つユーザーがアクセスするとtrueになりページを編集できる
+      streamVideoId: '',
+      editable: true, // 権限を持つユーザーがアクセスするとtrueになりページを編集できる
       events_show: true,
       ticket_person: 1,
       person_labels: ['1人', '2人', '3人'],
@@ -522,23 +356,25 @@ export default {
       error_alert: false,
       success_message: '',
       error_message: '',
+      dialog: false,
     }
   },
 
   methods: {
-    DateFormatter(input_date) {
+    DateFormatter(inputDate: string) {
+      const d = new Date(inputDate)
       return (
-        input_date.getMonth() +
+        d.getMonth() +
         1 +
         '月' +
-        input_date.getDate() +
+        d.getDate() +
         '日 ' +
-        input_date.getHours().toString().padStart(2, '0') +
+        d.getHours().toString().padStart(2, '0') +
         ':' +
-        input_date.getMinutes().toString().padStart(2, '0')
+        d.getMinutes().toString().padStart(2, '0')
       )
     },
-    HashColor(text) {
+    HashColor(text: string) {
       // group.idを色数で割った余りでデフォルトの色を決定
       const colors = [
         'blue-grey',
@@ -561,14 +397,14 @@ export default {
       index = index % colors.length
       return colors[index]
     },
-    async CreateTicket(event, person) {
+    async CreateTicket(event: Event, person: number) {
       if (!this.$auth.loggedIn) {
         this.error_message = '整理券の取得にはログインが必要です'
         this.error_alert = true
         return 1
       }
-      event.dialog = false
-      if (this.user_me.is_student) person = 1
+      this.dialog = false
+      if (this.$auth.$state.strategy === 'ad') person = 1
       await this.$axios
         .post(
           '/groups/' +
@@ -578,7 +414,7 @@ export default {
             '/tickets?person=' +
             person
         )
-        .then((response) => {
+        .then(() => {
           this.success_message =
             '整理券を取得できました！「整理券」タブから確認してください'
           this.success_alert = true
@@ -600,11 +436,11 @@ export default {
         return 1
       }
       this.$axios
-        .post('/groups/' + this.group.id + '/like')
+        .post('/groups/' + this.group?.id + '/like')
         .then(() => {
           this.$nuxt.refresh()
         })
-        .catch((e) => {})
+        .catch(() => {})
     },
     DeleteLike() {
       if (!this.$auth.loggedIn) {
@@ -613,12 +449,12 @@ export default {
         return 1
       }
       this.$axios
-        .delete('/groups/' + this.group.id + '/like')
+        .delete('/groups/' + this.group?.id + '/like')
         .then(() => {
           this.$nuxt.refresh()
         })
-        .catch((e) => {})
+        .catch(() => {})
     },
   },
-}
+})
 </script>

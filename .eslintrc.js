@@ -12,5 +12,13 @@ module.exports = {
   ],
   plugins: ['jest'],
   // add your custom rules here
-  rules: {},
+  rules: {
+    'no-unused-vars': 'warn',
+    camelcase: 'off',
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      { ignoreRestSiblings: true },
+    ],
+    'import/order': 'off',
+  },
 }

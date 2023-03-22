@@ -9,24 +9,28 @@
             prepend-inner-icon="mdi-magnify"
             @input="SearchGroups($event)"
           ></v-text-field>
-          <p v-show="search_result" class="ma-0 pa-0 text-caption">
-            "{{ search_query }}"の検索結果({{ search_result_number }}件)
-          </p>
+          <p>現在検索機能は未実装です</p>
+          <p v-show="true" class="ma-0 pa-0 text-caption">""の検索結果( 件)</p>
           <v-chip-group
-            v-show="tag_selector"
+            v-show="true"
             active-class="primary--text"
             column
             mandatory
           >
-            <v-chip filter @click="selectedTag = ''"> すべて </v-chip>
-            <v-chip v-for="tag in tags" filter @click="selectedTag = tag">
+            <v-chip filter @click="selectedTag = undefined"> すべて </v-chip>
+            <v-chip
+              v-for="tag in tags"
+              :key="tag.id"
+              filter
+              @click="selectedTag = tag"
+            >
               {{ tag.tagname }}
             </v-chip>
           </v-chip-group>
         </v-col>
         <v-col class="my-0 py-0" cols="12">
           <v-divider class="my-0 py-0"></v-divider>
-          <div v-show="nowloading">
+          <div v-show="nowroading">
             <p class="my-0 py-1 text-body-1 grey--text">読み込み中...</p>
             <p class="my-0 py-1 text-caption grey--text">
               時間がかかることがあります(学校のWi-Fi使用中など)
@@ -36,6 +40,7 @@
         <v-col
           v-for="group in groups"
           v-show="filterGroups(group)"
+          :key="group.id"
           cols="12"
           md="4"
           sm="6"
@@ -48,14 +53,11 @@
             :to="'/groups/' + group.id"
           >
             <v-img
-              v-if="group.cover_image != null"
+              v-if="group.public_thumbnail_image_url != null"
               max-height="180px"
-              :src="'data:image/jpeg;base64,' + group.cover_image"
-            ></v-img>
-            <v-img
-              v-else-if="group.thumbnail_image != null"
-              max-height="180px"
-              :src="'data:image/jpeg;base64,' + group.thumbnail_image"
+              :src="
+                'data:image/jpeg;base64,' + group.public_thumbnail_image_url
+              "
             ></v-img>
             <v-img v-else :class="HashColor(group.id)" height="180px"></v-img>
             <v-card-title class="my-1 py-1"
@@ -64,7 +66,7 @@
             <v-card-text class="my-1 py-1">{{ group.description }}</v-card-text>
             <v-card-actions class="my-0 py-0">
               <v-chip-group column>
-                <v-chip v-for="tag in group.tags" disabled>
+                <v-chip v-for="tag in group.tags" :key="tag.id" disabled>
                   {{ tag.tagname }}
                 </v-chip>
               </v-chip-group>
@@ -76,80 +78,44 @@
   </v-app>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { Group, Tag } from 'types/quaint'
+import Vue from 'vue'
+
+type Data = {
+  nowroading: boolean
+  tags: Tag[]
+  groups: Group[]
+
+  selectedTag: Tag | undefined
+}
+
+export default Vue.extend({
   name: 'GroupsPage',
   auth: false,
-  asyncData({ error, $axios }) {},
-  data() {
+  async asyncData({ $axios }): Promise<Partial<Data>> {
+    const task = [$axios.$get('/groups'), $axios.$get('/tags')]
+    const res = await Promise.all(task)
+    return { nowroading: false, groups: res[0], tags: res[1] }
+  },
+  data(): Data {
     return {
+      nowroading: true,
       tags: [],
       groups: [],
-      all_groups: [],
-      selectedTag: '',
-      search_query: '',
-      search_result_number: 0,
-      search_result: false,
-      tag_selector: true,
-      nowloading: true,
+      selectedTag: undefined,
     }
   },
   created() {
-    let res_tags
-    let res_groups
-    Promise.all([this.$axios.get('/tags'), this.$axios.get('/groups')])
-      .then((response) => {
-        res_tags = response[0].data
-        res_groups = response[1].data
-
-        // 毎回同じ順番で表示されないようにgroupsの配列をランダムな順番にする
-        const shuffleArray = (array) => {
-          const cloneArray = [...array]
-          for (let i = cloneArray.length - 1; i >= 0; i--) {
-            const rand = Math.floor(Math.random() * (i + 1))
-            // 配列の要素の順番を入れ替える
-            const tmpStorage = cloneArray[i]
-            cloneArray[i] = cloneArray[rand]
-            cloneArray[rand] = tmpStorage
-          }
-          return cloneArray
-        }
-        this.groups = shuffleArray(res_groups)
-        this.all_groups = this.groups
-
-        const tag_promise = []
-        // 各groupが有しているtagをAPIから取得し，groups配列の中のオブジェクトに"tags"というキーを設けてgroupsとtagsの情報を結びつけている。
-        for (let i = 0; i < this.groups.length; i++) {
-          tag_promise.push(
-            this.$axios.get('/groups/' + this.groups[i].id + '/tags')
-          )
-        }
-        Promise.all(tag_promise)
-          .then((response) => {
-            for (let i = 0; i < this.groups.length; i++) {
-              this.groups[i].tags = response[i].data
-              this.all_groups[i].tags = response[i].data
-            }
-            this.tags = res_tags
-            this.nowloading = false
-          })
-          .catch((e) => {
-            console.error(e.message)
-            this.$nuxt.error({ message: e.message })
-          })
-      })
-      .catch((e) => {
-        console.error(e.message)
-        this.nuxt.error({ message: e.message })
-      })
+    // 毎回同じ順番で表示されないようにgroupsの配列をランダムな順番にする
+    // 各groupが有しているtagをAPIから取得し，groups配列の中のオブジェクトに"tags"というキーを設けてgroupsとtagsの情報を結びつけている。
   },
 
   methods: {
-    filterGroups(group) {
+    filterGroups(group: Group) {
       if (
-        this.selectedTag === '' ||
-        (typeof group.tags !== 'undefined' &&
-          group.tags.some((i) => i.id === this.selectedTag.id))
+        this.selectedTag === undefined ||
+        group.tags.some((i) => i.id === this.selectedTag?.id)
       ) {
         return true
         // tag全体（{id:hogehoge, tagname:honyohonyo}の形）を用いると，tagが一致している判定がうまく行えなかったので，idを用いてtagの一致を判定している
@@ -157,7 +123,7 @@ export default {
         return false
       }
     },
-    HashColor(text) {
+    HashColor(text: string) {
       // group.idを色数で割った余りでデフォルトの色を決定
       const colors = [
         'blue-grey',
@@ -175,50 +141,12 @@ export default {
       let index = 0
       for (let i = 0; i < text.length; i++) {
         // 文字列をUnicodeの和に変換
-        index += text.codePointAt(i)
+        index += text.codePointAt(i) ?? 1
       }
       index = index % colors.length
       return colors[index]
     },
-    SearchGroups(input) {
-      if (input == '') {
-        this.tag_selector = true
-        this.search_result = false
-        this.groups = this.all_groups
-      } else {
-        this.selectedTag = ''
-        this.tag_selector = false
-        this.search_query = input
-        this.search_result = true
-        this.$axios
-          .get('/search?q=' + input)
-          .then((response) => {
-            let res_groups = []
-            res_groups = response.data
-            const tag_promise = []
-            // 各groupが有しているtagをAPIから取得し，groups配列の中のオブジェクトに"tags"というキーを設けてgroupsとtagsの情報を結びつけている。
-            for (let i = 0; i < res_groups.length; i++) {
-              tag_promise.push(
-                this.$axios.get('/groups/' + res_groups[i].id + '/tags')
-              )
-            }
-            Promise.all(tag_promise)
-              .then((response) => {
-                for (let i = 0; i < res_groups.length; i++) {
-                  res_groups[i].tags = response[i].data
-                }
-                this.groups = res_groups
-                this.search_result_number = this.groups.length
-              })
-              .catch((e) => {
-                console.error(e)
-              })
-          })
-          .catch((e) => {
-            console.error(e)
-          })
-      }
-    },
+    SearchGroups() {},
   },
-}
+})
 </script>
