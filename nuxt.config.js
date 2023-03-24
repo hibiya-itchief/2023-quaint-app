@@ -77,6 +77,7 @@ export default {
   content: {},
 
   auth: {
+    plugins: ['~/plugins/axios.ts'],
     watchLoggedIn: true,
     token: {
       prefix: '_token.',
