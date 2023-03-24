@@ -785,14 +785,14 @@ export default Vue.extend({
           .get('/usres/me/owner_of')
           .then((res: AxiosResponse<string[]>) => {
             if (!res.data.includes(this.$route.params.groupId)) {
-              return this.$nuxt.error({ statusCode: 404, message: 'Not Found' })
+              this.$nuxt.error({ statusCode: 404, message: 'Not Found' })
             }
           })
           .catch(() => {
-            return this.$nuxt.error({ statusCode: 404, message: 'Not Found' })
+            this.$nuxt.error({ statusCode: 404, message: 'Not Found' })
           })
       } else {
-        return this.$nuxt.error({ statusCode: 404, message: 'Not Found' })
+        this.$nuxt.error({ statusCode: 404, message: 'Not Found' })
       }
     }
   },

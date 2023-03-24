@@ -392,7 +392,7 @@ export default Vue.extend({
       let index = 0
       for (let i = 0; i < text.length; i++) {
         // 文字列をUnicodeの和に変換
-        index += text.codePointAt(i)
+        index += text.codePointAt(i) ?? 1
       }
       index = index % colors.length
       return colors[index]
