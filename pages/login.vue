@@ -1,5 +1,8 @@
 <template>
   <v-app>
+    <p>
+      【開発環境】一般客アカウントは、お持ちのメールアドレスで作れるので適宜作って試してください。学校関係者アカウント情報(管理者権限も含む)はDiscordで配布します。
+    </p>
     <v-row justify="center" class="ma-4">
       <v-col cols="11" md="6" lg="4" class="ma-0 pa-0">
         <v-sheet color="white" elevation="4" class="py-4 px-2">

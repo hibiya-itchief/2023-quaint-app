@@ -77,7 +77,9 @@
               <v-icon>mdi-form-textbox-password</v-icon>
             </v-list-item-icon>
             <v-list-item-title
-              ><NuxtLink style="text-decoration: none; color: inherit"
+              ><NuxtLink
+                style="text-decoration: none; color: inherit"
+                to="/login"
                 >パスワードを変更</NuxtLink
               ></v-list-item-title
             >

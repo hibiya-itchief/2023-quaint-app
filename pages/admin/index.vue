@@ -2,7 +2,7 @@
   <v-app>
     <h1>管理者用画面</h1>
     <p>
-      一応現段階でも<a :href="apiUrl + 'docs'">{{ apiUrl }}/docs</a
+      一応現段階でも<a :href="apiUrl + 'docs'">{{ apiUrl }}docs</a
       >にアクセスするとすべての機能にアクセスできるが、使いづらい
     </p>
     <h2>この画面でできるようにしたいこと</h2>
