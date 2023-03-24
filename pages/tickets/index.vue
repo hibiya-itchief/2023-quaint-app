@@ -150,7 +150,7 @@
 </template>
 
 <script lang="ts">
-import QRCode from 'qrcode'
+import { toDataURL as getQRCodeDataUrl } from 'qrcode'
 import { Event, Group, Ticket } from 'types/quaint'
 import Vue from 'vue'
 type TicketInfo = {
@@ -201,7 +201,7 @@ export default Vue.extend({
   },
   async created() {
     this.fetchTicket()
-    this.qrcodeUrl = await QRCode.toDataURL(
+    this.qrcodeUrl = await getQRCodeDataUrl(
       (this.$auth.user?.oid ?? this.$auth.user?.sub) as string
     )
   },
@@ -220,8 +220,8 @@ export default Vue.extend({
 
       const ticketInfos: TicketInfo[] = []
       for (const ticket of tickets) {
-        const group = this.groups.find((e) => (e.id = ticket.group_id))
-        const event = this.events.find((e) => (e.id = ticket.event_id))
+        const group = this.groups?.find((e) => e.id === ticket.group_id)
+        const event = this.events?.find((e) => e.id === ticket.event_id)
         if (group === undefined || event === undefined) {
           break
         }
