@@ -185,40 +185,40 @@
                   >最新の状態に更新</a
                 >
                 <div v-for="event in events" :key="event.id">
+                  <v-row justify="center" class="ma-0 pa-0">
+                    <v-col cols="11" class="mx-0 ma-1 pa-0">
+                      <v-card class="ma-0" @click.stop="dialog = true">
+                        <v-card-title class="py-2">
+                          {{ event.eventname }}
+                          <v-spacer></v-spacer>
+                          <v-badge
+                            v-if="
+                              new Date() < new Date(event.sell_starts) ||
+                              new Date(event.sell_ends) < new Date()
+                            "
+                            color="grey"
+                            inline
+                          ></v-badge>
+                          <v-badge color="green" inline></v-badge>
+                          <!--8割以上で黄色になる-->
+                          <v-badge color="amber" inline></v-badge>
+                          <v-badge color="red" inline></v-badge>
+                        </v-card-title>
+                        <v-card-subtitle class="pb-2">
+                          <p class="ma-0 pa-0">
+                            配布時間：{{ DateFormatter(event.sell_starts) }}
+                            ~
+                            {{ DateFormatter(event.sell_ends) }}
+                          </p>
+                          <p class="ma-0 pa-0">
+                            公演時間：{{ DateFormatter(event.starts_at) }} ~
+                            {{ DateFormatter(event.ends_at) }}
+                          </p>
+                        </v-card-subtitle>
+                      </v-card>
+                    </v-col>
+                  </v-row>
                   <v-dialog v-model="dialog" width="100%">
-                    <v-row justify="center" class="ma-0 pa-0">
-                      <v-col cols="11" class="mx-0 ma-1 pa-0">
-                        <v-card class="ma-0" @click.stop="dialog = true">
-                          <v-card-title class="py-2">
-                            {{ event.eventname }}
-                            <v-spacer></v-spacer>
-                            <v-badge
-                              v-if="
-                                new Date() < new Date(event.sell_starts) ||
-                                new Date(event.sell_ends) < new Date()
-                              "
-                              color="grey"
-                              inline
-                            ></v-badge>
-                            <v-badge color="green" inline></v-badge>
-                            <!--8割以上で黄色になる-->
-                            <v-badge color="amber" inline></v-badge>
-                            <v-badge color="red" inline></v-badge>
-                          </v-card-title>
-                          <v-card-subtitle class="pb-2">
-                            <p class="ma-0 pa-0">
-                              配布時間：{{ DateFormatter(event.sell_starts) }}
-                              ~
-                              {{ DateFormatter(event.sell_ends) }}
-                            </p>
-                            <p class="ma-0 pa-0">
-                              公演時間：{{ DateFormatter(event.starts_at) }} ~
-                              {{ DateFormatter(event.ends_at) }}
-                            </p>
-                          </v-card-subtitle>
-                        </v-card>
-                      </v-col>
-                    </v-row>
                     <v-card class="pa-2">
                       <v-card-title class="px-1"
                         >{{ group?.title }} / {{ group?.groupname }} -
@@ -335,6 +335,7 @@ export default Vue.extend({
   async asyncData({ params, $axios }): Promise<Partial<Data>> {
     const group = await $axios.$get('/groups/' + params.groupId)
     const events = await $axios.$get('/groups/' + params.groupId + '/events')
+    console.log(events)
     return { group, events }
   },
   data(): Data {
