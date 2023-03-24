@@ -332,10 +332,12 @@ export default Vue.extend({
   name: 'IndivisualGroupPage',
   auth: false,
 
-  async asyncData({ params, $axios }): Promise<Partial<Data>> {
-    const group = await $axios.$get('/groups/' + params.groupId)
+  async asyncData({ params, $axios, payload }): Promise<Partial<Data>> {
     const events = await $axios.$get('/groups/' + params.groupId + '/events')
-    console.log(events)
+    if (payload !== undefined) {
+      return { group: payload, events }
+    }
+    const group = await $axios.$get('/groups/' + params.groupId)
     return { group, events }
   },
   data(): Data {

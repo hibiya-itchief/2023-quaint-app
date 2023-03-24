@@ -1,10 +1,14 @@
+import { NuxtConfig } from '@nuxt/types'
+import fetch from 'node-fetch'
+// @ts-ignore
 import colors from 'vuetify/es5/util/colors'
+import { Group, Tag } from './types/quaint'
 
 const environment = process.env.QUAINT_ENV || 'development'
 const envSet = require(`./env.${environment}.js`)
 
-export default {
-  ssr: false,
+const nuxtConfig: NuxtConfig = {
+  ssr: true,
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
 
@@ -79,10 +83,6 @@ export default {
   auth: {
     plugins: ['~/plugins/axios.ts'],
     watchLoggedIn: true,
-    token: {
-      prefix: '_token.',
-      global: true,
-    },
     redirect: {
       login: '/login',
       logout: '/',
@@ -104,6 +104,7 @@ export default {
           property: 'id_token', // ここは /tokenエンドポイントをたたいた時に返ってくるjsonに合わせる
           type: 'Bearer',
           maxAge: 1800,
+          global: true,
         },
         // ライブラリはthis.option.refreshTokenで読んでるからここは絶対に"refreshToken"
         refreshToken: {
@@ -128,6 +129,7 @@ export default {
           type: 'Bearer',
           prefix: '_id_token.',
           expirationPrefix: '_id_token_expiration.',
+          global: true,
         },
         responseType: 'code',
         grantType: 'authorization_code',
@@ -160,4 +162,40 @@ export default {
   build: {
     transpile: ['defu'],
   },
+  generate: {
+    async routes() {
+      const groups: Group[] = (await (
+        await fetch('https://quaint-api-dev-2023.azurewebsites.net/groups', {
+          method: 'GET',
+        })
+      ).json()) as Group[]
+      const tags: Tag[] = (await (
+        await fetch('https://quaint-api-dev-2023.azurewebsites.net/tags', {
+          method: 'GET',
+        })
+      ).json()) as Tag[]
+
+      const groupRoutes = groups.map((group) => {
+        return {
+          route: `/groups/${group.id}`,
+          payload: group,
+        }
+      })
+      const groupEditRoutes = groups.map((group) => {
+        return {
+          route: `/groups/${group.id}/edit`,
+          payload: { group, tags },
+        }
+      })
+      return [
+        {
+          route: '/groups',
+          payload: { groups, tags },
+        },
+        ...groupRoutes,
+        ...groupEditRoutes,
+      ]
+    },
+  },
 }
+export default nuxtConfig

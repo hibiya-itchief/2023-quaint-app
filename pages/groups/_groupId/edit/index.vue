@@ -659,7 +659,6 @@
 </template>
 
 <script lang="ts">
-import { AxiosResponse } from 'axios'
 import Vue from 'vue'
 import { Event, Group, GroupEdit, Tag } from '~/types/quaint'
 type Data = {
@@ -704,19 +703,31 @@ type Data = {
 
 export default Vue.extend({
   name: 'IndivisualGroupPageEditer',
-  async asyncData({ params, $axios }): Promise<Partial<Data>> {
-    const res = await Promise.all([
-      $axios.$get('/tags'),
-      $axios.$get('/groups/' + params.groupId),
-      $axios.$get('/groups/' + params.groupId + '/events'),
-    ])
-    const { id, enable_vote, groupname, ...groupEdit } = res[1] as Group
+  async asyncData({ params, $axios, payload }): Promise<Partial<Data>> {
+    let group
+    let tags
+    let events
+    if (payload !== undefined) {
+      group = payload.group
+      tags = payload.tags
+      events = await $axios.$get('/groups/' + params.groupId + '/events')
+    } else {
+      const res = await Promise.all([
+        $axios.$get('/tags'),
+        $axios.$get('/groups/' + params.groupId),
+        $axios.$get('/groups/' + params.groupId + '/events'),
+      ])
+      tags = res[0]
+      group = res[1]
+      events = res[2]
+    }
+    const { id, enable_vote, groupname, ...groupEdit } = group as Group
     return {
-      tags: res[0],
-      group: res[1],
-      events: res[2],
+      tags,
+      group,
+      events,
       groupEdit,
-      tag_selector: res[0][0],
+      tag_selector: tags[0],
     }
   },
   data(): Data {
@@ -774,23 +785,20 @@ export default Vue.extend({
       delete_group_dialog: false,
     }
   },
-  created() {
+  async created() {
     if (
       !(this.$auth.user?.groups as string[]).includes(this.userGroups.admin)
     ) {
       if (
         (this.$auth.user?.groups as string[]).includes(this.userGroups.owner)
       ) {
-        this.$axios
-          .get('/usres/me/owner_of')
-          .then((res: AxiosResponse<string[]>) => {
-            if (!res.data.includes(this.$route.params.groupId)) {
-              this.$nuxt.error({ statusCode: 404, message: 'Not Found' })
-            }
-          })
-          .catch(() => {
-            this.$nuxt.error({ statusCode: 404, message: 'Not Found' })
-          })
+        if (
+          !(
+            (await this.$axios.$get('/usres/me/owner_of')) as string[]
+          ).includes(this.$route.params.groupId)
+        ) {
+          this.$nuxt.error({ statusCode: 404, message: 'Not Found' })
+        }
       } else {
         this.$nuxt.error({ statusCode: 404, message: 'Not Found' })
       }

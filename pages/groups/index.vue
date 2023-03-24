@@ -93,7 +93,10 @@ type Data = {
 export default Vue.extend({
   name: 'GroupsPage',
   auth: false,
-  async asyncData({ $axios }): Promise<Partial<Data>> {
+  async asyncData({ $axios, payload }): Promise<Partial<Data>> {
+    if (payload !== undefined) {
+      return { nowroading: false, groups: payload.groups, tags: payload.tags }
+    }
     const task = [$axios.$get('/groups'), $axios.$get('/tags')]
     const res = await Promise.all(task)
     return { nowroading: false, groups: res[0], tags: res[1] }
