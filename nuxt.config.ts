@@ -62,6 +62,7 @@ const nuxtConfig: NuxtConfig = {
     '@nuxt/content',
     // https://auth.nuxtjs.org/
     '@nuxtjs/auth-next',
+    '@nuxtjs/google-gtag',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -137,6 +138,11 @@ const nuxtConfig: NuxtConfig = {
         codeChallengeMethod: 'S256',
       },
     },
+  },
+
+  'google-gtag': {
+    id: 'G-P1PFLRX395',
+    debug: true, // Enable to track in dev mode.
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
