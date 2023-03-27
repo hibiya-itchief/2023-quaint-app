@@ -40,7 +40,7 @@
     "core-js": "^3.25.3",
     "cross-env": "^7.0.3",
     "node-fetch": "^3.3.1",
-    "nuxt": "^2.15.8",
+    "nuxt": "^3.3.2",
     "patch-package": "^6.5.1",
     "postinstall-postinstall": "^2.1.0",
     "qrcode": "^1.5.1",
