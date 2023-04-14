@@ -61,6 +61,7 @@
 <script lang="ts">
 import Vue from 'vue'
 export default Vue.extend({
+  auth: false,
   mounted() {},
   methods: {
     loginB2c() {
