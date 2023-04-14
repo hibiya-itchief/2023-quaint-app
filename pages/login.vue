@@ -10,7 +10,6 @@
           <p align="center" class="">
             整理券の取得にはログインが必要となります。
           </p>
-          <NuxtLink to="/spectest">探す</NuxtLink>
           <v-divider class="my-3"></v-divider>
           <v-btn
             class="light-blue darken-4 my-3"
