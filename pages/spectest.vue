@@ -1,33 +1,33 @@
 <template>
   <v-app>
-    <p>
-      【開発環境】一般客アカウントは、お持ちのメールアドレスで作れるので適宜作って試してください。学校関係者アカウント情報(管理者権限も含む)はDiscordで配布します。
-    </p>
+    <h1 align="center">
+      てすとdayo
+    </h1>
     <v-row justify="center" class="ma-4">
       <v-col cols="11" md="6" lg="4" class="ma-0 pa-0">
         <v-sheet color="white" elevation="4" class="py-4 px-2">
-          <h2 align="center" class="text-h5 ma-3">ログイン</h2>
+          <h2 align="center" class="text-h5 ma-3">空きテナント１</h2>
           <p align="center" class="">
-            整理券の取得にはログインが必要となります。
+            空きテナント２
           </p>
           <v-divider class="my-3"></v-divider>
-          <v-btn
+          <v-chip
             class="light-blue darken-4 my-3"
             block
             dark
             @click="loginB2c()"
           >
-            一般の方はこちらから
-          </v-btn>
+            空きテナント３
+          </v-chip>
           <p align="center" class="text-caption">
-            アカウントをお持ちでない方も上のボタンを押していただき、指示に従って作成してください。当日入場する際に再ログインが求められる可能性があるため、パスワードを必ず記憶してください。
+            空きテナント４
           </p>
           <v-divider class="my-3"></v-divider>
-          <v-btn class="light-blue darken-4 my-3" block dark @click="loginAd()">
-            本校生徒・先生方はこちらから
-          </v-btn>
+          <v-chip class="light-blue darken-4 my-3" block dark @click="loginAd()">
+            空きテナント５
+          </v-chip>
           <p align="center" class="text-caption">
-            事前に配布された「@seiryofes.com」で終わるアカウントでログインしてください
+            事前に配布された「空きテナント６」
           </p>
         </v-sheet>
       </v-col>
