@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <h1 align="center">
-      てすとdayo
+      てすとらーだ・でる・そーれ
     </h1>
     <v-row justify="center" class="ma-4">
       <v-col cols="11" md="6" lg="4" class="ma-0 pa-0">
@@ -17,15 +17,39 @@
             dark
             @click="loginB2c()"
           >
-            空きテナント３
+            ぼたん１
           </v-chip>
-          <p align="center" class="text-caption">
-            空きテナント４
-          </p>
+          <v-divider class="my-3"></v-divider>
+          <v-chip
+            class="light-blue darken-4 my-3"
+            block
+            dark
+            @click="loginB2c()"
+          >
+            ぼたん２
+          </v-chip>
+          <v-chip class="my-5"
+            class="light-blue darken-4 my-3"
+            block
+            dark
+            @click="loginB2c()"
+          >
+            ぼたん３
+          </v-chip>
+          <v-divider class="my-3"></v-divider>
+          <v-chip variant="elevated"
+            class="light-blue darken-4 my-3"
+            block
+            dark
+            @click="loginB2c()"
+          >
+            ぼたん４
+          </v-chip>
           <v-divider class="my-3"></v-divider>
           <v-chip class="light-blue darken-4 my-3" block dark @click="loginAd()">
-            空きテナント５
+            簡単なぼたん５
           </v-chip>
+
           <p align="center" class="text-caption">
             事前に配布された「空きテナント６」
           </p>
