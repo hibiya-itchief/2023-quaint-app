@@ -28,8 +28,8 @@
           >
             ぼたん２
           </v-chip>
-          <v-chip class="my-5"
-            class="light-blue darken-4 my-3"
+          <v-chip
+            class="light-blue darken-4 my-8"
             block
             dark
             @click="loginB2c()"
