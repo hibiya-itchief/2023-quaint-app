@@ -10,8 +10,8 @@
           
           <v-btn		class="light-blue darken-4 my-8"		block		rounded="xl"		dark		@click="spectestBtn1">    ボタン１    </v-btn>
           <v-btn		class="light-blue darken-4 my-8"		block		rounded="xl"		dark		@click="spectestBtn2">		ボタン２    </v-btn>
-					<v-btn		class="light-blue darken-4 my-8"		block		rounded="xl"				@click="spectestBtn3">    ボタン３    </v-btn>
-          <v-btn		class="light-blue darken-4 my-8"		block		rounded="xl"				@click="spectestBtn4">		ボタン４    </v-btn>
+					<v-btn		class="light-blue darken-4 my-8"		block		rounded="xl"		dark		@click="spectestBtn3">    ボタン３    </v-btn>
+          <v-btn		class="light-blue darken-4 my-8"		block		rounded="xl"		dark		@click="spectestBtn4">		ボタン４    </v-btn>
 					<v-btn		class="light-blue darken-4 my-8"		block		rounded="xl"		dark		@click="spectestBtn5">    ボタン５    </v-btn>
           <v-btn		class="light-blue darken-4 my-8"		block		rounded="xl"		dark		@click="spectestBtn6">		ボタン６    </v-btn>
           <p align="center" class="text-subtitle-1">   IT委員会   </p>
