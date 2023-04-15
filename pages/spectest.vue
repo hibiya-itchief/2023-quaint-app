@@ -1,24 +1,13 @@
 <template>
   <v-app>
-    <h1 align="center">
-      負荷テスト
-    </h1>
     <v-row justify="center" class="ma-4">
       <v-col cols="11" md="6" lg="4" class="ma-0 pa-0">
         <v-sheet color="white" elevation="4" class="py-4 px-2">
-          <h2 align="center" class="text-h5 ma-3">空きテナント１</h2>
-          <p align="center" class="">
-            空きテナント２
-          </p>
+          <h2 align="center" class="text-h5 ma-3">負荷テスト</h2>
           <v-divider class="my-3"></v-divider>
-          <v-chip
-            class="light-blue darken-4 my-3"
-            block
-            dark
-            @click="loginB2c()"
-          >
-            ぼたん１
-          </v-chip>
+          <v-btn     class="light-blue darken-4 my-3"     block     rounded="xl"     dark     @click="loginB2c()">
+            ボタン１
+          </v-btn>
           <v-divider class="my-3"></v-divider>
           <v-chip
             class="light-blue darken-4 my-3"
