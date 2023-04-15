@@ -4,8 +4,8 @@
       <v-col cols="11" md="6" lg="4" class="ma-0 pa-0">
         <v-sheet color="white" elevation="4" class="py-4 px-2">
         
-          <h2   align="center"    class="text-h5 ma-3">   負荷テスト   </h2>
-          <p    align="center"    class="text-caption">   指示があるまではどのボタンも押さないでください   </p>
+          <h2   align="center"    class="text-h4 ma-3">   負荷テスト   </h2>
+          <p    align="center"    class="text-h6">   指示があるまではどのボタンも押さないでください   </p>
           <v-divider class="my-3"></v-divider>
           
           <v-btn		class="light-blue darken-4 my-8"		block		rounded="xl"		dark		@click="loginB2c()">    ボタン１    </v-btn>
@@ -14,7 +14,7 @@
           <v-btn		class="light-blue darken-4 my-8"		block		rounded="xl"		dark		@click="loginB2c()">		ボタン４    </v-btn>
 					<v-btn		class="light-blue darken-4 my-8"		block		rounded="xl"		dark		@click="loginB2c()">    ボタン５    </v-btn>
           <v-btn		class="light-blue darken-4 my-8"		block		rounded="xl"		dark		@click="loginB2c()">		ボタン６    </v-btn>
-          <p align="center" class="text-caption">   IT委員会   </p>
+          <p align="center" class="text-h5">   IT委員会   </p>
           
         </v-sheet>
       </v-col>
