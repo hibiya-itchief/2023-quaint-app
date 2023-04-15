@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <h1 align="center">
-      てすとらーだ・でる・そーれ
+      負荷テスト
     </h1>
     <v-row justify="center" class="ma-4">
       <v-col cols="11" md="6" lg="4" class="ma-0 pa-0">
