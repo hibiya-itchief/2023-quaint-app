@@ -33,12 +33,12 @@ export default Vue.extend({
     loginAd() {
       this.$auth.loginWith('ad')
     },
-    spectestBtn1()    {console.log("整理券を1人1枚取得")}
-    spectestBtn2()    {console.log("整理券を1人1枚取得し、リアルタイム混雑状況も確認")}
-    spectestBtn3()    {console.log("整理券を1人1枚取得し、混雑状況も確認、APIの/groupsのエンドポイントも呼ぶ")}
-    spectestBtn4()    {console.log("1端末から3人分の負荷をかける")}
-    spectestBtn5()    {console.log("1端末から5人分の負荷をかける")}
-    spectestBtn6()    {console.log("1端末から10人分の負荷をかける")}
+    spectestBtn1()    {console.log("整理券を1人1枚取得")},
+    spectestBtn2()    {console.log("整理券を1人1枚取得し、リアルタイム混雑状況も確認")},
+    spectestBtn3()    {console.log("整理券を1人1枚取得し、混雑状況も確認、APIの/groupsのエンドポイントも呼ぶ")},
+    spectestBtn4()    {console.log("1端末から3人分の負荷をかける")},
+    spectestBtn5()    {console.log("1端末から5人分の負荷をかける")},
+    spectestBtn6()    {console.log("1端末から10人分の負荷をかける")},
   },
 })
 </script>
