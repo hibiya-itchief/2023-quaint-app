@@ -5,35 +5,10 @@
         <v-sheet color="white" elevation="4" class="py-4 px-2">
           <h2 align="center" class="text-h5 ma-3">負荷テスト</h2>
           <v-divider class="my-3"></v-divider>
-          <v-btn     class="light-blue darken-4 my-3"     block     rounded="xl"     dark     @click="loginB2c()">
-            ボタン１
-          </v-btn>
-          <v-divider class="my-3"></v-divider>
-          <v-chip
-            class="light-blue darken-4 my-3"
-            block
-            dark
-            @click="loginB2c()"
-          >
-            ぼたん２
-          </v-chip>
-          <v-chip
-            class="light-blue darken-4 my-8"
-            block
-            dark
-            @click="loginB2c()"
-          >
-            ぼたん３
-          </v-chip>
-          <v-divider class="my-3"></v-divider>
-          <v-chip variant="elevated"
-            class="light-blue darken-4 my-3"
-            block
-            dark
-            @click="loginB2c()"
-          >
-            ぼたん４
-          </v-chip>
+          
+          <v-btn		class="light-blue darken-4 my-3"		block		rounded="xl"		dark		@click="loginB2c()">ボタン１</v-btn>
+          <v-btn		class="light-blue darken-4 my-6"		block		rounded="xl"		dark		@click="loginB2c()">		ボタン２		</v-btn>
+					
           <v-divider class="my-3"></v-divider>
           <v-chip class="light-blue darken-4 my-3" block dark @click="loginAd()">
             簡単なぼたん５
