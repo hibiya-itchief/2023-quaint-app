@@ -1,132 +1,50 @@
 <template>
-<div>
-<v-row
-  justify="center" align-content="center"
-  class="ma-4"
->
-<v-col cols="11" md="6" lg="4" class="ma-0 pa-0">
-<v-sheet
-  color="white"
-  elevation="4"
-  class="py-4 px-2"
->
- <form>
-    <h2 align="center" class="text-h5 ma-3">ログイン</h2>
-    <p align="center" class="text-caption">事前配布されたseiryofes.comのアカウントでログイン</p>
-    <v-text-field
-      v-model="login.username"
-      label="ユーザー名"
-      required
-      class="my-3"
-    ></v-text-field>
-    <v-text-field
-      v-model="login.password"
-      :append-icon="pw_visible ? 'mdi-eye' : 'mdi-eye-off'"
-      :type="pw_visible ? 'text' : 'password'"
-      label="パスワード"
-      @click:append="pw_visible = !pw_visible"
-      class="my-3"
-    ></v-text-field>
-    <v-btn
-      class="light-blue darken-4 my-3"
-      @click="userLogin"
-      dark
-    >
-      ログイン
-    </v-btn>
-  </form>
-</v-sheet>
-</v-col>
-</v-row>
-<v-snackbar
-    v-model="success_alert"
-    color="success"
-    elevation="2"
->
-    {{success_message}}
-    <template v-slot:action="{ attrs }">
-        <v-btn
-        color="white"
-        icon
-        v-bind="attrs"
-        @click="success_alert = false"
-        >
-        <v-icon>mdi-close</v-icon>
-        </v-btn>
-    </template>
-</v-snackbar>
-<v-snackbar
-    v-model="error_alert"
-    color="red"
-    elevation="2"
->
-    {{error_message}}
-    <template v-slot:action="{ attrs }">
-        <v-btn
-        color="white"
-        icon
-        v-bind="attrs"
-        @click="error_alert = false"
-        >
-        <v-icon>mdi-close</v-icon>
-        </v-btn>
-    </template>
-</v-snackbar>
-</div>
+  <v-app>
+    <p>
+      【開発環境】一般客アカウントは、お持ちのメールアドレスで作れるので適宜作って試してください。学校関係者アカウント情報(管理者権限も含む)はDiscordで配布します。
+    </p>
+    <v-row justify="center" class="ma-4">
+      <v-col cols="11" md="6" lg="4" class="ma-0 pa-0">
+        <v-sheet color="white" elevation="4" class="py-4 px-2">
+          <h2 align="center" class="text-h5 ma-3">ログイン</h2>
+          <p align="center" class="">
+            整理券の取得にはログインが必要となります。
+          </p>
+          <v-divider class="my-3"></v-divider>
+          <v-btn
+            class="light-blue darken-4 my-3"
+            block
+            dark
+            @click="loginB2c()"
+          >
+            一般の方はこちらから
+          </v-btn>
+          <p align="center" class="text-caption">
+            アカウントをお持ちでない方も上のボタンを押していただき、指示に従って作成してください。当日入場する際に再ログインが求められる可能性があるため、パスワードを必ず記憶してください。
+          </p>
+          <v-divider class="my-3"></v-divider>
+          <v-btn class="light-blue darken-4 my-3" block dark @click="loginAd()">
+            本校生徒・先生方はこちらから
+          </v-btn>
+          <p align="center" class="text-caption">
+            事前に配布された「@seiryofes.com」で終わるアカウントでログインしてください
+          </p>
+        </v-sheet>
+      </v-col>
+    </v-row>
+  </v-app>
 </template>
-
-<script>
-export default {
-  name: 'SignInPage',
-  data() {
-    return {
-      login: {
-        username: '',
-        password: '',
-      },
-      username:"",
-      password:"",
-      pw_visible:false,
-      loginerror:false,
-      logout:false,
-      success_alert:false,
-      error_alert:false,
-      success_message:"",
-      error_message:"",
-    }
-  },
-  mounted(){
-    if(typeof this.$route.query.logout != 'undefined'){
-      this.logout=true
-    }
-  }, 
+<script lang="ts">
+import Vue from 'vue'
+export default Vue.extend({
+  mounted() {},
   methods: {
-    async userLogin() {
-      let params = new URLSearchParams();
-      params.append('username', this.login.username);
-      params.append('password', this.login.password);
-      try {
-        await this.$auth.loginWith('local', {data:params})
-        location.reload()        
-      } catch (e) {
-        if(e.response){
-          if(e.response.status==401){
-            this.error_message=e.response.data.detail
-            this.error_alert=true
-          }
-          else if(e.response.status==400){
-            this.error_message=e.response.data.detail
-            this.error_alert=true
-            setTimeout(()=>{this.$router.push('/user/changepassword')},2500)
-          }
-        }
-        else{
-          this.error_message="予期せぬエラーが発生しました。IT部隊にお声がけください🙇‍♂️";
-          this.error_alert=true;
-          console.error(e.response.status)
-        }
-      }
-    }
-  }
-}
+    loginB2c() {
+      this.$auth.loginWith('b2c')
+    },
+    loginAd() {
+      this.$auth.loginWith('ad')
+    },
+  },
+})
 </script>

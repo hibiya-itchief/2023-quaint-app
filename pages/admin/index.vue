@@ -1,38 +1,25 @@
 <template>
-<v-app>
-<v-container>
-<v-row class="ma-0 pa-0" justify="center">
-    <v-col cols="12" md="8" lg="6" class="ma-0 pa-0">
-    <p class="text-h5"><v-icon color="amber">mdi-crown</v-icon>Admin Settings</p>
-    <NuxtLink to="/admin/logs">ログの表示</NuxtLink>
-    <NuxtLink to="/admin/users">ユーザー</NuxtLink>
-    </v-col>
-</v-row>
-</v-container>
-</v-app>
+  <v-app>
+    <h1>管理者用画面</h1>
+    <p>
+      一応現段階でも<a :href="apiUrl + 'docs'">{{ apiUrl }}docs</a
+      >にアクセスするとすべての機能にアクセスできるが、使いづらい
+    </p>
+    <h2>この画面でできるようにしたいこと</h2>
+    <p>新規団体の追加</p>
+    <p>ユーザーの権限管理</p>
+    <p>
+      チーフ会やIT委員会が、複数の団体の複数の公演を条件に合わせて一括で処理できるようにする。例)全クラスの第一公演の開始時刻を一括で15分遅らせる
+    </p>
+    <p>チーフ会・IT委員会のみが確認できる情報にアクセスする。例)投票数</p>
+  </v-app>
 </template>
-
 <script>
 export default {
-    data(){
-        return{
-
-        }
-    },
-    async asyncData({params,error,$axios}){
-        let user_me={};
-        let user_me_authority={owner_of:[],authorizer_of:[]};
-        await Promise.all([
-            $axios.get("/users/me/authority"),
-        ])
-        .then((response)=>{
-            user_me_authority=response[0].data
-        })
-        .catch((e)=>{})
-        //権限が無い場合は404
-        if(user_me_authority.is_admin!=true){
-            return error({ statusCode: 404, message: "Not Found" })
-        }
+  data() {
+    return {
+      apiUrl: process.env.BASEURL,
     }
+  },
 }
 </script>
