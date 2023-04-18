@@ -12,7 +12,12 @@
       </v-app-bar>
     </v-card>
 
-    <v-navigation-drawer v-model="drawer" temporary fixed height="100vh">
+    <v-navigation-drawer
+      v-model="drawer"
+      temporary
+      fixed
+      style="position: fixed"
+    >
       <v-list nav dense>
         <v-list-item-group active-class="light-blue--text text--accent-4">
           <v-card v-if="$auth.loggedIn" elevation="0">
@@ -56,8 +61,8 @@
             </v-card-actions>
           </v-card>
 
-          <v-card v-else elevation="0">
-            <v-card-title class="px-2 py-1"
+          <v-card v-if="!$auth.loggedIn" elevation="0">
+            <v-card-title v-if="!$auth.loggedIn" class="px-2 py-1"
               ><v-icon class="mr-4">mdi-account-circle</v-icon
               ><span class="grey--text text-caption"
                 >ログインしていません</span
@@ -146,16 +151,6 @@
       <v-btn to="/tickets">
         <span>整理券</span>
         <v-icon>mdi-ticket</v-icon>
-      </v-btn>
-
-      <v-btn to="/scan/entry">
-        <span>QR</span>
-        <v-icon>mdi-qrcode</v-icon>
-      </v-btn>
-
-      <v-btn to="/admin">
-        <span>👑Admin</span>
-        <v-icon>mdi-crown</v-icon>
       </v-btn>
     </v-bottom-navigation>
   </v-app>
