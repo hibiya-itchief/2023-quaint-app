@@ -173,6 +173,9 @@ type Data = {
 }
 export default Vue.extend({
   name: 'UsersTicketsPage',
+  head: {
+    title: '整理券',
+  },
   async asyncData({ $axios }): Promise<Partial<Data>> {
     /* APIへのリクエストを減らしDBの負荷を下げるために
     nuxt generateしたときにフロントエンドにすべてのgroupとeventが埋め込まれるようにしたが、こうするとフロントエンドが重くなる。

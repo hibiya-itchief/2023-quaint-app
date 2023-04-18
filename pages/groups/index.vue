@@ -3,14 +3,14 @@
     <v-container>
       <v-row justify="center">
         <v-col class="mt-2 mb-0 py-0" cols="12">
+          <p class="my-0 py-0 text-caption">現在検索機能は未実装です</p>
           <v-text-field
             solo
             label="検索"
             prepend-inner-icon="mdi-magnify"
             @input="SearchGroups($event)"
           ></v-text-field>
-          <p>現在検索機能は未実装です</p>
-          <p v-show="true" class="ma-0 pa-0 text-caption">""の検索結果( 件)</p>
+          <p v-show="false" class="ma-0 pa-0 text-caption">""の検索結果( 件)</p>
           <v-chip-group
             v-show="true"
             active-class="primary--text"
@@ -93,6 +93,9 @@ type Data = {
 export default Vue.extend({
   name: 'GroupsPage',
   auth: false,
+  head: {
+    title: '探す (団体一覧)',
+  },
   async asyncData({ $axios, payload }): Promise<Partial<Data>> {
     if (payload !== undefined) {
       return { nowroading: false, groups: payload.groups, tags: payload.tags }

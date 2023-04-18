@@ -24,7 +24,9 @@
 <script lang="ts">
 import Vue from 'vue'
 export default Vue.extend({
-  auth: false,
+  head: {
+    title: '負荷テスト',
+  },
   mounted() {},
   methods: {
     loginB2c() {
