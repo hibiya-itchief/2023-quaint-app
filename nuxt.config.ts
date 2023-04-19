@@ -83,8 +83,6 @@ const nuxtConfig: NuxtConfig = {
     meta: {
       name: '星陵祭',
       author: 'IT委員会|東京都立日比谷高等学校',
-      appleStatusBarStyle: 'black-translucent',
-      nativeUI: true,
     },
     manifest: {
       name: '星陵祭',
