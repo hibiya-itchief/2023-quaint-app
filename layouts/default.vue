@@ -20,7 +20,7 @@
     >
       <v-list nav dense>
         <v-list-item-group active-class="light-blue--text text--accent-4">
-          <v-card v-if="$auth.loggedIn" elevation="0">
+          <v-card v-show="$auth.loggedIn" elevation="0">
             <v-card-title class="px-2 py-1"
               ><v-icon class="mr-4">mdi-account-circle</v-icon
               >{{ $auth.user?.name }}</v-card-title
@@ -28,7 +28,7 @@
             <v-card-text class="px-2 py-1">
               <v-chip-group column>
                 <v-chip
-                  v-if="$auth.user?.groups?.includes(userGroups.admin)"
+                  v-show="$auth.user?.groups?.includes(userGroups.admin)"
                   outlined
                 >
                   👑Admin
@@ -39,12 +39,12 @@
                 <v-chip outlined> Authorizer </v-chip>
                 <v-chip outlined> 家族用アカウント </v-chip>-->
                 <v-chip
-                  v-if="$auth.user?.jobTitle?.includes('Visited')"
+                  v-show="$auth.user?.jobTitle?.includes('Visited')"
                   outlined
                 >
                   校内入場処理済み
                 </v-chip>
-                <v-chip v-if="$auth.$state.strategy == 'ad'" outlined>
+                <v-chip v-show="$auth.$state.strategy == 'ad'" outlined>
                   生徒用アカウント
                 </v-chip>
               </v-chip-group>
@@ -61,8 +61,8 @@
             </v-card-actions>
           </v-card>
 
-          <v-card v-if="!$auth.loggedIn" elevation="0">
-            <v-card-title v-if="!$auth.loggedIn" class="px-2 py-1"
+          <v-card v-show="!$auth.loggedIn" elevation="0">
+            <v-card-title class="px-2 py-1"
               ><v-icon class="mr-4">mdi-account-circle</v-icon
               ><span class="grey--text text-caption"
                 >ログインしていません</span
