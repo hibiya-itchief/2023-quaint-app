@@ -36,19 +36,6 @@
                 </v-chip>
               </v-chip-group>
             </v-card-actions>
-            <v-card-actions v-if="editable == true">
-              <v-btn
-                color="blue-grey"
-                dark
-                outlined
-                rounded
-                width="100%"
-                :to="'/groups/' + group?.id + '/edit'"
-              >
-                <v-icon>mdi-pencil</v-icon>
-                団体情報を編集
-              </v-btn>
-            </v-card-actions>
             <v-card-actions>
               <v-btn color="primary" dark rounded @click="videoViewer = true">
                 <v-icon>mdi-play</v-icon>
@@ -331,7 +318,6 @@ type Data = {
 export default Vue.extend({
   name: 'IndivisualGroupPage',
   auth: false,
-
   async asyncData({ params, $axios, payload }): Promise<Partial<Data>> {
     const events = await $axios.$get('/groups/' + params.groupId + '/events')
     if (payload !== undefined) {
@@ -360,6 +346,11 @@ export default Vue.extend({
       success_message: '',
       error_message: '',
       dialog: false,
+    }
+  },
+  head() {
+    return {
+      title: this.group?.groupname,
     }
   },
 

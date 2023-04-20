@@ -14,15 +14,22 @@ const nuxtConfig: NuxtConfig = {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - quaint-app',
-    title: 'quaint-app',
+    titleTemplate: '%s - 星陵祭',
+    title: '星陵祭',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: '' },
       { name: 'format-detection', content: 'telephone=no' },
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    link: [
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      { rel: 'preconnect', href: 'https://fonts.gstatic.com' },
+      {
+        rel: 'stylesheet',
+        href: 'https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap',
+      },
+    ],
   },
 
   // cross-env
@@ -73,8 +80,14 @@ const nuxtConfig: NuxtConfig = {
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
+    meta: {
+      name: '星陵祭',
+      author: 'IT委員会|東京都立日比谷高等学校',
+    },
     manifest: {
-      lang: 'en',
+      name: '星陵祭',
+      short_name: '星陵祭',
+      lang: 'ja',
     },
   },
 
@@ -171,12 +184,12 @@ const nuxtConfig: NuxtConfig = {
   generate: {
     async routes() {
       const groups: Group[] = (await (
-        await fetch('https://quaint-api-dev-2023.azurewebsites.net/groups', {
+        await fetch('https://quaint-api.azurewebsites.net/groups', {
           method: 'GET',
         })
       ).json()) as Group[]
       const tags: Tag[] = (await (
-        await fetch('https://quaint-api-dev-2023.azurewebsites.net/tags', {
+        await fetch('https://quaint-api.azurewebsites.net/tags', {
           method: 'GET',
         })
       ).json()) as Tag[]
