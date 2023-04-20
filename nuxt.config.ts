@@ -184,12 +184,12 @@ const nuxtConfig: NuxtConfig = {
   generate: {
     async routes() {
       const groups: Group[] = (await (
-        await fetch('https://quaint-api-dev-2023.azurewebsites.net/groups', {
+        await fetch('https://quaint-api.azurewebsites.net/groups', {
           method: 'GET',
         })
       ).json()) as Group[]
       const tags: Tag[] = (await (
-        await fetch('https://quaint-api-dev-2023.azurewebsites.net/tags', {
+        await fetch('https://quaint-api.azurewebsites.net/tags', {
           method: 'GET',
         })
       ).json()) as Tag[]
