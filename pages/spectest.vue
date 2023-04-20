@@ -17,6 +17,27 @@
         </v-sheet>
       </v-col>
     </v-row>
+     <v-snackbar v-model="success_alert" color="success" elevation="2">
+        {{ success_message }}
+        <template #action="{ attrs }">
+          <v-btn
+            color="white"
+            icon
+            v-bind="attrs"
+            @click="success_alert = false"
+          >
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </template>
+      </v-snackbar>
+      <v-snackbar v-model="error_alert" color="red" elevation="2">
+        {{ error_message }}
+        <template #action="{ attrs }">
+          <v-btn color="white" icon v-bind="attrs" @click="error_alert = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </template>
+      </v-snackbar>
   </v-app>
 </template>
 <script lang="ts">
@@ -25,24 +46,49 @@ export default Vue.extend({
   head: {
     title: '負荷テスト',
   },
+  data(){
+    return {
+      success_alert: false,
+      error_alert: false,
+      success_message: '',
+      error_message: '',
+      dialog: false,
+    }
+  },
   mounted() {},
   methods: {
-    loginB2c() {
-      this.$auth.loginWith('b2c')
-    },
-    loginAd() {
-      this.$auth.loginWith('ad')
-    },
-    spectestBtn1() {
+    async spectestBtn1() {
       const promises = []
       for (let i = 0; i < 3; i++){
         promises.push(this.$axios.$post("/spectest/tickets"))
       }
-      Promise.all(promises)
+      await Promise.all(promises)
+      this.success_alert = true
+      this.success_message="成功しました"
     },
-    spectestBtn2()    {console.log("整理券を1人1枚取得し、リアルタイム混雑状況も確認")},
-    spectestBtn3()    {console.log("整理券を1人1枚取得し、混雑状況も確認、APIの/groupsのエンドポイントも呼ぶ")},
-    spectestBtn4()    {console.log("1端末から3人分の負荷をかける")},
+    async spectestBtn2() {
+      const promises = []
+      for (let i = 0; i < 5; i++) {
+        promises.push(this.$axios.$post("/spectest/tickets"))
+      }
+      await Promise.all(promises)
+      this.success_alert = true
+      this.success_message="成功しました"
+    },
+    async spectestBtn3() {
+      await this.$axios.$get("/groups")
+      this.success_alert = true
+      this.success_message="成功しました"
+    },
+    async spectestBtn4() {
+      const promises = []
+        for (let i = 0; i < 10; i++) {
+          promises.push(this.$axios.$post("/spectest/tickets"))
+      }
+      await Promise.all(promises)
+      this.success_alert = true
+      this.success_message="成功しました"
+    },
   },
 })
 </script>
