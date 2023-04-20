@@ -134,8 +134,8 @@
               >次に見たい公演を探しに行きましょう✨</a
             >
           </div>
-          <a href="#" @click="fetchTicket(true)"
-            >取得したはずの整理券が表示されない場合はここをクリック</a
+          <v-btn class="mx-1 my-3" color="primary" @click="fetchTicket()"
+            >再読み込み</v-btn
           >
         </v-col>
       </v-row>
@@ -176,18 +176,7 @@ export default Vue.extend({
   head: {
     title: '整理券',
   },
-  async asyncData({ $axios }): Promise<Partial<Data>> {
-    /* APIへのリクエストを減らしDBの負荷を下げるために
-    nuxt generateしたときにフロントエンドにすべてのgroupとeventが埋め込まれるようにしたが、こうするとフロントエンドが重くなる。
-    ユーザーが読み込むのに時間がかかるからどうにかいい改善案を思いつきたい */
-    const groups: Group[] = await $axios.$get('/groups')
-    const task: Promise<Event[]>[] = []
-    for (const group of groups) {
-      task.push($axios.$get('/groups/' + group.id + '/events'))
-    }
-    const eventsArray = await Promise.all(task)
-    return { groups, events: eventsArray.flat() }
-  },
+  async asyncData() {},
   data(): Data {
     return {
       groups: [],
@@ -204,30 +193,26 @@ export default Vue.extend({
   },
   async created() {
     this.fetchTicket()
-    this.qrcodeUrl = await getQRCodeDataUrl(
-      (this.$auth.user?.oid ?? this.$auth.user?.sub) as string
-    )
+    try {
+      if (this.$auth.$state.strategy === 'ad') {
+        this.qrcodeUrl = await getQRCodeDataUrl(this.$auth.user?.oid as string)
+      } else {
+        this.qrcodeUrl = await getQRCodeDataUrl(this.$auth.user?.sub as string)
+      }
+    } catch {}
   },
   methods: {
-    async fetchTicket(reload: boolean = false) {
-      const ticketsString = window.localStorage.getItem('myTickets')
-      let tickets: Ticket[]
-      if (ticketsString !== null && reload === false) {
-        tickets = JSON.parse(ticketsString)
-      } else {
-        tickets = await this.$axios.$get('/users/me/tickets')
-      }
-
-      const ticketsJson = JSON.stringify(tickets)
-      window.localStorage.setItem('myTickets', ticketsJson)
+    async fetchTicket() {
+      const tickets: Ticket[] = await this.$axios.$get('/users/me/tickets')
 
       const ticketInfos: TicketInfo[] = []
       for (const ticket of tickets) {
-        const group = this.groups?.find((e) => e.id === ticket.group_id)
-        const event = this.events?.find((e) => e.id === ticket.event_id)
-        if (group === undefined || event === undefined) {
-          break
-        }
+        const group: Group = await this.$axios.$get(
+          '/groups/' + ticket.group_id
+        )
+        const event: Event = await this.$axios.$get(
+          '/groups/' + ticket.group_id + '/events/' + ticket.event_id
+        )
         const ticketInfo: TicketInfo = {
           group,
           event,
