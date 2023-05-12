@@ -6,7 +6,7 @@
   export default Vue.extend({
     created(){
         if( this.$route.query.error !== undefined){
-            this.$router.push(`/login`)
+            this.$router.push(`/login?error=loginerror`)
     }
     }
   })
