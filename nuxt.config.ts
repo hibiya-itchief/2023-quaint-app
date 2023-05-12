@@ -83,8 +83,6 @@ const nuxtConfig: NuxtConfig = {
     meta: {
       name: '星陵祭',
       author: 'IT委員会|東京都立日比谷高等学校',
-      appleStatusBarStyle: 'black-translucent',
-      nativeUI: true,
     },
     manifest: {
       name: '星陵祭',
@@ -186,12 +184,12 @@ const nuxtConfig: NuxtConfig = {
   generate: {
     async routes() {
       const groups: Group[] = (await (
-        await fetch('https://quaint-api-dev-2023.azurewebsites.net/groups', {
+        await fetch('https://quaint-api.azurewebsites.net/groups', {
           method: 'GET',
         })
       ).json()) as Group[]
       const tags: Tag[] = (await (
-        await fetch('https://quaint-api-dev-2023.azurewebsites.net/tags', {
+        await fetch('https://quaint-api.azurewebsites.net/tags', {
           method: 'GET',
         })
       ).json()) as Tag[]
