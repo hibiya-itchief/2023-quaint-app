@@ -5,7 +5,7 @@
   import Vue from 'vue'
   export default Vue.extend({
     created(){
-        if( this.$route.query.error !== null){
+        if( this.$route.query.error !== undefined){
             this.$router.push(`/login`)
     }
     }
