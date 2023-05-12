@@ -53,7 +53,7 @@ export default Vue.extend({
   mounted() {},
   created(){
     if( this.$route.query.error !== undefined)
-    this.errorLogin
+    this.errorLogin()
   },
   methods: {
     loginB2c() {
