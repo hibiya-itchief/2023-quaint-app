@@ -54,7 +54,7 @@ export default Vue.extend({
   created(){
     if( this.$route.query.error !== undefined)
     this.errorLogin
-  }
+  },
   methods: {
     loginB2c() {
       this.$auth.loginWith('b2c')
