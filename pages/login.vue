@@ -49,7 +49,7 @@ export default Vue.extend({
     return{
       error_alert: false
     }
-  }
+  },
   mounted() {},
   created(){
     if( this.$route.query.error !== undefined)
