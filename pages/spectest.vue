@@ -63,8 +63,15 @@ export default Vue.extend({
         promises.push(this.$axios.$post("/spectest/tickets"))
       }
       await Promise.all(promises)
-      this.success_alert = true
-      this.success_message="成功しました"
+      .then(() => {
+        this.success_alert = true
+        this.success_message="成功しました"
+      })
+      .catch((e) => {
+        this.error_alert = true
+        this.error_message = "エラーが発生しました お近くのIT委員をお呼びください"
+        console.log(e)
+      })
     },
     async spectestBtn2() {
       const promises = []
@@ -72,22 +79,42 @@ export default Vue.extend({
         promises.push(this.$axios.$post("/spectest/tickets"))
       }
       await Promise.all(promises)
-      this.success_alert = true
-      this.success_message="成功しました"
+      .then(() => {
+        this.success_alert = true
+        this.success_message="成功しました"
+      })
+      .catch((e) => {
+        this.error_alert = true
+        this.error_message = "エラーが発生しました お近くのIT委員をお呼びください"
+        console.log(e)
+      })
     },
     async spectestBtn3() {
       await this.$axios.$get("/groups")
-      this.success_alert = true
-      this.success_message="成功しました"
+      .then(() => {
+        this.success_alert = true
+        this.success_message="成功しました"
+      })
+      .catch((e) => {
+        this.error_alert = true
+        this.error_message = "エラーが発生しました お近くのIT委員をお呼びください"
+        console.log(e)
+      })
     },
     async spectestBtn4() {
       const promises = []
         for (let i = 0; i < 10; i++) {
           promises.push(this.$axios.$post("/spectest/tickets"))
       }
-      await Promise.all(promises)
-      this.success_alert = true
-      this.success_message="成功しました"
+      await Promise.all(promises).then(() => {
+        this.success_alert = true
+        this.success_message="成功しました"
+      })
+      .catch((e) => {
+        this.error_alert = true
+        this.error_message = "エラーが発生しました お近くのIT委員をお呼びください"
+        console.log(e)
+      })
     },
   },
 })
