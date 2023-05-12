@@ -29,6 +29,14 @@
         </v-sheet>
       </v-col>
     </v-row>
+    <v-snackbar v-model="error_alert" color="red" elevation="2">
+        ログイン失敗　もう一度お試しください
+        <template #action="{ attrs }">
+          <v-btn color="white" icon v-bind="attrs" @click="error_alert = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </template>
+      </v-snackbar>
   </v-app>
 </template>
 <script lang="ts">
@@ -37,7 +45,16 @@ export default Vue.extend({
   head: {
     title: 'ログイン',
   },
+  data(){
+    return{
+      error_alert: false
+    }
+  }
   mounted() {},
+  created(){
+    if( this.$route.query.error !== undefined)
+    this.errorLogin
+  }
   methods: {
     loginB2c() {
       this.$auth.loginWith('b2c')
@@ -45,6 +62,9 @@ export default Vue.extend({
     loginAd() {
       this.$auth.loginWith('ad')
     },
+    errorLogin(){
+      this.error_alert=true
+    }
   },
 })
 </script>
