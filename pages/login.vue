@@ -12,7 +12,6 @@
             class="light-blue darken-4 my-3"
             block
             dark
-            disabled
           >
             一般の方はこちらから
           </v-btn>
