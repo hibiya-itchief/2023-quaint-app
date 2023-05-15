@@ -12,6 +12,8 @@
           <v-btn		class="light-blue darken-4 my-8"		block		rounded="xl"		dark		@click="spectestBtn2">		ボタン２    </v-btn>
 					<v-btn		class="light-blue darken-4 my-8"		block		rounded="xl"		dark		@click="spectestBtn3">    ボタン３    </v-btn>
           <v-btn		class="light-blue darken-4 my-8"		block		rounded="xl"		dark		@click="spectestBtn4">		ボタン４    </v-btn>
+					<v-btn		class="light-blue darken-4 my-8"		block		rounded="xl"		dark		@click="spectestBtn5">		ボタン５    </v-btn>
+					<v-btn		class="light-blue darken-4 my-8"		block		rounded="xl"		dark		@click="spectestBtn6">		ボタン６    </v-btn>
           <p align="center" class="text-subtitle-1">   IT委員会   </p>
           
         </v-sheet>
@@ -104,6 +106,36 @@ export default Vue.extend({
     async spectestBtn4() {
       const promises = []
         for (let i = 0; i < 10; i++) {
+          promises.push(this.$axios.$post("/spectest/tickets"))
+      }
+      await Promise.all(promises).then(() => {
+        this.success_alert = true
+        this.success_message="成功しました"
+      })
+      .catch((e) => {
+        this.error_alert = true
+        this.error_message = "エラーが発生しました お近くのIT委員をお呼びください"
+        console.log(e)
+      })
+    },
+		async spectestBtn5() {
+      const promises = []
+        for (let i = 0; i < 20; i++) {
+          promises.push(this.$axios.$post("/spectest/tickets"))
+      }
+      await Promise.all(promises).then(() => {
+        this.success_alert = true
+        this.success_message="成功しました"
+      })
+      .catch((e) => {
+        this.error_alert = true
+        this.error_message = "エラーが発生しました お近くのIT委員をお呼びください"
+        console.log(e)
+      })
+    },
+		async spectestBtn6() {
+      const promises = []
+        for (let i = 0; i < 50; i++) {
           promises.push(this.$axios.$post("/spectest/tickets"))
       }
       await Promise.all(promises).then(() => {
