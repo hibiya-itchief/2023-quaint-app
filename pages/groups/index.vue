@@ -25,8 +25,7 @@
 
         <v-col v-for="group in groups" v-show="filterGroups(group)" :key="group.id" cols="12" md="4" sm="6" class="my-0">
           <script>
-            if(filterGroups(group)==true){
-            this.search_result_number += 1}
+            this.search_result_number += 1
           </script>
           <!-- <class="d-flex flex-column">で，「もっと見る」が常に最下部に -->
           <v-card height="100%" class="d-flex flex-column my-1" :to="'/groups/' + group.id">
