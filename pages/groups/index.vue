@@ -21,7 +21,6 @@
             <p class="my-0 py-1 text-caption grey--text">時間がかかることがあります(学校のWi-Fi使用中など)</p>
           </div>
         </v-col>
-        <v-col v-show="hogehogetesting()"></v-col>
 
         <v-col v-for="group in groups" v-show="filterGroups(group)" :key="group.id" cols="12" md="4" sm="6" class="my-0">
           <!-- <class="d-flex flex-column">で，「もっと見る」が常に最下部に -->
@@ -102,10 +101,6 @@ export default Vue.extend({
         this.searchB=true
     }
   },
-  hogehogetesting(){
-      this.search_result_number = 0;
-      return false
-    },
 
 
     filterGroups(group: Group) {
