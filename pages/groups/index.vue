@@ -8,9 +8,6 @@
           <v-text-field solo label="検索" prepend-inner-icon="mdi-magnify" @input="SearchGroups($event)"></v-text-field>
           <p v-show="searchB" class="ma-0 pa-0 text-caption">"{{search_query}}"の検索結果({{search_result_number}}件)</p>
           
-          <script>
-            this.search_result_number=0
-          </script>
           
           <v-chip-group v-show="!searchB" active-class="primary--text" column mandatory>
             <v-chip filter @click="selectedTag = undefined"> すべて </v-chip>
