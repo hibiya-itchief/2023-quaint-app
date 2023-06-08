@@ -7,7 +7,9 @@
           <p class="my-0 py-0 text-caption">開発中しか出さない文章なので、後で消してください！！！</p>
           <v-text-field solo label="検索" prepend-inner-icon="mdi-magnify" @input="SearchGroups($event)"></v-text-field>
           <p v-show="searchB" class="ma-0 pa-0 text-caption">"{{search_query}}"の検索結果({{search_result_number}}件)</p>
-          
+          <script>
+            this.search_result_number=0
+          </script>
           
           <v-chip-group v-show="!searchB" active-class="primary--text" column mandatory>
             <v-chip filter @click="selectedTag = undefined"> すべて </v-chip>
@@ -25,6 +27,9 @@
 
         <v-col v-for="group in groups" v-show="filterGroups(group)" :key="group.id" cols="12" md="4" sm="6" class="my-0">
           <!-- <class="d-flex flex-column">で，「もっと見る」が常に最下部に -->
+            <script>
+            this.search_result_number += 1
+          </script>
           <v-card height="100%" class="d-flex flex-column my-1" :to="'/groups/' + group.id">
             <v-img
               v-if="group.public_thumbnail_image_url != null"
@@ -94,13 +99,12 @@ export default Vue.extend({
 
   methods: {
     filterGroups(group: Group) {
-      this.search_result_number = 0
       if ( this.selectedTag === undefined ) {
-        if( !this.searchB || group.id.includes(this.search_query) || group.groupname.includes(this.search_query) ) {this.search_result_number += 1; return true }
-        else if( group.title!==null && group.title.includes(this.search_query) ){this.search_result_number += 1; return true }
-        else if( group.description!==null && group.description.includes(this.search_query) ){this.search_result_number += 1; return true } }
+        if( !this.searchB || group.id.includes(this.search_query) || group.groupname.includes(this.search_query) ) { return true }
+        else if( group.title!==null && group.title.includes(this.search_query) ){ return true }
+        else if( group.description!==null && group.description.includes(this.search_query) ){ return true } }
 
-      else if ( group.tags.some( (i) => i.id === this.selectedTag?.id ) ) {this.search_result_number += 1; return true }
+      else if ( group.tags.some( (i) => i.id === this.selectedTag?.id ) ) { return true }
       else{ return false }
     },// tag全体（{id:hogehoge, tagname:honyohonyo}の形）を用いると，tagが一致している判定がうまく行えなかったので，idを用いてtagの一致を判定している
     HashColor(text: string) {
@@ -134,7 +138,6 @@ export default Vue.extend({
         this.selectedTag=undefined
         this.search_query=input
         this.searchB=true
-        this.search_result_number=0
     }
   }
   }
