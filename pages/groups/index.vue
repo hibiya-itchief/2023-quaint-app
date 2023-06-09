@@ -114,10 +114,7 @@ export default Vue.extend({
 
     filterGroups(group: Group) {
       if ( this.selectedTag === undefined ) {
-        if( !this.searchB || group.id.includes(this.search_query) || group.groupname.includes(this.search_query) ) { return true }
-        else if( group.title!==null && group.title.includes(this.search_query) ){ return true }
-        else if( group.description!==null && group.description.includes(this.search_query) ){ return true } 
-      }
+        if( !this.searchB || group.id.includes(this.search_query) || group.groupname.includes(this.search_query) || group.title?.includes(this.search_query) || group.description?.includes(this.search_query) ) { return true }      }
       else if ( group.tags.some( (i) => i.id === this.selectedTag?.id ) ) { return true }
       else{ return false }
     },// tag全体（{id:hogehoge, tagname:honyohonyo}の形）を用いると，tagが一致している判定がうまく行えなかったので，idを用いてtagの一致を判定している
