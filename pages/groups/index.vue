@@ -91,28 +91,30 @@ export default Vue.extend({
   },
 
   methods: {
+
     SearchGroups(input: string){
       if(input==""){
         this.searchB=false
-        this.search_result_number = 3
       }
       else{
         this.selectedTag=undefined
         this.search_query=input
         this.searchB=true
-        this.search_result_number = 5
+        this.search_result_number = 0
+        for( let i = 0; i < groups.length; i++){
+          if(this.groups[i].id.includes(this.search_query)){this.search_result_number=11}}
     }
   },
 
 
     filterGroups(group: Group) {
       if ( this.selectedTag === undefined ) {
-        if( !this.searchB || group.id.includes(this.search_query) || group.groupname.includes(this.search_query) ) {this.search_result_number=2; return true; }
+        if( !this.searchB || group.id.includes(this.search_query) || group.groupname.includes(this.search_query) ) { return true }
         else if( group.title!==null && group.title.includes(this.search_query) ){ return true }
         else if( group.description!==null && group.description.includes(this.search_query) ){ return true } 
       }
       else if ( group.tags.some( (i) => i.id === this.selectedTag?.id ) ) { return true }
-      else{return false}
+      else{ return false }
     },// tag全体（{id:hogehoge, tagname:honyohonyo}の形）を用いると，tagが一致している判定がうまく行えなかったので，idを用いてtagの一致を判定している
 
     HashColor(text: string) {
