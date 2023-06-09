@@ -108,7 +108,7 @@ export default Vue.extend({
     filterGroups(group: Group) {
       this.search_result_number = 1
       if ( this.selectedTag === undefined ) {
-        if( !this.searchB || group.id.includes(this.search_query) || group.groupname.includes(this.search_query) ) { return true }
+        if( !this.searchB || group.id.includes(this.search_query) || group.groupname.includes(this.search_query) ) {this.search_result_number=2; return true; }
         else if( group.title!==null && group.title.includes(this.search_query) ){ return true }
         else if( group.description!==null && group.description.includes(this.search_query) ){ return true } 
       }
