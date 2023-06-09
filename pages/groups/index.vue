@@ -4,7 +4,6 @@
       <v-row justify="center">
 
         <v-col class="mt-2 mb-0 py-0" cols="12">
-          <p class="my-0 py-0 text-caption">開発中しか出さない文章なので、後で消してください！！！</p>
           <v-text-field solo label="検索" prepend-inner-icon="mdi-magnify" @input="SearchGroups($event)"></v-text-field>
           <p v-show="searchB" class="ma-0 pa-0 text-caption">"{{search_query}}"の検索結果({{search_result_number}}件)</p>
           
