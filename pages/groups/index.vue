@@ -11,7 +11,7 @@
             <v-chip filter @click="selectedTag = undefined"> すべて </v-chip>
             <v-chip filter v-for="tag in tags" :key="tag.id" @click="selectedTag = tag">{{ tag.tagname }}</v-chip>
             <v-divider vertical :thickness="10" class="mx-2 px-0"></v-divider>
-            <v-chip filter @click="selectedTag = undefined"> お気に入り </v-chip>
+            <v-chip filter @click="selectedTag = undefined" class="ml-1"> お気に入り </v-chip>
           </v-chip-group>
         </v-col>
 
