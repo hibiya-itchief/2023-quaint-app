@@ -102,7 +102,10 @@ export default Vue.extend({
         this.searchB=true
         this.search_result_number = 0
         for( let i = 0; i < this.groups.length; i++){
-          if(this.groups[i].id.includes(this.search_query)){this.search_result_number=11}}
+          if( this.groups[i].id.includes(this.search_query) || this.groups[i].groupname.includes(this.search_query) ) { this.search_result_number += 1 }
+          else if( this.groups[i].title!==null && this.groups[i].title.includes(this.search_query) ){ this.search_result_number += 1 }
+          else if( this.groups[i].description!==null && this.groups[i].description.includes(this.search_query) ){ this.search_result_number += 1 }
+        }
     }
   },
 
