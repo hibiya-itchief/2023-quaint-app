@@ -101,7 +101,7 @@ export default Vue.extend({
         this.search_query=input
         this.searchB=true
         this.search_result_number = 0
-        for( let i = 0; i < groups.length; i++){
+        for( let i = 0; i < this.groups.length; i++){
           if(this.groups[i].id.includes(this.search_query)){this.search_result_number=11}}
     }
   },
