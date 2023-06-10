@@ -60,7 +60,6 @@
                 ><v-icon>mdi-star</v-icon></v-btn
               >
               <v-btn v-else @click="addFavorite(group)" icon><v-icon>mdi-star-outline</v-icon></v-btn>
-              <p class="ma-0 pa-0 text--caption">お気に入り機能(試行中)</p>
             </v-card-actions>
 
             <v-dialog v-model="videoViewer" fullscreen>
@@ -314,7 +313,7 @@ type Data = {
   ticket_person: number
   person_labels: any[]
   person_icons: any[]
-  changeFavorite: number
+  displayFavorite: number
 }
 export default Vue.extend({
   name: 'IndivisualGroupPage',
@@ -347,7 +346,7 @@ export default Vue.extend({
       success_message: '',
       error_message: '',
       dialog: false,
-      changeFavorite: 0
+      displayFavorite: 0
     }
   },
   head() {
@@ -358,9 +357,9 @@ export default Vue.extend({
 
   methods: {
     IsFavorite(group: Group){
-      if(this.changeFavorite == 0 ){ this.changeFavorite = 1; return false}
-      if(this.changeFavorite == 2 ){ return false}
-      if(this.changeFavorite == 3 ){ return true }
+      if(this.displayFavorite == 0 ){ this.displayFavorite = 1; return false}
+      if(this.displayFavorite == 2 ){ return false}
+      if(this.displayFavorite == 3 ){ return true }
       
 
       for(let i = 0; i < localStorage.length; i++){
@@ -370,11 +369,11 @@ export default Vue.extend({
     },
     addFavorite(group: Group){
       localStorage.setItem(group?.id,group?.id)
-      this.changeFavorite=3
+      this.displayFavorite=3
     },
     removeFavorite(group: Group){
       localStorage.removeItem(group?.id)
-      this.changeFavorite=2
+      this.displayFavorite=2
     },
     
     DateFormatter(inputDate: string) {
