@@ -358,8 +358,10 @@ export default Vue.extend({
 
   methods: {
     IsFavorite(group: Group){
-      if(this.changeFavorite == 0 ){ this.changeFavorite = 1; return false }
-      if(this.changeFavorite == 2 || 3){ return false }
+      if(this.changeFavorite == 0 ){ this.changeFavorite = 1; return false}
+      if(this.changeFavorite == 2 ){ return false}
+      if(this.changeFavorite == 3 ){ return true }
+      
 
       for(let i = 0; i < localStorage.length; i++){
         if ( group?.id == localStorage.key(i) ){ return true }
