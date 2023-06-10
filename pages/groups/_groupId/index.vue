@@ -314,6 +314,7 @@ type Data = {
   ticket_person: number
   person_labels: any[]
   person_icons: any[]
+  changeFavorite: boolean
 }
 export default Vue.extend({
   name: 'IndivisualGroupPage',
@@ -346,6 +347,7 @@ export default Vue.extend({
       success_message: '',
       error_message: '',
       dialog: false,
+      changeFavorite: false
     }
   },
   head() {
@@ -356,13 +358,15 @@ export default Vue.extend({
 
   methods: {
     IsFavorite(group: Group){
+      if(this.changeFavorite == false ){ this.changeFavorite = true return false}
       for(let i = 0; i < localStorage.length; i++){
         if ( group?.id == localStorage.key(i) ){ return true }
-      };
+      }
       return false
     },
     addFavorite(group: Group){
       localStorage.setItem(group?.id,group?.id)
+      this.changeFavorite=true
     },
     removeFavorite(group: Group){
       localStorage.removeItem(group?.id)
