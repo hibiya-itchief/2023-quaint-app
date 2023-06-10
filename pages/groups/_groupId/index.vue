@@ -357,7 +357,7 @@ export default Vue.extend({
   methods: {
     IsFavorite(group: Group){
       for(let i = 0; i < localStorage.length; i++){
-        if ( group?.id == localStorage.key(i) ){ return true }
+        if ( group?.id == localStorage.key(i) ){ return false }
       };
       return false
     },
