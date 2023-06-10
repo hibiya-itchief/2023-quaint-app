@@ -121,8 +121,8 @@ export default Vue.extend({
       else if ( this.selectedTag === null) {
         for(let i = 0; i < this.groups.length; i++){
         if ( group.id == localStorage.key(i) ){ return true }
-        else{ return false }
       }
+      else{ return false }
     }
       else if ( group.tags.some( (i) => i.id === this.selectedTag?.id ) ) { return true }
       else{ return false }
