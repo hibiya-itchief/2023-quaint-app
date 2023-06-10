@@ -185,10 +185,10 @@
                             color="grey"
                             inline
                           ></v-badge>
-                          <v-badge color="green" inline></v-badge>
+                          <v-badge v-else-if="checkTakenTickets / checkStock < 0.8" color="green" inline></v-badge>
                           <!--8割以上で黄色になる-->
-                          <v-badge color="amber" inline></v-badge>
-                          <v-badge color="red" inline></v-badge>
+                          <v-badge v-else-if="checkTakenTickets / checkStock >=0.8 && checkTakenTickets < checkStock" color="amber" inline></v-badge>
+                          <v-badge v-else-if="checkTakenTickets >=checkStock < 0.8" color="red" inline></v-badge>
                         </v-card-title>
                         <v-card-subtitle class="pb-2">
                           <p class="ma-0 pa-0">
@@ -356,6 +356,7 @@ export default Vue.extend({
   },
 
   methods: {
+
     IsFavorite(group: Group){
       if(this.displayFavorite == 0 ){ this.displayFavorite = 1; return false}
       if(this.displayFavorite == 2 ){ return false}
@@ -374,6 +375,12 @@ export default Vue.extend({
     removeFavorite(group: Group){
       localStorage.removeItem('seiryofes.groups.favorite.'+group?.id)
       this.displayFavorite=2
+    },
+    checkStock(event: Event){
+      return this.$axios.get("/groups/" + group.id + "/events/" + event.id + "/tickets/stock")
+    },
+    checkTakenTickets(event: Event){
+      return this.$axios.get("/groups/" + group.id + "/events/" + event.id + "/tickets/taken_tickets")
     },
     
     DateFormatter(inputDate: string) {
