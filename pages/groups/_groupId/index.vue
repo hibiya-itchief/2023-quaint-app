@@ -56,11 +56,11 @@
                 ><v-icon>mdi-instagram</v-icon></v-btn
               >
               <v-spacer></v-spacer>
-              <v-btn v-if="true" icon><v-icon>mdi-star-outline</v-icon></v-btn>
-              <v-btn v-if="true" icon class="yellow--text"
+              <v-btn v-if="!IsFavorite" @click="addFavorite" icon><v-icon>mdi-star-outline</v-icon></v-btn>
+              <v-btn v-if="IsFavorite" @click="removeFavorite" icon class="yellow--text"
                 ><v-icon>mdi-star</v-icon></v-btn
               >
-              <p class="ma-0 pa-0 text--caption">お気に入り機能(未実装)</p>
+              <p class="ma-0 pa-0 text--caption">お気に入り機能(試行中)</p>
             </v-card-actions>
 
             <v-dialog v-model="videoViewer" fullscreen>
@@ -355,6 +355,19 @@ export default Vue.extend({
   },
 
   methods: {
+    IsFavorite(){
+      for(let i = 0; i < localStorage.length; i++){
+        if ( group?.id == localStorage.key(i) ){ return true }
+      };
+      return false
+    },
+    addFavorite(){
+      localStorage.setItem(group?.id,group?.id)
+    },
+    removeFavorite(){
+      localStorage.removeItem(group?.id)
+    },
+    
     DateFormatter(inputDate: string) {
       const d = new Date(inputDate)
       return (
