@@ -119,7 +119,7 @@ export default Vue.extend({
         if( !this.searchB || group.id.includes(this.search_query) || group.groupname.includes(this.search_query) || group.title?.includes(this.search_query) || group.description?.includes(this.search_query) ) { return true }
       }
       else if ( this.selectedTag === null) {
-        for(let i = 0; i < localStorage.length; i++){
+        for(let i = 0; i < this.groups.length; i++){
         if ( group.id == localStorage.key(i) ){ return true }
         else{ return false }
       }
