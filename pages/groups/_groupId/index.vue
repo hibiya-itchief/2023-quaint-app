@@ -361,7 +361,7 @@ export default Vue.extend({
       if(this.changeFavorite == false ){ this.changeFavorite = true return false}
       for(let i = 0; i < localStorage.length; i++){
         if ( group?.id == localStorage.key(i) ){ return true }
-      }
+      };
       return false
     },
     addFavorite(group: Group){
