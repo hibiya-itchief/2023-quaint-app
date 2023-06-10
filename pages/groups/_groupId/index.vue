@@ -188,7 +188,7 @@
                           <v-badge v-else-if="checkTakenTickets / checkStock < 0.8" color="green" inline></v-badge>
                           <!--8割以上で黄色になる-->
                           <v-badge v-else-if="checkTakenTickets / checkStock >=0.8 && checkTakenTickets < checkStock" color="amber" inline></v-badge>
-                          <v-badge v-else-if="checkTakenTickets >=checkStock < 0.8" color="red" inline></v-badge>
+                          <v-badge v-else-if="checkTakenTickets >=checkStock" color="red" inline></v-badge>
                         </v-card-title>
                         <v-card-subtitle class="pb-2">
                           <p class="ma-0 pa-0">
