@@ -355,16 +355,16 @@ export default Vue.extend({
   },
 
   methods: {
-    IsFavorite(){
+    IsFavorite(group: Group){
       for(let i = 0; i < localStorage.length; i++){
         if ( group?.id == localStorage.key(i) ){ return true }
       };
       return false
     },
-    addFavorite(){
+    addFavorite(group: Group){
       localStorage.setItem(group?.id,group?.id)
     },
-    removeFavorite(){
+    removeFavorite(group: Group){
       localStorage.removeItem(group?.id)
     },
     
