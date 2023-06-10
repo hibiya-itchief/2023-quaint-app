@@ -377,10 +377,10 @@ export default Vue.extend({
       this.displayFavorite=2
     },
     checkStock(event: Event){
-      return this.$axios.get("/groups/" + this.group.id + "/events/" + event.id + "/tickets/stock")
+      return this.$axios.get("/groups/" + this.group?.id + "/events/" + event.id + "/tickets/stock")
     },
     checkTakenTickets(event: Event){
-      return this.$axios.get("/groups/" + this.group.id + "/events/" + event.id + "/tickets/taken_tickets")
+      return this.$axios.get("/groups/" + this.group?.id + "/events/" + event.id + "/tickets/taken_tickets")
     },
     
     DateFormatter(inputDate: string) {
