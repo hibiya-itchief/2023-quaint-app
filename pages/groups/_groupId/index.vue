@@ -56,7 +56,7 @@
                 ><v-icon>mdi-instagram</v-icon></v-btn
               >
               <v-spacer></v-spacer>
-              <v-btn v-if="IsFavorite(group)" @click="addFavorite(group)" icon class="yellow--text"
+              <v-btn v-if="IsFavorite(group)" @click="removeFavorite(group)" icon class="yellow--text"
                 ><v-icon>mdi-star</v-icon></v-btn
               >
               <v-btn v-else @click="addFavorite(group)" icon><v-icon>mdi-star-outline</v-icon></v-btn>
@@ -357,7 +357,7 @@ export default Vue.extend({
   methods: {
     IsFavorite(group: Group){
       for(let i = 0; i < localStorage.length; i++){
-        if ( group?.id == localStorage.key(i) ){ return false }
+        if ( group?.id == localStorage.key(i) ){ return true }
       };
       return false
     },
