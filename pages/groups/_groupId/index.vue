@@ -56,10 +56,10 @@
                 ><v-icon>mdi-instagram</v-icon></v-btn
               >
               <v-spacer></v-spacer>
-              <v-btn v-if="IsFavorite(group)" @click="removeFavorite(group)" icon class="yellow--text"
-                ><v-icon>mdi-star</v-icon></v-btn
+              <v-btn v-if="IsFavorite(group)" @click="removeFavorite(group)" icon class="pink--text"
+                ><v-icon>mdi-heart</v-icon></v-btn
               >
-              <v-btn v-else @click="addFavorite(group)" icon><v-icon>mdi-star-outline</v-icon></v-btn>
+              <v-btn v-else @click="addFavorite(group)" icon><v-icon>mdi-heart-outline</v-icon></v-btn>
             </v-card-actions>
 
             <v-dialog v-model="videoViewer" fullscreen>
