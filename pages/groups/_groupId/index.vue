@@ -56,8 +56,8 @@
                 ><v-icon>mdi-instagram</v-icon></v-btn
               >
               <v-spacer></v-spacer>
-              <v-btn v-if="!IsFavorite" @click="addFavorite" icon><v-icon>mdi-star-outline</v-icon></v-btn>
-              <v-btn v-if="IsFavorite" @click="removeFavorite" icon class="yellow--text"
+              <v-btn v-if="!IsFavorite" @click="addFavorite(group)" icon><v-icon>mdi-star-outline</v-icon></v-btn>
+              <v-btn v-if="IsFavorite" @click="removeFavorite(group)" icon class="yellow--text"
                 ><v-icon>mdi-star</v-icon></v-btn
               >
               <p class="ma-0 pa-0 text--caption">お気に入り機能(試行中)</p>
