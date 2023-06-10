@@ -56,11 +56,10 @@
                 ><v-icon>mdi-instagram</v-icon></v-btn
               >
               <v-spacer></v-spacer>
-              <v-btn v-if="true" icon><v-icon>mdi-star-outline</v-icon></v-btn>
-              <v-btn v-if="true" icon class="yellow--text"
-                ><v-icon>mdi-star</v-icon></v-btn
+              <v-btn v-if="IsFavorite(group)" @click="removeFavorite(group)" icon class="pink--text"
+                ><v-icon>mdi-heart</v-icon></v-btn
               >
-              <p class="ma-0 pa-0 text--caption">お気に入り機能(未実装)</p>
+              <v-btn v-else @click="addFavorite(group)" icon><v-icon>mdi-heart-outline</v-icon></v-btn>
             </v-card-actions>
 
             <v-dialog v-model="videoViewer" fullscreen>
@@ -314,6 +313,7 @@ type Data = {
   ticket_person: number
   person_labels: any[]
   person_icons: any[]
+  displayFavorite: number
 }
 export default Vue.extend({
   name: 'IndivisualGroupPage',
@@ -346,6 +346,7 @@ export default Vue.extend({
       success_message: '',
       error_message: '',
       dialog: false,
+      displayFavorite: 0
     }
   },
   head() {
@@ -355,6 +356,26 @@ export default Vue.extend({
   },
 
   methods: {
+    IsFavorite(group: Group){
+      if(this.displayFavorite == 0 ){ this.displayFavorite = 1; return false}
+      if(this.displayFavorite == 2 ){ return false}
+      if(this.displayFavorite == 3 ){ return true }
+      
+
+      for(let i = 0; i < localStorage.length; i++){
+        if ( 'seiryofes.groups.favorite.'+group?.id == localStorage.key(i) ){ return true }
+      }
+      return false
+    },
+    addFavorite(group: Group){
+      localStorage.setItem('seiryofes.groups.favorite.'+group?.id,group?.id)
+      this.displayFavorite=3
+    },
+    removeFavorite(group: Group){
+      localStorage.removeItem('seiryofes.groups.favorite.'+group?.id)
+      this.displayFavorite=2
+    },
+    
     DateFormatter(inputDate: string) {
       const d = new Date(inputDate)
       return (
