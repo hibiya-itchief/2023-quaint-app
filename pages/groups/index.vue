@@ -11,7 +11,7 @@
             <v-chip filter @click="selectedTag = undefined"> すべて </v-chip>
             <v-chip filter v-for="tag in tags" :key="tag.id" @click="selectedTag = tag">{{ tag.tagname }}</v-chip>
             <v-divider vertical :thickness="10" class="mx-2 px-0"></v-divider>
-            <v-chip filter @click="selectedTag = undefined" class="ml-1"> お気に入り </v-chip>
+            <v-chip filter @click="selectedTag = favorite" class="ml-1"> お気に入り </v-chip>
           </v-chip-group>
         </v-col>
 
@@ -118,6 +118,7 @@ export default Vue.extend({
       if ( this.selectedTag === undefined ) {
         if( !this.searchB || group.id.includes(this.search_query) || group.groupname.includes(this.search_query) || group.title?.includes(this.search_query) || group.description?.includes(this.search_query) ) { return true }
       }
+      else if ( this.selectedTag === favorite) {}
       else if ( group.tags.some( (i) => i.id === this.selectedTag?.id ) ) { return true }
       else{ return false }
     },// tag全体（{id:hogehoge, tagname:honyohonyo}の形）を用いると，tagが一致している判定がうまく行えなかったので，idを用いてtagの一致を判定している
