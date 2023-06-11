@@ -174,6 +174,20 @@ export default Vue.extend({
 </script>
 
 <style>
+/* v-app-barを削除すると、v-bottom-navigationのボタンが上にずれ、背景の色が正しくならないので不本意ながらカスタムcssを追加 */
+.v-item-group.v-bottom-navigation .v-btn {
+  background-color: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  flex: 0 1 auto;
+  font-size: 0.75rem;
+  height: inherit;
+  max-width: 168px;
+  min-width: 80px;
+  position: relative;
+  text-transform: none;
+}
+
 .app-env {
   position: fixed;
   top: 0;
@@ -266,6 +280,7 @@ export default Vue.extend({
   width: 30%;
 }
 
+/* ハンバーガーメニューを開くボタンのためのスペース */
 .drawer-menu {
   padding-top: 40px;
 }
