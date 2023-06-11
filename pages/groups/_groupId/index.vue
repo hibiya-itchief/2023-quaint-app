@@ -377,12 +377,17 @@ export default Vue.extend({
       this.displayFavorite=2
     },
     checkStock(event: Event){
-      const checkTickets: object = this.$axios.get("/groups/" + this.group?.id + "/events/" + event.id + "/tickets")
-      return (checkTickets.stock)
+      interface IFcheckTickets{
+        taken_tickets: number
+        stock: number
+      }
+      const checkTickets = this.$axios.get("/groups/" + this.group?.id + "/events/" + event.id + "/tickets") as IFcheckTickets
+      const key: keyof IFcheckTickets = 'stock'
+      return (checkTickets['key'])
     },
     checkTakenTickets(event: Event){
       const checkTickets: object = this.$axios.get("/groups/" + this.group?.id + "/events/" + event.id + "/tickets")
-      return (checkTickets['taken_tickets' as keyof typeof object])
+      return (checkTickets['taken_tickets' as keyof typeof Object])
     },
     
     DateFormatter(inputDate: string) {
