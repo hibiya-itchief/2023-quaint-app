@@ -382,7 +382,7 @@ export default Vue.extend({
     },
     checkTakenTickets(event: Event){
       const checkTickets = this.$axios.get("/groups/" + this.group?.id + "/events/" + event.id + "/tickets")
-      return (checkTickets.taken-tickets)
+      return (checkTickets['taken_tickets'])
     },
     
     DateFormatter(inputDate: string) {
