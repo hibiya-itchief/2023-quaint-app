@@ -377,12 +377,14 @@ export default Vue.extend({
       this.displayFavorite=2
     },
     checkStock(event: Event){
-      const checkTickets: object = this.$axios.get("/groups/" + group?.id + "/events/" + event.id + "/tickets").then
+      interface IFcheckStock{"stock" : number}
+      const checkTickets: IFcheckStock = this.$axios.get("/groups/" + group?.id + "/events/" + event.id + "/tickets").then
       return (checkTickets["stock"])
     },
     checkTakenTickets(event: Event){
-      const checkTickets: object = this.$axios.get("/groups/" + group?.id + "/events/" + event.id + "/tickets").then
-      return (checkTickets["taken_tickets"])
+      interface IFcheckTakenTickets{"taken_tickets" : number}
+      const checkTickets: IFcheckTakenTickets = this.$axios.get("/groups/" + group?.id + "/events/" + event.id + "/tickets").then
+      return (checkTickets."taken_tickets")
     },
     
     DateFormatter(inputDate: string) {
