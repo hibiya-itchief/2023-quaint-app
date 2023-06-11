@@ -1,19 +1,22 @@
 <template>
   <v-app>
-    <v-card class="overflow-hidden">
-      <v-app-bar fixed color="light-blue" dark app elevate-on-scroll>
-        <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
-        <v-toolbar-title
-          ><NuxtLink to="/" class="ma-0 pa-0" tag="span">星陵祭2023</NuxtLink>
-          <span v-if="app_env !== 'production'"
-            >@ {{ app_env }}</span
-          ></v-toolbar-title
-        >
-      </v-app-bar>
-    </v-card>
+    <div class="app-env" v-if="app_env !== 'production'">
+      <span>@{{ app_env }} </span>
+      <span style="font-size: 0.5em">API:{{ api_url }} </span>
+    </div>
+    <div class="humbuger-box">
+      <div
+        class="humbugermenu"
+        @click="drawerMenu = !drawerMenu"
+        :class="{ active: drawerMenu }"
+      >
+        <div class="humbuger-btn"><span></span><span></span><span></span></div>
+      </div>
+    </div>
 
     <v-navigation-drawer
-      v-model="drawer"
+      v-model="drawerMenu"
+      class="drawer-menu"
       temporary
       fixed
       style="position: fixed"
@@ -76,21 +79,6 @@
           </v-card>
 
           <v-divider></v-divider>
-
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>mdi-form-textbox-password</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title
-              ><NuxtLink
-                style="text-decoration: none; color: inherit"
-                to="/login"
-                >パスワードを変更</NuxtLink
-              ></v-list-item-title
-            >
-          </v-list-item>
-
-          <v-divider></v-divider>
         </v-list-item-group>
       </v-list>
       <template #append>
@@ -134,7 +122,7 @@
     </v-navigation-drawer>
 
     <v-main>
-      <Nuxt />
+      <Nuxt class="main-content" />
     </v-main>
 
     <v-bottom-navigation color="light-blue" fixed app>
@@ -163,9 +151,10 @@ export default Vue.extend({
   name: 'DefaultLayout',
   data() {
     return {
-      drawer: false,
+      drawerMenu: false,
       userGroups: { admin: process.env.AZURE_AD_GROUPS_QUAINT_ADMIN as string },
       app_env: process.env.QUAINT_ENV,
+      api_url: process.env.BASEURL,
     }
   },
   async fetch() {},
@@ -183,3 +172,120 @@ export default Vue.extend({
   },
 })
 </script>
+
+<style>
+/* v-app-barを削除すると、v-bottom-navigationのボタンが上にずれ、背景の色が正しくならないので不本意ながらカスタムcssを追加 */
+.v-item-group.v-bottom-navigation .v-btn {
+  background-color: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  flex: 0 1 auto;
+  font-size: 0.75rem;
+  height: inherit;
+  max-width: 168px;
+  min-width: 80px;
+  position: relative;
+  text-transform: none;
+}
+
+.app-env {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 1500;
+  padding: 0.5rem;
+  background-color: #ffd900;
+  border-radius: 0 0 0 5px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: #f00;
+  animation: blinking 1s ease-in-out infinite alternate;
+}
+
+@keyframes blinking {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.humbuger-box {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+.humbugermenu {
+  position: relative; /* ボタン内側の基点となるためrelativeを指定 */
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
+}
+
+/* ボタン内側 */
+.humbugermenu .humbuger-btn {
+  transition: all 0.6s; /* アニメーションの設定 */
+  width: 50px;
+  height: 50px;
+}
+
+.humbugermenu span {
+  display: inline-block;
+  transition: all 0.4s;
+  position: absolute;
+  left: 14px;
+  height: 3px;
+  border-radius: 2px;
+  background: #05aaf4;
+  width: 45%;
+}
+
+.humbugermenu span:nth-of-type(1) {
+  top: 15px;
+}
+
+.humbugermenu span:nth-of-type(2) {
+  top: 23px;
+}
+
+.humbugermenu span:nth-of-type(3) {
+  top: 31px;
+}
+
+/* activeクラスが付与されると .openbtn-areaが360度回転し、その中の線が回転して×に */
+.humbugermenu.active .humbuger-btn {
+  transform: rotate(360deg);
+}
+
+.humbugermenu.active span:nth-of-type(1) {
+  top: 18px;
+  left: 18px;
+  transform: translateY(6px) rotate(-45deg);
+  width: 30%;
+}
+
+.humbugermenu.active span:nth-of-type(2) {
+  opacity: 0;
+}
+
+.humbugermenu.active span:nth-of-type(3) {
+  top: 30px;
+  left: 18px;
+  transform: translateY(-6px) rotate(45deg);
+  width: 30%;
+}
+
+/* ハンバーガーメニューを開くボタンのためのスペース */
+.drawer-menu {
+  padding-top: 40px;
+}
+
+.main-content {
+  padding-top: 40px;
+}
+</style>
