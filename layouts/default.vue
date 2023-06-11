@@ -152,10 +152,6 @@
         <span>整理券</span>
         <v-icon>mdi-ticket</v-icon>
       </v-btn>
-      <v-btn to="/spectest">
-        <span>負荷テスト</span>
-        <v-icon>mdi-test-tube</v-icon>
-      </v-btn>
     </v-bottom-navigation>
   </v-app>
 </template>
