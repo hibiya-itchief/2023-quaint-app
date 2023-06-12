@@ -170,7 +170,7 @@
                 <a class="px-3 pb-1" @click="$nuxt.refresh()"
                   >最新の状態に更新</a
                 >
-                <div v-for="event in events" :key="event.id">
+                <div v-for="(event, index) in events" :key="event.id">
                   <v-row justify="center" class="ma-0 pa-0">
                     <v-col cols="11" class="mx-0 ma-1 pa-0">
                       <v-card class="ma-0" @click.stop="dialog = true">
@@ -185,10 +185,10 @@
                             color="grey"
                             inline
                           ></v-badge>
-                          <v-badge v-else-if="checkTakenTickets(event) / checkStock(event) < 0.8" color="green" inline></v-badge>
+                          <v-badge v-else-if="checkTakenTickets(index) / checkStock(index) < 0.8" color="green" inline></v-badge>
                           <!--8割以上で黄色になる-->
-                          <v-badge v-else-if="checkTakenTickets(event) / checkStock(event) >=0.8 && checkTakenTickets(event) < checkStock(event)" color="amber" inline></v-badge>
-                          <v-badge v-else-if="checkTakenTickets(event) >=checkStock(event)" color="red" inline></v-badge>
+                          <v-badge v-else-if="checkTakenTickets(index) / checkStock(index) >=0.8 && checkTakenTickets(index) < checkStock(index)" color="amber" inline></v-badge>
+                          <v-badge v-else-if="checkTakenTickets(index) >=checkStock(index)" color="red" inline></v-badge>
                         </v-card-title>
                         <v-card-subtitle class="pb-2">
                           <p class="ma-0 pa-0">
@@ -355,6 +355,29 @@ export default Vue.extend({
     }
   },
 
+
+
+
+
+
+  async created(){
+    const getTicketsInfo = []
+    const listStock = []
+    const listTakenTickets = []
+    for(let i = 0; i < this.events.length; i++){
+      let iID = this.events[i].id
+      getTicketsInfo.push("'$axios.$get(/groups/' + this.group?.id + '/events/' + iID + ')'")
+    }
+    const ticketsInfo = await Promise.all(this.getTicketsInfo)
+    for(let i = 0; i < ticketsInfo.length; i++){
+      listStock.push(this.ticketsInfo[i].stock)
+      listTakenTickets.push(this.ticketsInfo[i]['taken_tickets'])
+    }
+
+    
+  },
+ 
+
   methods: {
 
     IsFavorite(group: Group){
@@ -376,18 +399,11 @@ export default Vue.extend({
       localStorage.removeItem('seiryofes.groups.favorite.'+group?.id)
       this.displayFavorite=2
     },
-    async checkStock(event: Event){
-      interface IFcheckTickets{
-        taken_tickets: number
-        stock: number
-      }
-      const checkTickets = await $axios.get("/groups/" + this.group?.id + "/events/" + event.id + "/tickets") as IFcheckTickets
-      const key: keyof IFcheckTickets = 'stock'
-      return (checkTickets['key'])
+    checkStock(index: number){
+      return this.listStock[index]
     },
-    checkTakenTickets(event: Event){
-      const checkTickets: object = this.$axios.get("/groups/" + this.group?.id + "/events/" + event.id + "/tickets")
-      return (checkTickets['taken_tickets' as keyof typeof Object])
+    checkTakenTickets(index: number){
+      return this.listTakenTickets[index]
     },
     
     DateFormatter(inputDate: string) {
