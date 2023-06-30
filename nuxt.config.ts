@@ -183,13 +183,18 @@ const nuxtConfig: NuxtConfig = {
   },
   generate: {
     async routes() {
+      // emvSet.BASEURLの末尾にスラッシュがある場合は削除する
+      const baseurl_without_slash =
+        envSet.BASEURL.slice(-1) === '/'
+          ? envSet.BASEURL.slice(0, -1)
+          : envSet.BASEURL
       const groups: Group[] = (await (
-        await fetch('https://quaint-api.azurewebsites.net/groups', {
+        await fetch(baseurl_without_slash + '/groups', {
           method: 'GET',
         })
       ).json()) as Group[]
       const tags: Tag[] = (await (
-        await fetch('https://quaint-api.azurewebsites.net/tags', {
+        await fetch(baseurl_without_slash + '/tags', {
           method: 'GET',
         })
       ).json()) as Tag[]
