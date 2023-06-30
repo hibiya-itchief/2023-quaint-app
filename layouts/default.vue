@@ -55,6 +55,9 @@
                 ユーザーID：{{ $auth.user?.oid ?? $auth.user?.sub }}
                 <!--ADの場合ユーザーオブジェクトIDはoidに入ってる-->
               </p>
+              <p class="ma-0 pa-0 text-caption grey--text">
+                <a @click="revealToken()">APIトークンを表示</a>
+              </p>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -166,6 +169,12 @@ export default Vue.extend({
     }
   },
   methods: {
+    revealToken() {
+      window.open(
+        'https://jwt.io/?token=' +
+          (this.$auth.strategy as any).token.get().split(' ').slice(-1)[0]
+      )
+    },
     async logout() {
       await this.$auth.logout()
     },
