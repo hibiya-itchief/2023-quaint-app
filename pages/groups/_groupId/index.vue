@@ -364,11 +364,11 @@ export default Vue.extend({
     const getTicketsInfo = []
     const listStock = []
     const listTakenTickets = []
+    const ticketsInfo = await Promise.all(this.getTicketsInfo)
     for(let i = 0; i < this.events.length; i++){
       let iID = this.events[i].id
       getTicketsInfo.push('$axios.$get(/groups/' + this.group?.id + '/events/' + iID + ')')
     }
-    const ticketsInfo = await Promise.all(this.getTicketsInfo)
     for(let i = 0; i < ticketsInfo.length; i++){
       listStock.push(this.ticketsInfo[i].stock)
       listTakenTickets.push(this.ticketsInfo[i]['taken_tickets'])
