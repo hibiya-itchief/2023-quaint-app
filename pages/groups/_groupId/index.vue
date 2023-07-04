@@ -3,7 +3,7 @@
     <v-btn icon fab to="/groups/">
       <v-icon>mdi-chevron-left</v-icon>
     </v-btn>
-    <v-conteiner>
+    <v-container>
       <v-row justify="center" class="ma-0 pa-0">
         <v-col cols="12" sm="6" lg="6" class="mx-0 my-2 px-0 py-0 px-sm-3">
           <!--作品情報-->
@@ -291,7 +291,7 @@
           </v-btn>
         </template>
       </v-snackbar>
-    </v-conteiner>
+    </v-container>
   </v-app>
 </template>
 
@@ -314,6 +314,8 @@ type Data = {
   person_labels: any[]
   person_icons: any[]
   displayFavorite: number
+  listStock: number[]
+  listTakenTickets: number[]
 }
 export default Vue.extend({
   name: 'IndivisualGroupPage',
@@ -346,7 +348,9 @@ export default Vue.extend({
       success_message: '',
       error_message: '',
       dialog: false,
-      displayFavorite: 0
+      displayFavorite: 0,
+      listStock: [],
+      listTakenTickets: []
     }
   },
   head() {
@@ -354,38 +358,32 @@ export default Vue.extend({
       title: this.group?.groupname,
     }
   },
-
-
-
-
-
-
-  async created(){
-    const getTicketsInfo = []
-    const listStock = []
-    const listTakenTickets = []
-    const ticketsInfo = await Promise.all(this.getTicketsInfo)
-    for(let i = 0; i < this.events.length; i++){
-      let iID = this.events[i].id
-      getTicketsInfo.push('$axios.$get(/groups/' + this.group?.id + '/events/' + iID + ')')
-    }
-    for(let i = 0; i < ticketsInfo.length; i++){
-      listStock.push(this.ticketsInfo[i].stock)
-      listTakenTickets.push(this.ticketsInfo[i]['taken_tickets'])
-    }
-
-    
+/*
+  created(){
+    this.listStock = [60, 60,60]
+    this.listTakenTickets = [0, 59, 60]
   },
- 
+*/
+  async created(){
+    if(this.events.length !== 0){
+    const getTicketsInfo = []
+    for(let i = 0; i < this.events.length; i++){
+      getTicketsInfo.push(this.$axios.$get( "/groups/" + this.group?.id + "/events/"+ this.events[i].id +"/tickets"))
+    }
+    const ticketsInfo = await Promise.all(getTicketsInfo)
+    console.log(ticketsInfo)
+    for(let i = 0; i < ticketsInfo.length; i++){
+      this.listStock.push(ticketsInfo[i].stock)
+      this.listTakenTickets.push(ticketsInfo[i]['taken_tickets'])
+    }
+  }
+  },
 
   methods: {
-
     IsFavorite(group: Group){
       if(this.displayFavorite == 0 ){ this.displayFavorite = 1; return false}
       if(this.displayFavorite == 2 ){ return false}
       if(this.displayFavorite == 3 ){ return true }
-      
-
       for(let i = 0; i < localStorage.length; i++){
         if ( 'seiryofes.groups.favorite.'+group?.id == localStorage.key(i) ){ return true }
       }
@@ -405,7 +403,6 @@ export default Vue.extend({
     checkTakenTickets(index: number){
       return this.listTakenTickets[index]
     },
-    
     DateFormatter(inputDate: string) {
       const d = new Date(inputDate)
       return (
@@ -474,6 +471,8 @@ export default Vue.extend({
           this.error_alert = true
         })
     },
+    /*
+    以下、かつて存在した「いいね機能」の跡を遺しておく
     CreateLike() {
       if (!this.$auth.loggedIn) {
         this.error_message = '「いいね！」するにはログインが必要です'
@@ -500,6 +499,8 @@ export default Vue.extend({
         })
         .catch(() => {})
     },
+    
+    */
   },
 })
 </script>
