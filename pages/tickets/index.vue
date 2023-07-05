@@ -279,7 +279,7 @@ export default Vue.extend({
           this.error_message = e.message
         })
       this.cancelDialog = false
-      this.$nuxt.refresh()
+      this.fetchTicket()
     },
   },
 })
