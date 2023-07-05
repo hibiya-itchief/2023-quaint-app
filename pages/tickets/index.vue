@@ -173,9 +173,6 @@ type Data = {
 }
 export default Vue.extend({
   name: 'UsersTicketsPage',
-  head: {
-    title: '整理券',
-  },
   async asyncData() {},
   data(): Data {
     return {
@@ -190,6 +187,9 @@ export default Vue.extend({
       success_message: '',
       error_message: '',
     }
+  },
+  head: {
+    title: '整理券',
   },
   async created() {
     this.fetchTicket()

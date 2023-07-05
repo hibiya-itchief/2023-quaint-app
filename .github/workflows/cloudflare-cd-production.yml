@@ -1,7 +1,7 @@
 name: cloudflare-deploy-production
 on:
   schedule:
-    - cron: "0 15 * * *" # 毎日0時にビルド
+    - cron: '0 15 * * *' # 毎日0時にビルド
   workflow_dispatch:
   push:
     branches:

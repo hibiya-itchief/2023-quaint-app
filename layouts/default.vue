@@ -1,14 +1,14 @@
 <template>
   <v-app>
-    <div class="app-env" v-if="app_env !== 'production'">
+    <div v-if="app_env !== 'production'" class="app-env">
       <span>@{{ app_env }} </span>
       <span style="font-size: 0.5em">API:{{ api_url }} </span>
     </div>
     <div class="humbuger-box">
       <div
         class="humbugermenu"
-        @click="drawerMenu = !drawerMenu"
         :class="{ active: drawerMenu }"
+        @click="drawerMenu = !drawerMenu"
       >
         <div class="humbuger-btn"><span></span><span></span><span></span></div>
       </div>

@@ -56,10 +56,16 @@
                 ><v-icon>mdi-instagram</v-icon></v-btn
               >
               <v-spacer></v-spacer>
-              <v-btn v-if="IsFavorite(group)" @click="removeFavorite(group)" icon class="pink--text"
+              <v-btn
+                v-if="IsFavorite(group)"
+                icon
+                class="pink--text"
+                @click="removeFavorite(group)"
                 ><v-icon>mdi-heart</v-icon></v-btn
               >
-              <v-btn v-else @click="addFavorite(group)" icon><v-icon>mdi-heart-outline</v-icon></v-btn>
+              <v-btn v-else icon @click="addFavorite(group)"
+                ><v-icon>mdi-heart-outline</v-icon></v-btn
+              >
             </v-card-actions>
 
             <v-dialog v-model="videoViewer" fullscreen>
@@ -185,10 +191,30 @@
                             color="grey"
                             inline
                           ></v-badge>
-                          <v-badge v-else-if="checkTakenTickets(index) / checkStock(index) < 0.8" color="green" inline></v-badge>
+                          <v-badge
+                            v-else-if="
+                              checkTakenTickets(index) / checkStock(index) < 0.8
+                            "
+                            color="green"
+                            inline
+                          ></v-badge>
                           <!--8割以上で黄色になる-->
-                          <v-badge v-else-if="checkTakenTickets(index) / checkStock(index) >=0.8 && checkTakenTickets(index) < checkStock(index)" color="amber" inline></v-badge>
-                          <v-badge v-else-if="checkTakenTickets(index) >=checkStock(index)" color="red" inline></v-badge>
+                          <v-badge
+                            v-else-if="
+                              checkTakenTickets(index) / checkStock(index) >=
+                                0.8 &&
+                              checkTakenTickets(index) < checkStock(index)
+                            "
+                            color="amber"
+                            inline
+                          ></v-badge>
+                          <v-badge
+                            v-else-if="
+                              checkTakenTickets(index) >= checkStock(index)
+                            "
+                            color="red"
+                            inline
+                          ></v-badge>
                         </v-card-title>
                         <v-card-subtitle class="pb-2">
                           <p class="ma-0 pa-0">
@@ -350,7 +376,7 @@ export default Vue.extend({
       dialog: false,
       displayFavorite: 0,
       listStock: [],
-      listTakenTickets: []
+      listTakenTickets: [],
     }
   },
   head() {
@@ -358,49 +384,65 @@ export default Vue.extend({
       title: this.group?.groupname,
     }
   },
-/*
+  /*
   created(){
     this.listStock = [60, 60,60]
     this.listTakenTickets = [0, 59, 60]
   },
 */
-  async created(){
-    if(this.events.length !== 0){
-    const getTicketsInfo = []
-    for(let i = 0; i < this.events.length; i++){
-      getTicketsInfo.push(this.$axios.$get( "/groups/" + this.group?.id + "/events/"+ this.events[i].id +"/tickets"))
+  async created() {
+    if (this.events.length !== 0) {
+      const getTicketsInfo = []
+      for (let i = 0; i < this.events.length; i++) {
+        getTicketsInfo.push(
+          this.$axios.$get(
+            '/groups/' +
+              this.group?.id +
+              '/events/' +
+              this.events[i].id +
+              '/tickets'
+          )
+        )
+      }
+      const ticketsInfo = await Promise.all(getTicketsInfo)
+      for (let i = 0; i < ticketsInfo.length; i++) {
+        this.listStock.push(ticketsInfo[i].stock)
+        this.listTakenTickets.push(ticketsInfo[i].taken_tickets)
+      }
     }
-    const ticketsInfo = await Promise.all(getTicketsInfo)
-    console.log(ticketsInfo)
-    for(let i = 0; i < ticketsInfo.length; i++){
-      this.listStock.push(ticketsInfo[i].stock)
-      this.listTakenTickets.push(ticketsInfo[i]['taken_tickets'])
-    }
-  }
   },
 
   methods: {
-    IsFavorite(group: Group){
-      if(this.displayFavorite == 0 ){ this.displayFavorite = 1; return false}
-      if(this.displayFavorite == 2 ){ return false}
-      if(this.displayFavorite == 3 ){ return true }
-      for(let i = 0; i < localStorage.length; i++){
-        if ( 'seiryofes.groups.favorite.'+group?.id == localStorage.key(i) ){ return true }
+    IsFavorite(group: Group) {
+      if (this.displayFavorite === 0) {
+        this.displayFavorite = 1
+        return false
+      }
+      if (this.displayFavorite === 2) {
+        return false
+      }
+      if (this.displayFavorite === 3) {
+        return true
+      }
+      for (let i = 0; i < localStorage.length; i++) {
+        if ('seiryofes.groups.favorite.' + group?.id === localStorage.key(i)) {
+          return true
+        }
       }
       return false
     },
-    addFavorite(group: Group){
-      localStorage.setItem('seiryofes.groups.favorite.'+group?.id,group?.id)
-      this.displayFavorite=3
+    addFavorite(group: Group) {
+      localStorage.setItem('seiryofes.groups.favorite.' + group?.id, group?.id)
+      this.displayFavorite = 3
     },
-    removeFavorite(group: Group){
-      localStorage.removeItem('seiryofes.groups.favorite.'+group?.id)
-      this.displayFavorite=2
+    removeFavorite(group: Group) {
+      localStorage.removeItem('seiryofes.groups.favorite.' + group?.id)
+      this.displayFavorite = 2
     },
-    checkStock(index: number){
+    checkStock(index: number) {
       return this.listStock[index]
     },
-    checkTakenTickets(index: number){
+    checkTakenTickets(index: number) {
       return this.listTakenTickets[index]
     },
     DateFormatter(inputDate: string) {
