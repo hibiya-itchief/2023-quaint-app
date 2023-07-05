@@ -8,20 +8,20 @@
         <v-col cols="12" sm="6" lg="6" class="mx-0 my-2 px-0 py-0 px-sm-3">
           <!--作品情報-->
           <!--タイトル，団体，お気に入り，映像で鑑賞ボタン-->
-          <v-card>
+          <v-card v-if="group">
             <v-img
-              v-if="group?.public_thumbnail_image_url != null"
+              v-if="group.public_thumbnail_image_url != null"
               max-height="500px"
-              :src="group?.public_thumbnail_image_url"
+              :src="group.public_thumbnail_image_url"
             ></v-img>
             <v-img
               v-else
-              :class="HashColor(group?.id ?? 'hashcolor')"
+              :class="HashColor(group.id ?? 'hashcolor')"
               height="180px"
             ></v-img>
-            <v-card-title clsss="pb-0">{{ group?.title }}</v-card-title>
+            <v-card-title clsss="pb-0">{{ group.title }}</v-card-title>
             <v-card-subtitle class="pb-0">{{
-              group?.groupname
+              group.groupname
             }}</v-card-subtitle>
             <!--
                         お気に入り機能は未実装
@@ -31,7 +31,7 @@
 
             <v-card-actions>
               <v-chip-group column>
-                <v-chip v-for="tag in group?.tags" :key="tag.id" disabled>
+                <v-chip v-for="tag in group.tags" :key="tag.id" disabled>
                   {{ tag.tagname }}
                 </v-chip>
               </v-chip-group>
@@ -42,14 +42,14 @@
                 映像で鑑賞
               </v-btn>
               <v-btn
-                v-if="group?.twitter_url != null"
+                v-if="group.twitter_url != null"
                 icon
                 :href="group.twitter_url"
                 target="_blank"
                 ><v-icon>mdi-twitter</v-icon></v-btn
               >
               <v-btn
-                v-if="group?.instagram_url != null"
+                v-if="group.instagram_url != null"
                 icon
                 :href="group.instagram_url"
                 target="_blank"
@@ -75,8 +75,7 @@
                     <v-icon>mdi-close</v-icon>
                   </v-btn>
                   <v-toolbar-title
-                    >{{ group?.title }} -
-                    {{ group?.groupname }}</v-toolbar-title
+                    >{{ group.title }} - {{ group.groupname }}</v-toolbar-title
                   >
                 </v-toolbar>
                 <v-row
@@ -86,7 +85,7 @@
                 >
                   <v-col cols="12">
                     <iframe
-                      v-if="group?.stream_url != null"
+                      v-if="group.stream_url != null"
                       class="ma-0 pa-0"
                       height="400px"
                       width="99%"
@@ -104,7 +103,7 @@
                   <v-card-text
                     >※映像鑑賞には，学校で配布されたMicrosoftアカウントへのログインが必要です。</v-card-text
                   >
-                  <v-col v-if="group?.stream_url != null" cols="12">
+                  <v-col v-if="group.stream_url != null" cols="12">
                     <v-row justify="center">
                       <v-btn
                         color="primary"
