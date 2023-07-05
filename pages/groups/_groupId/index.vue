@@ -177,113 +177,109 @@
                   >最新の状態に更新</a
                 >
                 <div v-for="(event, index) in events" :key="event.id">
-                  <v-row justify="center" class="ma-0 pa-0">
-                    <v-col cols="11" class="mx-0 ma-1 pa-0">
-                      <v-card class="ma-0" @click.stop="dialog = true">
-                        <v-card-title class="py-2">
-                          {{ event.eventname }}
-                          <v-spacer></v-spacer>
-                          <v-badge
-                            v-if="
-                              new Date() < new Date(event.sell_starts) ||
-                              new Date(event.sell_ends) < new Date()
-                            "
-                            color="grey"
-                            inline
-                          ></v-badge>
-                          <v-badge
-                            v-else-if="
-                              checkTakenTickets(index) / checkStock(index) < 0.8
-                            "
-                            color="green"
-                            inline
-                          ></v-badge>
-                          <!--8割以上で黄色になる-->
-                          <v-badge
-                            v-else-if="
-                              checkTakenTickets(index) / checkStock(index) >=
-                                0.8 &&
-                              checkTakenTickets(index) < checkStock(index)
-                            "
-                            color="amber"
-                            inline
-                          ></v-badge>
-                          <v-badge
-                            v-else-if="
-                              checkTakenTickets(index) >= checkStock(index)
-                            "
-                            color="red"
-                            inline
-                          ></v-badge>
-                        </v-card-title>
-                        <v-card-subtitle class="pb-2">
-                          <p class="ma-0 pa-0">
-                            配布時間：{{ DateFormatter(event.sell_starts) }}
-                            ~
-                            {{ DateFormatter(event.sell_ends) }}
-                          </p>
-                          <p class="ma-0 pa-0">
-                            公演時間：{{ DateFormatter(event.starts_at) }} ~
-                            {{ DateFormatter(event.ends_at) }}
-                          </p>
-                        </v-card-subtitle>
-                      </v-card>
-                    </v-col>
-                  </v-row>
-                  <v-dialog v-model="dialog" width="100%">
-                    <v-card class="pa-2">
-                      <v-card-title class="px-1"
-                        >{{ group?.title }} / {{ group?.groupname }} -
-                        {{ event.eventname }}</v-card-title
-                      >
-                      <v-card-subtitle class="px-1">
-                        <p class="ma-0 pa-0">この公演の整理券をとりますか？</p>
-                        <p class="ma-0 pa-0">
-                          公演時間：{{ DateFormatter(event.starts_at) }} ~
-                          {{ DateFormatter(event.ends_at) }}
-                        </p>
-                      </v-card-subtitle>
-                      <div class="px-1">
-                        <p
-                          v-if="$auth.$state.strategy == 'ad'"
-                          class="ma-0 pa-0 text-subtitle-2"
-                        >
-                          席数：1席
-                        </p>
-                        <p v-else class="ma-0 pa-0 text-subtitle-2">
-                          <v-icon>mdi-account-plus</v-icon
-                          >同時に入場する人数(ご家族など)
-                        </p>
-                        <v-slider
-                          v-if="$auth.$state.strategy != 'ad'"
-                          v-model="ticket_person"
-                          :tick-labels="person_labels"
-                          min="1"
-                          max="3"
-                        >
-                          <template #thumb-label="props">
-                            <v-icon dark>
-                              {{ person_icons[props.value - 1] }}
-                            </v-icon>
-                          </template>
-                        </v-slider>
-                      </div>
-                      <v-card-actions class="px-1">
-                        <v-spacer></v-spacer>
-
-                        <v-btn color="red" text @click="dialog = false">
-                          いいえ
-                        </v-btn>
-                        <v-btn
-                          color="primary"
-                          @click="CreateTicket(event, ticket_person)"
-                        >
-                          はい
-                        </v-btn>
-                      </v-card-actions>
-                    </v-card>
-                  </v-dialog>
+                  <v-card class="mx-2 my-1" @click.stop="selectEvent(event)">
+                    <v-card-title class="py-2">
+                      {{ event.eventname }}
+                      <v-spacer></v-spacer>
+                      <v-badge
+                        v-if="
+                          new Date() < new Date(event.sell_starts) ||
+                          new Date(event.sell_ends) < new Date()
+                        "
+                        color="grey"
+                        inline
+                      ></v-badge>
+                      <v-badge
+                        v-else-if="
+                          checkTakenTickets(index) / checkStock(index) < 0.8
+                        "
+                        color="green"
+                        inline
+                      ></v-badge>
+                      <!--8割以上で黄色になる-->
+                      <v-badge
+                        v-else-if="
+                          checkTakenTickets(index) / checkStock(index) >= 0.8 &&
+                          checkTakenTickets(index) < checkStock(index)
+                        "
+                        color="amber"
+                        inline
+                      ></v-badge>
+                      <v-badge
+                        v-else-if="
+                          checkTakenTickets(index) >= checkStock(index)
+                        "
+                        color="red"
+                        inline
+                      ></v-badge>
+                    </v-card-title>
+                    <v-card-subtitle class="pb-2">
+                      <p class="ma-0 pa-0">
+                        配布時間：{{ DateFormatter(event.sell_starts) }}
+                        ~
+                        {{ DateFormatter(event.sell_ends) }}
+                      </p>
+                      <p class="ma-0 pa-0">
+                        公演時間：{{ DateFormatter(event.starts_at) }} ~
+                        {{ DateFormatter(event.ends_at) }}
+                      </p>
+                    </v-card-subtitle>
+                  </v-card>
                 </div>
+                <v-dialog v-if="selected_event" v-model="dialog" width="100%">
+                  <v-card class="pa-2">
+                    <v-card-title class="px-1"
+                      >{{ group?.title }} / {{ group?.groupname }} -
+                      {{ selected_event.eventname }}</v-card-title
+                    >
+                    <v-card-subtitle class="px-1">
+                      <p class="ma-0 pa-0">この公演の整理券をとりますか？</p>
+                      <p class="ma-0 pa-0">
+                        公演時間：{{ DateFormatter(selected_event.starts_at) }}
+                        ~
+                        {{ DateFormatter(selected_event.ends_at) }}
+                      </p>
+                    </v-card-subtitle>
+                    <div class="px-1">
+                      <p
+                        v-if="$auth.$state.strategy == 'ad'"
+                        class="ma-0 pa-0 text-subtitle-2"
+                      >
+                        席数：1席
+                      </p>
+                      <p v-else class="ma-0 pa-0 text-subtitle-2">
+                        <v-icon>mdi-account-plus</v-icon
+                        >同時に入場する人数(ご家族など)
+                      </p>
+                      <v-slider
+                        v-if="$auth.$state.strategy != 'ad'"
+                        v-model="ticket_person"
+                        :tick-labels="person_labels"
+                        min="1"
+                        max="3"
+                      >
+                        <template #thumb-label="props">
+                          <v-icon dark>
+                            {{ person_icons[props.value - 1] }}
+                          </v-icon>
+                        </template>
+                      </v-slider>
+                    </div>
+                    <v-card-actions class="px-1">
+                      <v-spacer></v-spacer>
+
+                      <v-btn color="red" text @click.stop="dialog = false">
+                        いいえ
+                      </v-btn>
+                      <v-btn
+                        color="primary"
+                        @click="CreateTicket(selected_event, ticket_person)"
+                      >
+                        はい
+                      </v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
                 <v-col v-if="events.length === 0" cols="12">
                   <v-card disabled>
                     <v-card-title
@@ -327,6 +323,7 @@ import Vue from 'vue'
 type Data = {
   group: Group | undefined
   events: Event[]
+  selected_event: Event | null
   videoViewer: boolean
   streamVideoId: string
   editable: boolean
@@ -359,6 +356,7 @@ export default Vue.extend({
       videoViewer: false,
       group: undefined,
       events: [],
+      selected_event: null,
       streamVideoId: '',
       editable: true, // 権限を持つユーザーがアクセスするとtrueになりページを編集できる
       events_show: true,
@@ -512,6 +510,10 @@ export default Vue.extend({
           }
           this.error_alert = true
         })
+    },
+    selectEvent(event: Event) {
+      this.selected_event = event
+      this.dialog = true
     },
     /*
     以下、かつて存在した「いいね機能」の跡を遺しておく
