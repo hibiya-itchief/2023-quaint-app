@@ -381,12 +381,6 @@ export default Vue.extend({
       title: this.group?.groupname,
     }
   },
-  /*
-  created(){
-    this.listStock = [60, 60,60]
-    this.listTakenTickets = [0, 59, 60]
-  },
-*/
   async created() {
     if (this.events.length !== 0) {
       const getTicketsInfo = []
@@ -514,36 +508,6 @@ export default Vue.extend({
       this.selected_event = event
       this.dialog = true
     },
-    /*
-    以下、かつて存在した「いいね機能」の跡を遺しておく
-    CreateLike() {
-      if (!this.$auth.loggedIn) {
-        this.error_message = '「いいね！」するにはログインが必要です'
-        this.error_alert = true
-        return 1
-      }
-      this.$axios
-        .post('/groups/' + this.group?.id + '/like')
-        .then(() => {
-          this.$nuxt.refresh()
-        })
-        .catch(() => {})
-    },
-    DeleteLike() {
-      if (!this.$auth.loggedIn) {
-        this.error_message = '「いいね！」するにはログインが必要です'
-        this.error_alert = true
-        return 1
-      }
-      this.$axios
-        .delete('/groups/' + this.group?.id + '/like')
-        .then(() => {
-          this.$nuxt.refresh()
-        })
-        .catch(() => {})
-    },
-    
-    */
   },
 })
 </script>
