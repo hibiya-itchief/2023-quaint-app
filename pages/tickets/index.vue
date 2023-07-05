@@ -273,14 +273,6 @@ export default Vue.extend({
         .then(() => {
           this.success_alert = true
           this.success_message = '整理券が正常にキャンセルされました'
-
-          const ticketsString = window.localStorage.getItem('myTickets')
-          if (ticketsString !== null) {
-            const tickets: TicketInfo[] = JSON.parse(ticketsString)
-            tickets.filter((e) => e.ticket.id !== deleteTicket.ticket.id)
-            const ticketsJson = JSON.stringify(tickets)
-            window.localStorage.setItem('myTickets', ticketsJson)
-          }
         })
         .catch((e) => {
           this.error_alert = true
