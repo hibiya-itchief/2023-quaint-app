@@ -24,8 +24,8 @@ export default Vue.extend({
     meta: [
       { charset: 'utf-8' },
       {
-        name: "google-site-verification",
-        content: "kWJ2xUbgwAHnCg34_SgnJlN3oUPoUUpIlGf-9oEYFqA",
+        name: 'google-site-verification',
+        content: 'kWJ2xUbgwAHnCg34_SgnJlN3oUPoUUpIlGf-9oEYFqA',
       }
       {
         name: 'viewport',
