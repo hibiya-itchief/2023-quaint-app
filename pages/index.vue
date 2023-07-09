@@ -38,6 +38,10 @@ export default Vue.extend({
         href: 'https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@1,100&display=swap',
       },
     ],
+    meta: [
+      name: "google-site-verification",
+      content: "kWJ2xUbgwAHnCg34_SgnJlN3oUPoUUpIlGf-9oEYFqA",
+    ],
     script: [
       {
         type: 'module',
