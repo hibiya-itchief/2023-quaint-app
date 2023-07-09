@@ -21,6 +21,25 @@ export default Vue.extend({
   name: 'IndexPage',
   auth: false,
   head: {
+    meta: [
+      { charset: 'utf-8' },
+      {
+        name: 'google-site-verification',
+        content: 'kWJ2xUbgwAHnCg34_SgnJlN3oUPoUUpIlGf-9oEYFqA',
+      }
+      {
+        name: 'viewport',
+        content: 'width=device-width',
+      },
+      {
+        name: 'description',
+        content: 'Seiryofes 2023 official website',
+      },
+      {
+        name: 'keywords',
+        content: 'Seiryofes,星陵祭,日比谷高校,文化祭,公式,星稜祭,日比谷,星陵祭公式,日比谷高校文化祭,IT委員会,日比谷IT',
+      },
+    ],
     title: '星陵祭2023',
     link: [
       { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
