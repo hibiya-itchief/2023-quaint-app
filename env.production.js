@@ -1,7 +1,7 @@
 // This file is git-controlled, so don't write a private value
 module.exports = {
   QUAINT_ENV: 'production',
-  BASEURL: 'https://api-43e73a.seiryofes.com/',
+  BASEURL: 'https://api.seiryofes.com/',
   AZURE_AD_OPENIDCONFIGURATION:
     'https://login.microsoftonline.com/158e6d17-f3d5-4365-8428-26dfc74a9d27/v2.0/.well-known/openid-configuration',
   AZURE_AD_CLIENTID: '0f2252c5-62ef-4aab-af65-99a753f1c77c',
