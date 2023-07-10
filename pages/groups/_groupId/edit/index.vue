@@ -741,7 +741,7 @@ export default Vue.extend({
         admin: process.env.AZURE_AD_GROUPS_QUAINT_ADMIN as string,
         owner: process.env.AZURE_AD_GROUPS_QUAINT_OWNER as string,
       },
-      hostname: location.host,
+      hostname: '',
       success_alert: false,
       error_alert: false,
       success_message: '',
@@ -786,6 +786,7 @@ export default Vue.extend({
     }
   },
   async created() {
+    this.hostname = location.host // data()のreturn()内で使うとエラーになるのでここで代入
     if (
       !(this.$auth.user?.groups as string[]).includes(this.userGroups.admin)
     ) {
