@@ -418,8 +418,7 @@
                   color="primary"
                   outlined
                   @click="
-                    groupEdit.public_thumbnail_image_url =
-                      change_thumbnail_image_input
+                    groupEdit.public_thumbnail_image_url = null
                     UpdateGroup()
                   "
                 >
@@ -838,6 +837,38 @@ export default Vue.extend({
               '予期しないエラーが発生しました。IT部隊にお声がけください🙇‍♂️'
           }
           this.error_alert = true
+        })
+    },
+    ChangeThumbnailImage() {
+      if (this.change_thumbnail_image_input === null) {
+        this.error_message = '画像が選択されていません'
+        this.error_alert = true
+        return
+      }
+      const params = new FormData()
+      params.append('file', this.change_thumbnail_image_input)
+      this.$axios
+        .put('/groups/' + this.group?.id + '/public_thumbnail_image', params, {
+          headers: { 'content-type': 'multipart/form-data' },
+        })
+        .then((res) => {
+          this.group = res.data
+          this.success_message = 'サムネイル画像が変更されました'
+          this.success_alert = true
+          this.$nuxt.refresh()
+        })
+        .catch((e) => {
+          if (e.response) {
+            this.error_message = e.response.data.detail
+            if (e.response.status === 422) {
+              this.error_message = '入力された値の形式が不適切です'
+            }
+          } else {
+            this.error_message =
+              '予期しないエラーが発生しました。IT部隊にお声がけください🙇‍♂️'
+          }
+          this.error_alert = true
+          this.$nuxt.refresh()
         })
     },
     DeleteTag(tag: Tag) {
