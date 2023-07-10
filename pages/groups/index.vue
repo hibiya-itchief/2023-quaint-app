@@ -163,7 +163,7 @@ export default Vue.extend({
           return true
         }
       } else if (this.selectedTag === null) {
-        for (let i = 0; i < this.groups.length; i++) {
+        for (let i = 0; i < localStorage.length; i++) {
           if ('seiryofes.groups.favorite.' + group.id === localStorage.key(i)) {
             return true
           }
