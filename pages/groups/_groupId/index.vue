@@ -36,6 +36,19 @@
                 </v-chip>
               </v-chip-group>
             </v-card-actions>
+            <v-card-actions v-if="editable == true">
+              <v-btn
+                color="blue-grey"
+                dark
+                outlined
+                rounded
+                width="100%"
+                :to="'/groups/' + group?.id + '/edit'"
+              >
+                <v-icon>mdi-pencil</v-icon>
+                団体情報を編集
+              </v-btn>
+            </v-card-actions>
             <v-card-actions>
               <v-btn color="primary" dark rounded @click="videoViewer = true">
                 <v-icon>mdi-play</v-icon>
@@ -323,6 +336,7 @@ type Data = {
   group: Group | undefined
   events: Event[]
   selected_event: Event | null
+  userGroups: { admin: string; owner: string }
   videoViewer: boolean
   streamVideoId: string
   editable: boolean
@@ -352,12 +366,16 @@ export default Vue.extend({
   },
   data(): Data {
     return {
+      userGroups: {
+        admin: process.env.AZURE_AD_GROUPS_QUAINT_ADMIN as string,
+        owner: process.env.AZURE_AD_GROUPS_QUAINT_OWNER as string,
+      },
       videoViewer: false,
       group: undefined,
       events: [],
       selected_event: null,
       streamVideoId: '',
-      editable: true, // 権限を持つユーザーがアクセスするとtrueになりページを編集できる
+      editable: false, // 権限を持つユーザーがアクセスするとtrueになりページを編集できる
       events_show: true,
       ticket_person: 1,
       person_labels: ['1人', '2人', '3人'],
@@ -399,6 +417,19 @@ export default Vue.extend({
       for (let i = 0; i < ticketsInfo.length; i++) {
         this.listStock.push(ticketsInfo[i].stock)
         this.listTakenTickets.push(ticketsInfo[i].taken_tickets)
+      }
+    }
+    // admin権限を持つ もしくは この団体にowner権限を持つユーザーがアクセスするとtrueになりページを編集できる
+    // 実際に編集できるかどうかはAPIがJWTで認証するのでここはあくまでフロント側の制御
+    if (this.$auth.user?.groups && Array.isArray(this.$auth.user?.groups)) {
+      if (this.$auth.user?.groups.includes(this.userGroups.admin)) {
+        this.editable = true
+      } else if (this.$auth.user?.groups.includes(this.userGroups.owner)) {
+        this.$axios.$get('/users/me/owner_of').then((res: string[]) => {
+          if (res.includes(this.group?.id as string)) {
+            this.editable = true
+          }
+        })
       }
     }
   },

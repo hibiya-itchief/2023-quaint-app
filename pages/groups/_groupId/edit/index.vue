@@ -795,7 +795,7 @@ export default Vue.extend({
       ) {
         if (
           !(
-            (await this.$axios.$get('/usres/me/owner_of')) as string[]
+            (await this.$axios.$get('/users/me/owner_of')) as string[]
           ).includes(this.$route.params.groupId)
         ) {
           this.$nuxt.error({ statusCode: 404, message: 'Not Found' })
