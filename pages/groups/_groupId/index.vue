@@ -176,7 +176,12 @@
                   >最新の状態に更新</a
                 >
                 <div v-for="(event, index) in events" :key="event.id">
-                  <v-card class="mx-2 my-1" @click.stop="selectEvent(event)">
+                  <v-card
+                    class="mx-2 my-1"
+                    @click.stop="
+                      selectEvent(event, event.sell_starts, event.sell_ends)
+                    "
+                  >
                     <v-card-title class="py-2">
                       {{ event.eventname }}
                       <v-spacer></v-spacer>
@@ -504,9 +509,17 @@ export default Vue.extend({
           this.error_alert = true
         })
     },
-    selectEvent(event: Event) {
-      this.selected_event = event
-      this.dialog = true
+    selectEvent(event: Event, sellStarts: string, sellEnds: string) {
+      if (
+        new Date() < new Date(sellStarts) ||
+        new Date(sellEnds) < new Date()
+      ) {
+        this.error_message = '配布時間外です'
+        this.error_alert = true
+      } else {
+        this.selected_event = event
+        this.dialog = true
+      }
     },
   },
 })
