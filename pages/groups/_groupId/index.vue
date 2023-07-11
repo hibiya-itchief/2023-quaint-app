@@ -3,25 +3,25 @@
     <v-btn icon fab to="/groups/">
       <v-icon>mdi-chevron-left</v-icon>
     </v-btn>
-    <v-conteiner>
+    <v-container>
       <v-row justify="center" class="ma-0 pa-0">
         <v-col cols="12" sm="6" lg="6" class="mx-0 my-2 px-0 py-0 px-sm-3">
           <!--作品情報-->
           <!--タイトル，団体，お気に入り，映像で鑑賞ボタン-->
-          <v-card>
+          <v-card v-if="group">
             <v-img
-              v-if="group?.public_thumbnail_image_url != null"
+              v-if="group.public_thumbnail_image_url != null"
               max-height="500px"
-              :src="group?.public_thumbnail_image_url"
+              :src="group.public_thumbnail_image_url"
             ></v-img>
             <v-img
               v-else
-              :class="HashColor(group?.id ?? 'hashcolor')"
+              :class="HashColor(group.id ?? 'hashcolor')"
               height="180px"
             ></v-img>
-            <v-card-title clsss="pb-0">{{ group?.title }}</v-card-title>
+            <v-card-title clsss="pb-0">{{ group.title }}</v-card-title>
             <v-card-subtitle class="pb-0">{{
-              group?.groupname
+              group.groupname
             }}</v-card-subtitle>
             <!--
                         お気に入り機能は未実装
@@ -31,10 +31,23 @@
 
             <v-card-actions>
               <v-chip-group column>
-                <v-chip v-for="tag in group?.tags" :key="tag.id" disabled>
+                <v-chip v-for="tag in group.tags" :key="tag.id" disabled>
                   {{ tag.tagname }}
                 </v-chip>
               </v-chip-group>
+            </v-card-actions>
+            <v-card-actions v-if="editable == true">
+              <v-btn
+                color="blue-grey"
+                dark
+                outlined
+                rounded
+                width="100%"
+                :to="'/groups/' + group?.id + '/edit'"
+              >
+                <v-icon>mdi-pencil</v-icon>
+                団体情報を編集
+              </v-btn>
             </v-card-actions>
             <v-card-actions>
               <v-btn color="primary" dark rounded @click="videoViewer = true">
@@ -42,24 +55,30 @@
                 映像で鑑賞
               </v-btn>
               <v-btn
-                v-if="group?.twitter_url != null"
+                v-if="group.twitter_url != null"
                 icon
                 :href="group.twitter_url"
                 target="_blank"
                 ><v-icon>mdi-twitter</v-icon></v-btn
               >
               <v-btn
-                v-if="group?.instagram_url != null"
+                v-if="group.instagram_url != null"
                 icon
                 :href="group.instagram_url"
                 target="_blank"
                 ><v-icon>mdi-instagram</v-icon></v-btn
               >
               <v-spacer></v-spacer>
-              <v-btn v-if="IsFavorite(group)" @click="removeFavorite(group)" icon class="pink--text"
+              <v-btn
+                v-if="IsFavorite(group)"
+                icon
+                class="pink--text"
+                @click="removeFavorite(group)"
                 ><v-icon>mdi-heart</v-icon></v-btn
               >
-              <v-btn v-else @click="addFavorite(group)" icon><v-icon>mdi-heart-outline</v-icon></v-btn>
+              <v-btn v-else icon @click="addFavorite(group)"
+                ><v-icon>mdi-heart-outline</v-icon></v-btn
+              >
             </v-card-actions>
 
             <v-dialog v-model="videoViewer" fullscreen>
@@ -69,8 +88,7 @@
                     <v-icon>mdi-close</v-icon>
                   </v-btn>
                   <v-toolbar-title
-                    >{{ group?.title }} -
-                    {{ group?.groupname }}</v-toolbar-title
+                    >{{ group.title }} - {{ group.groupname }}</v-toolbar-title
                   >
                 </v-toolbar>
                 <v-row
@@ -80,7 +98,7 @@
                 >
                   <v-col cols="12">
                     <iframe
-                      v-if="group?.stream_url != null"
+                      v-if="group.stream_url != null"
                       class="ma-0 pa-0"
                       height="400px"
                       width="99%"
@@ -98,7 +116,7 @@
                   <v-card-text
                     >※映像鑑賞には，学校で配布されたMicrosoftアカウントへのログインが必要です。</v-card-text
                   >
-                  <v-col v-if="group?.stream_url != null" cols="12">
+                  <v-col v-if="group.stream_url != null" cols="12">
                     <v-row justify="center">
                       <v-btn
                         color="primary"
@@ -170,94 +188,110 @@
                 <a class="px-3 pb-1" @click="$nuxt.refresh()"
                   >最新の状態に更新</a
                 >
-                <div v-for="event in events" :key="event.id">
-                  <v-row justify="center" class="ma-0 pa-0">
-                    <v-col cols="11" class="mx-0 ma-1 pa-0">
-                      <v-card class="ma-0" @click.stop="dialog = true">
-                        <v-card-title class="py-2">
-                          {{ event.eventname }}
-                          <v-spacer></v-spacer>
-                          <v-badge
-                            v-if="
-                              new Date() < new Date(event.sell_starts) ||
-                              new Date(event.sell_ends) < new Date()
-                            "
-                            color="grey"
-                            inline
-                          ></v-badge>
-                          <v-badge color="green" inline></v-badge>
-                          <!--8割以上で黄色になる-->
-                          <v-badge color="amber" inline></v-badge>
-                          <v-badge color="red" inline></v-badge>
-                        </v-card-title>
-                        <v-card-subtitle class="pb-2">
-                          <p class="ma-0 pa-0">
-                            配布時間：{{ DateFormatter(event.sell_starts) }}
-                            ~
-                            {{ DateFormatter(event.sell_ends) }}
-                          </p>
-                          <p class="ma-0 pa-0">
-                            公演時間：{{ DateFormatter(event.starts_at) }} ~
-                            {{ DateFormatter(event.ends_at) }}
-                          </p>
-                        </v-card-subtitle>
-                      </v-card>
-                    </v-col>
-                  </v-row>
-                  <v-dialog v-model="dialog" width="100%">
-                    <v-card class="pa-2">
-                      <v-card-title class="px-1"
-                        >{{ group?.title }} / {{ group?.groupname }} -
-                        {{ event.eventname }}</v-card-title
-                      >
-                      <v-card-subtitle class="px-1">
-                        <p class="ma-0 pa-0">この公演の整理券をとりますか？</p>
-                        <p class="ma-0 pa-0">
-                          公演時間：{{ DateFormatter(event.starts_at) }} ~
-                          {{ DateFormatter(event.ends_at) }}
-                        </p>
-                      </v-card-subtitle>
-                      <div class="px-1">
-                        <p
-                          v-if="$auth.$state.strategy == 'ad'"
-                          class="ma-0 pa-0 text-subtitle-2"
-                        >
-                          席数：1席
-                        </p>
-                        <p v-else class="ma-0 pa-0 text-subtitle-2">
-                          <v-icon>mdi-account-plus</v-icon
-                          >同時に入場する人数(ご家族など)
-                        </p>
-                        <v-slider
-                          v-if="$auth.$state.strategy != 'ad'"
-                          v-model="ticket_person"
-                          :tick-labels="person_labels"
-                          min="1"
-                          max="3"
-                        >
-                          <template #thumb-label="props">
-                            <v-icon dark>
-                              {{ person_icons[props.value - 1] }}
-                            </v-icon>
-                          </template>
-                        </v-slider>
-                      </div>
-                      <v-card-actions class="px-1">
-                        <v-spacer></v-spacer>
-
-                        <v-btn color="red" text @click="dialog = false">
-                          いいえ
-                        </v-btn>
-                        <v-btn
-                          color="primary"
-                          @click="CreateTicket(event, ticket_person)"
-                        >
-                          はい
-                        </v-btn>
-                      </v-card-actions>
-                    </v-card>
-                  </v-dialog>
+                <div v-for="(event, index) in events" :key="event.id">
+                  <v-card class="mx-2 my-1" @click.stop="selectEvent(event)">
+                    <v-card-title class="py-2">
+                      {{ event.eventname }}
+                      <v-spacer></v-spacer>
+                      <v-badge
+                        v-if="
+                          new Date() < new Date(event.sell_starts) ||
+                          new Date(event.sell_ends) < new Date()
+                        "
+                        color="grey"
+                        inline
+                      ></v-badge>
+                      <v-badge
+                        v-else-if="
+                          checkTakenTickets(index) / checkStock(index) < 0.8
+                        "
+                        color="green"
+                        inline
+                      ></v-badge>
+                      <!--8割以上で黄色になる-->
+                      <v-badge
+                        v-else-if="
+                          checkTakenTickets(index) / checkStock(index) >= 0.8 &&
+                          checkTakenTickets(index) < checkStock(index)
+                        "
+                        color="amber"
+                        inline
+                      ></v-badge>
+                      <v-badge
+                        v-else-if="
+                          checkTakenTickets(index) >= checkStock(index)
+                        "
+                        color="red"
+                        inline
+                      ></v-badge>
+                    </v-card-title>
+                    <v-card-subtitle class="pb-2">
+                      <p class="ma-0 pa-0">
+                        配布時間：{{ DateFormatter(event.sell_starts) }}
+                        ~
+                        {{ DateFormatter(event.sell_ends) }}
+                      </p>
+                      <p class="ma-0 pa-0">
+                        公演時間：{{ DateFormatter(event.starts_at) }} ~
+                        {{ DateFormatter(event.ends_at) }}
+                      </p>
+                    </v-card-subtitle>
+                  </v-card>
                 </div>
+                <v-dialog v-if="selected_event" v-model="dialog" width="100%">
+                  <v-card class="pa-2">
+                    <v-card-title class="px-1"
+                      >{{ group?.title }} / {{ group?.groupname }} -
+                      {{ selected_event.eventname }}</v-card-title
+                    >
+                    <v-card-subtitle class="px-1">
+                      <p class="ma-0 pa-0">この公演の整理券をとりますか？</p>
+                      <p class="ma-0 pa-0">
+                        公演時間：{{ DateFormatter(selected_event.starts_at) }}
+                        ~
+                        {{ DateFormatter(selected_event.ends_at) }}
+                      </p>
+                    </v-card-subtitle>
+                    <div class="px-1">
+                      <p
+                        v-if="$auth.$state.strategy == 'ad'"
+                        class="ma-0 pa-0 text-subtitle-2"
+                      >
+                        席数：1席
+                      </p>
+                      <p v-else class="ma-0 pa-0 text-subtitle-2">
+                        <v-icon>mdi-account-plus</v-icon
+                        >同時に入場する人数(ご家族など)
+                      </p>
+                      <v-slider
+                        v-if="$auth.$state.strategy != 'ad'"
+                        v-model="ticket_person"
+                        :tick-labels="person_labels"
+                        min="1"
+                        max="3"
+                      >
+                        <template #thumb-label="props">
+                          <v-icon dark>
+                            {{ person_icons[props.value - 1] }}
+                          </v-icon>
+                        </template>
+                      </v-slider>
+                    </div>
+                    <v-card-actions class="px-1">
+                      <v-spacer></v-spacer>
+
+                      <v-btn color="red" text @click.stop="dialog = false">
+                        いいえ
+                      </v-btn>
+                      <v-btn
+                        color="primary"
+                        @click="CreateTicket(selected_event, ticket_person)"
+                      >
+                        はい
+                      </v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
                 <v-col v-if="events.length === 0" cols="12">
                   <v-card disabled>
                     <v-card-title
@@ -291,7 +325,7 @@
           </v-btn>
         </template>
       </v-snackbar>
-    </v-conteiner>
+    </v-container>
   </v-app>
 </template>
 
@@ -301,6 +335,8 @@ import Vue from 'vue'
 type Data = {
   group: Group | undefined
   events: Event[]
+  selected_event: Event | null
+  userGroups: { admin: string; owner: string }
   videoViewer: boolean
   streamVideoId: string
   editable: boolean
@@ -314,6 +350,8 @@ type Data = {
   person_labels: any[]
   person_icons: any[]
   displayFavorite: number
+  listStock: number[]
+  listTakenTickets: number[]
 }
 export default Vue.extend({
   name: 'IndivisualGroupPage',
@@ -328,11 +366,16 @@ export default Vue.extend({
   },
   data(): Data {
     return {
+      userGroups: {
+        admin: process.env.AZURE_AD_GROUPS_QUAINT_ADMIN as string,
+        owner: process.env.AZURE_AD_GROUPS_QUAINT_OWNER as string,
+      },
       videoViewer: false,
       group: undefined,
       events: [],
+      selected_event: null,
       streamVideoId: '',
-      editable: true, // 権限を持つユーザーがアクセスするとtrueになりページを編集できる
+      editable: false, // 権限を持つユーザーがアクセスするとtrueになりページを編集できる
       events_show: true,
       ticket_person: 1,
       person_labels: ['1人', '2人', '3人'],
@@ -346,7 +389,9 @@ export default Vue.extend({
       success_message: '',
       error_message: '',
       dialog: false,
-      displayFavorite: 0
+      displayFavorite: 0,
+      listStock: [],
+      listTakenTickets: [],
     }
   },
   head() {
@@ -354,28 +399,74 @@ export default Vue.extend({
       title: this.group?.groupname,
     }
   },
+  async created() {
+    if (this.events.length !== 0) {
+      const getTicketsInfo = []
+      for (let i = 0; i < this.events.length; i++) {
+        getTicketsInfo.push(
+          this.$axios.$get(
+            '/groups/' +
+              this.group?.id +
+              '/events/' +
+              this.events[i].id +
+              '/tickets'
+          )
+        )
+      }
+      const ticketsInfo = await Promise.all(getTicketsInfo)
+      for (let i = 0; i < ticketsInfo.length; i++) {
+        this.listStock.push(ticketsInfo[i].stock)
+        this.listTakenTickets.push(ticketsInfo[i].taken_tickets)
+      }
+    }
+    // admin権限を持つ もしくは この団体にowner権限を持つユーザーがアクセスするとtrueになりページを編集できる
+    // 実際に編集できるかどうかはAPIがJWTで認証するのでここはあくまでフロント側の制御
+    if (this.$auth.user?.groups && Array.isArray(this.$auth.user?.groups)) {
+      if (this.$auth.user?.groups.includes(this.userGroups.admin)) {
+        this.editable = true
+      } else if (this.$auth.user?.groups.includes(this.userGroups.owner)) {
+        this.$axios.$get('/users/me/owner_of').then((res: string[]) => {
+          if (res.includes(this.group?.id as string)) {
+            this.editable = true
+          }
+        })
+      }
+    }
+  },
 
   methods: {
-    IsFavorite(group: Group){
-      if(this.displayFavorite == 0 ){ this.displayFavorite = 1; return false}
-      if(this.displayFavorite == 2 ){ return false}
-      if(this.displayFavorite == 3 ){ return true }
-      
-
-      for(let i = 0; i < localStorage.length; i++){
-        if ( 'seiryofes.groups.favorite.'+group?.id == localStorage.key(i) ){ return true }
+    IsFavorite(group: Group) {
+      if (this.displayFavorite === 0) {
+        this.displayFavorite = 1
+        return false
+      }
+      if (this.displayFavorite === 2) {
+        return false
+      }
+      if (this.displayFavorite === 3) {
+        return true
+      }
+      for (let i = 0; i < localStorage.length; i++) {
+        if ('seiryofes.groups.favorite.' + group?.id === localStorage.key(i)) {
+          return true
+        }
       }
       return false
     },
-    addFavorite(group: Group){
-      localStorage.setItem('seiryofes.groups.favorite.'+group?.id,group?.id)
-      this.displayFavorite=3
+    addFavorite(group: Group) {
+      localStorage.setItem('seiryofes.groups.favorite.' + group?.id, group?.id)
+      this.displayFavorite = 3
     },
-    removeFavorite(group: Group){
-      localStorage.removeItem('seiryofes.groups.favorite.'+group?.id)
-      this.displayFavorite=2
+    removeFavorite(group: Group) {
+      localStorage.removeItem('seiryofes.groups.favorite.' + group?.id)
+      this.displayFavorite = 2
     },
-    
+    checkStock(index: number) {
+      return this.listStock[index]
+    },
+    checkTakenTickets(index: number) {
+      return this.listTakenTickets[index]
+    },
     DateFormatter(inputDate: string) {
       const d = new Date(inputDate)
       return (
@@ -444,31 +535,18 @@ export default Vue.extend({
           this.error_alert = true
         })
     },
-    CreateLike() {
-      if (!this.$auth.loggedIn) {
-        this.error_message = '「いいね！」するにはログインが必要です'
+    selectEvent(event: Event) {
+      if (
+        new Date() < new Date(event.sell_starts) ||
+        new Date(event.sell_ends) < new Date()
+      ) {
+        this.error_message = '配布時間外です'
         this.error_alert = true
-        return 1
+      } else {
+        this.selected_event = event
+        this.dialog = true
+        this.error_alert = false
       }
-      this.$axios
-        .post('/groups/' + this.group?.id + '/like')
-        .then(() => {
-          this.$nuxt.refresh()
-        })
-        .catch(() => {})
-    },
-    DeleteLike() {
-      if (!this.$auth.loggedIn) {
-        this.error_message = '「いいね！」するにはログインが必要です'
-        this.error_alert = true
-        return 1
-      }
-      this.$axios
-        .delete('/groups/' + this.group?.id + '/like')
-        .then(() => {
-          this.$nuxt.refresh()
-        })
-        .catch(() => {})
     },
   },
 })

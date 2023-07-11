@@ -101,33 +101,37 @@
                       <span class="grey--text text--darken-2">ID：</span
                       >{{ ticketInfo.ticket.id }}
                     </p>
-                    <v-btn @click="cancel_dialog = true">
+                    <v-btn @click="selectCancelTicket(ticketInfo)">
                       <v-icon>mdi-close</v-icon>
                       <p class="pa-0 ma-0">このチケットをキャンセル</p>
                     </v-btn>
                   </v-card-text>
                 </div>
               </v-expand-transition>
-              <v-dialog v-model="cancel_dialog" max-width="300">
-                <v-card>
-                  <v-card-title class="text-h5"
-                    >{{ ticketInfo.group.title }} -
-                    {{
-                      ticketInfo.group.groupname
-                    }}の整理券をキャンセルしてもよろしいですか？</v-card-title
-                  >
-                  <v-card-text>このアクションは取り消せません</v-card-text>
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn text @click="cancel_dialog = false">いいえ</v-btn>
-                    <v-btn color="primary" @click="CancelTicket(ticketInfo)"
-                      >はい</v-btn
-                    >
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
             </v-card>
           </div>
+          <v-dialog
+            v-if="selectedTicket"
+            v-model="cancelDialog"
+            max-width="300"
+          >
+            <v-card>
+              <v-card-title class="text-h5"
+                >{{ selectedTicket.group.title }} -
+                {{
+                  selectedTicket.group.groupname
+                }}の整理券をキャンセルしてもよろしいですか？</v-card-title
+              >
+              <v-card-text>このアクションは取り消せません</v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn text @click="cancelDialog = false">いいえ</v-btn>
+                <v-btn color="primary" @click="CancelTicket(selectedTicket)"
+                  >はい</v-btn
+                >
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
           <div v-if="tickets.length == 0" class="pa-3">
             <p>ここに表示するものはありません</p>
             <a href="/groups" class="amber--text text--darken-4"
@@ -163,7 +167,8 @@ type Data = {
   groups: Group[]
   events: Event[]
   tickets: TicketInfo[]
-  cancel_dialog: boolean
+  cancelDialog: boolean
+  selectedTicket: TicketInfo | null
   display_userid: boolean
   qrcodeUrl: string
   success_alert: boolean
@@ -173,16 +178,14 @@ type Data = {
 }
 export default Vue.extend({
   name: 'UsersTicketsPage',
-  head: {
-    title: '整理券',
-  },
   async asyncData() {},
   data(): Data {
     return {
       groups: [],
       events: [],
       tickets: [],
-      cancel_dialog: false,
+      cancelDialog: false,
+      selectedTicket: null,
       display_userid: false,
       qrcodeUrl: '',
       success_alert: false,
@@ -190,6 +193,9 @@ export default Vue.extend({
       success_message: '',
       error_message: '',
     }
+  },
+  head: {
+    title: '整理券',
   },
   async created() {
     this.fetchTicket()
@@ -250,6 +256,10 @@ export default Vue.extend({
         d.getMinutes().toString().padStart(2, '0')
       )
     },
+    selectCancelTicket(ticketInfo: TicketInfo) {
+      this.cancelDialog = true
+      this.selectedTicket = ticketInfo
+    },
     async CancelTicket(deleteTicket: TicketInfo) {
       await this.$axios
         .delete(
@@ -263,21 +273,13 @@ export default Vue.extend({
         .then(() => {
           this.success_alert = true
           this.success_message = '整理券が正常にキャンセルされました'
-
-          const ticketsString = window.localStorage.getItem('myTickets')
-          if (ticketsString !== null) {
-            const tickets: TicketInfo[] = JSON.parse(ticketsString)
-            tickets.filter((e) => e.ticket.id !== deleteTicket.ticket.id)
-            const ticketsJson = JSON.stringify(tickets)
-            window.localStorage.setItem('myTickets', ticketsJson)
-          }
         })
         .catch((e) => {
           this.error_alert = true
           this.error_message = e.message
         })
-      this.cancel_dialog = false
-      this.$nuxt.refresh()
+      this.cancelDialog = false
+      this.fetchTicket()
     },
   },
 })
