@@ -163,8 +163,8 @@ export default Vue.extend({
           return true
         }
       } else if (
-        this.selectedTag === null ||
-        localStorage.getItem('seiryofes.groups.favorite.' + groups.id) !== null
+        this.selectedTag === null &&
+        localStorage.getItem('seiryofes.groups.favorite.' + group.id) !== null
       ) {
         return true
       } else if (group.tags.some((i) => i.id === this.selectedTag?.id)) {
