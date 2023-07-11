@@ -505,8 +505,17 @@ export default Vue.extend({
         })
     },
     selectEvent(event: Event) {
-      this.selected_event = event
-      this.dialog = true
+      if (
+        new Date() < new Date(event.sell_starts) ||
+        new Date(event.sell_ends) < new Date()
+      ) {
+        this.error_message = '配布時間外です'
+        this.error_alert = true
+      } else {
+        this.selected_event = event
+        this.dialog = true
+        this.error_alert = false
+      }
     },
   },
 })
