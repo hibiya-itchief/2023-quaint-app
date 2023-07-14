@@ -806,6 +806,9 @@ export default Vue.extend({
       selected_event: null,
     }
   },
+  head: {
+    title: '団体情報の編集',
+  },
   async created() {
     this.hostname = location.host // data()のreturn()内で使うとエラーになるのでここで代入
     if (
@@ -847,6 +850,7 @@ export default Vue.extend({
           this.group = res
           this.success_message = '団体情報が更新されました'
           this.success_alert = true
+
         })
         .catch((e) => {
           if (e.response) {
