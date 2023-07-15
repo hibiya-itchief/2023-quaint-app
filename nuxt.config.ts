@@ -44,7 +44,10 @@ const nuxtConfig: NuxtConfig = {
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: [
+    // https://qiita.com/teracy164/items/34831d83094cdb6cb3dd
+    { src: '@/plugins/quill', mode: 'client' },
+  ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,

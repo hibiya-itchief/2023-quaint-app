@@ -303,6 +303,55 @@
             </v-expand-transition>
           </v-card>
         </v-col>
+        <v-col cols="6">
+          <v-card>
+            <v-card-title class="ma-0 px-3 pb-2 pt-4">
+              <v-icon class="mr-3">mdi-note-text</v-icon>
+              {{ group?.title }} の投稿一覧
+            </v-card-title>
+            <v-list two-line>
+              <v-list-item-group
+                v-model="selected"
+                active-class="pink--text"
+                multiple
+              >
+                <template v-for="(item, index) in postItems">
+                  <v-list-item :key="item.title">
+                    <template #default="{ active }">
+                      <v-list-item-content>
+                        <v-list-item-title>{{ item.title }}</v-list-item-title>
+
+                        <v-list-item-subtitle>{{
+                          item.subtitle
+                        }}</v-list-item-subtitle>
+                      </v-list-item-content>
+
+                      <v-list-item-action>
+                        <v-list-item-action-text>{{
+                          item.action
+                        }}</v-list-item-action-text>
+
+                        <v-icon v-if="!active" color="grey lighten-1">
+                          mdi-star-outline
+                        </v-icon>
+
+                        <v-icon v-else color="yellow darken-3">
+                          mdi-star
+                        </v-icon>
+                      </v-list-item-action>
+                    </template>
+                  </v-list-item>
+
+                  <v-divider
+                    v-if="index < postItems.length - 1"
+                    :key="index"
+                  ></v-divider>
+                </template>
+              </v-list-item-group>
+            </v-list>
+          </v-card>
+        </v-col>
+        <v-col cols="4"></v-col>
       </v-row>
       <v-snackbar v-model="success_alert" color="success" elevation="2">
         {{ success_message }}
@@ -352,6 +401,13 @@ type Data = {
   displayFavorite: number
   listStock: number[]
   listTakenTickets: number[]
+  postItems: {
+    action: string
+    headline: string
+    subtitle: string
+    title: string
+  }[]
+  postSelected: number[]
 }
 export default Vue.extend({
   name: 'IndivisualGroupPage',
@@ -392,6 +448,36 @@ export default Vue.extend({
       displayFavorite: 0,
       listStock: [],
       listTakenTickets: [],
+      // cf https://v2.vuetifyjs.com/ja/components/lists/#section-30a230af30b730e730f330b930bf30c330af
+      postItems: [
+        {
+          action: '9月17日 08:11',
+          headline: '【重要】第一公演開始時刻の変更',
+          subtitle: `ただいま当日朝の装飾チェックが予想以上に長引いています。それに伴い星陵祭の開始時刻を予定していた9:00...`,
+          title: '【重要】第一公演開始時刻の変更',
+        },
+        {
+          action: '9月15日',
+          headline: 'いよいよ明日は星陵祭です',
+          subtitle: `本日お配りした当日の流れのプリントをよく確認しておいてください。また当日は暑いことが予想されます熱中症対...`,
+          title: 'いよいよ明日は星陵祭です',
+        },
+        {
+          action: '8月30日',
+          headline: '',
+          subtitle:
+            '生徒はオンライン整理券システム上で投票を行い、保護者・一般の方は紙による投票となります。投票場所は、生徒ホールです。また、...',
+          title: '投票方法に関する連絡',
+        },
+        {
+          action: '8月16日 12:00',
+          headline: '',
+          subtitle:
+            '夏休みも終盤となってきました。星陵祭準備おつかれさまです。工具貸し出しに関する変更がありました。詳しくはこちらをご確認ください。',
+          title: '工具貸し出しに関する変更',
+        },
+      ],
+      postSelected: [2],
     }
   },
   head() {
