@@ -161,7 +161,10 @@ export default Vue.extend({
   data() {
     return {
       drawerMenu: false,
-      userGroups: { admin: process.env.AZURE_AD_GROUPS_QUAINT_ADMIN as string },
+      userGroups: {
+        admin: process.env.AZURE_AD_GROUPS_QUAINT_ADMIN as string,
+        owner: process.env.AZURE_AD_GROUPS_QUAINT_OWNER as string
+      },
       app_env: process.env.QUAINT_ENV,
       api_url: process.env.BASEURL,
     }
