@@ -542,6 +542,9 @@ export default Vue.extend({
       ) {
         this.error_message = '配布時間外です'
         this.error_alert = true
+      } else if (!this.$auth.loggedIn) {
+        this.error_message = '整理券の取得にはログインが必要です'
+        this.error_alert = true
       } else {
         this.selected_event = event
         this.dialog = true
