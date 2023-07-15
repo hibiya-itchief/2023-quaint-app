@@ -40,7 +40,7 @@
                   v-show="$auth.user?.groups?.includes(userGroups.owner)"
                   outlined
                 >
-                  Owner
+                  団体代表者
                 </v-chip>
 
                 <!--
