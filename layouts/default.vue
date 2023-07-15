@@ -36,9 +36,15 @@
                 >
                   👑Admin
                 </v-chip>
+                <v-chip
+                  v-show="$auth.user?.groups?.includes(userGroups.owner)"
+                  outlined
+                >
+                  Owner
+                </v-chip>
+
                 <!--
                 <v-chip outlined> Entry </v-chip>
-                <v-chip outlined> Owner </v-chip>
                 <v-chip outlined> Authorizer </v-chip>
                 <v-chip outlined> 家族用アカウント </v-chip>-->
                 <v-chip
