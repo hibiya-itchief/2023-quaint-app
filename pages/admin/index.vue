@@ -12,6 +12,10 @@
       チーフ会やIT委員会が、複数の団体の複数の公演を条件に合わせて一括で処理できるようにする。例)全クラスの第一公演の開始時刻を一括で15分遅らせる
     </p>
     <p>チーフ会・IT委員会のみが確認できる情報にアクセスする。例)投票数</p>
+
+    <v-btn color="primary" @click="updateFrontend"
+      >フロントエンドをビルドして最新の状態に更新</v-btn
+    >
   </v-app>
 </template>
 <script>
@@ -20,6 +24,11 @@ export default {
     return {
       apiUrl: process.env.BASEURL,
     }
+  },
+  methods: {
+    async updateFrontend() {
+      await this.$axios.$post('/admin/update_frontend')
+    },
   },
 }
 </script>
