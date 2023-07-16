@@ -17,4 +17,4 @@ jobs:
     steps:
       - name: Cloudflareのデプロイフックを実行
         run: |
-          curl -X POST ${{ secrets.CLOUDFLARE_DEPLOY_HOOK_URL }}}
+          curl -X POST ${{ secrets.CLOUDFLARE_DEPLOY_HOOK_URL }}
