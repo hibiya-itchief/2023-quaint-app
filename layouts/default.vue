@@ -36,9 +36,15 @@
                 >
                   👑Admin
                 </v-chip>
+                <v-chip
+                  v-show="$auth.user?.groups?.includes(userGroups.owner)"
+                  outlined
+                >
+                  団体代表者
+                </v-chip>
+
                 <!--
                 <v-chip outlined> Entry </v-chip>
-                <v-chip outlined> Owner </v-chip>
                 <v-chip outlined> Authorizer </v-chip>
                 <v-chip outlined> 家族用アカウント </v-chip>-->
                 <v-chip
@@ -155,7 +161,10 @@ export default Vue.extend({
   data() {
     return {
       drawerMenu: false,
-      userGroups: { admin: process.env.AZURE_AD_GROUPS_QUAINT_ADMIN as string },
+      userGroups: {
+        admin: process.env.AZURE_AD_GROUPS_QUAINT_ADMIN as string,
+        owner: process.env.AZURE_AD_GROUPS_QUAINT_OWNER as string,
+      },
       app_env: process.env.QUAINT_ENV,
       api_url: process.env.BASEURL,
     }
