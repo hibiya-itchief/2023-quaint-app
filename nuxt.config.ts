@@ -14,7 +14,7 @@ const nuxtConfig: NuxtConfig = {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - 星陵祭',
+    titleTemplate: '%s - 東京都立日比谷高等学校星陵祭公式Webサイト',
     title: '星陵祭',
     meta: [
       { charset: 'utf-8' },
