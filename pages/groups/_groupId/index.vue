@@ -414,7 +414,7 @@ export default Vue.extend({
       title: this.group?.groupname,
     }
   },
-  async created() {
+  created() {
     if (this.events.length !== 0) {
       const getTicketsInfo = []
       for (let i = 0; i < this.events.length; i++) {
@@ -428,11 +428,12 @@ export default Vue.extend({
           )
         )
       }
-      const ticketsInfo = await Promise.all(getTicketsInfo)
-      for (let i = 0; i < ticketsInfo.length; i++) {
-        this.listStock.push(ticketsInfo[i].stock)
-        this.listTakenTickets.push(ticketsInfo[i].taken_tickets)
-      }
+      Promise.all(getTicketsInfo).then((ticketsInfo) => {
+        for (let i = 0; i < ticketsInfo.length; i++) {
+          this.listStock.push(ticketsInfo[i].stock)
+          this.listTakenTickets.push(ticketsInfo[i].taken_tickets)
+        }
+      })
     }
     // admin権限を持つ もしくは この団体にowner権限を持つユーザーがアクセスするとtrueになりページを編集できる
     // 実際に編集できるかどうかはAPIがJWTで認証するのでここはあくまでフロント側の制御
