@@ -88,6 +88,18 @@
           </v-card>
 
           <v-divider></v-divider>
+          <v-list-item>
+            <v-list-item-icon>
+              <v-icon>mdi-help-circle</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title
+              ><a
+                style="text-decoration: none; color: inherit"
+                href="https://hibiya-itchief.github.io/quaint-docs/"
+                >使い方ガイド</a
+              ></v-list-item-title
+            >
+          </v-list-item>
         </v-list-item-group>
       </v-list>
       <template #append>
@@ -121,8 +133,8 @@
 
               <v-divider></v-divider>
               <p class="ma-0 pa-0 text-caption grey--text">
-                © 2023 東京都立日比谷高校 星陵祭チーフ会 IT部隊 | SeiryoFes IT
-                Chief Tokyo Metropolitan Hibiya High School
+                © 2023 東京都立日比谷高等学校 IT委員会 | IT Chief | Tokyo
+                Metropolitan Hibiya High School
               </p>
             </v-list-item-group>
           </v-list>

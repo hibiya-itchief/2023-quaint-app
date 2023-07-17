@@ -11,7 +11,13 @@
             <span class="red--text">編集内容は毎日0:00に反映されます。</span>
             <span>緊急で変更する必要がある場合はIT委員会に伝えて下さい</span>
           </p>
-
+          <p style="text-align: right">
+            <a
+              href="https://hibiya-itchief.github.io/quaint-docs/owner/manage_group/"
+              ><v-icon>mdi-help-circle-outline</v-icon>
+              詳しい編集方法や注意点はこちら
+            </a>
+          </p>
           <v-card class="mx-1 my-1 px-2 py-2" elevation="1">
             <v-card-title class="ma-0 pa-0">
               <p
