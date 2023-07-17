@@ -1,9 +1,9 @@
 <template>
   <v-app>
-    <v-btn icon fab to="/groups/">
+    <v-btn icon fab small to="/groups/">
       <v-icon>mdi-chevron-left</v-icon>
     </v-btn>
-    <v-container>
+    <v-container class="px-1 py-0">
       <v-row justify="center" class="ma-0 pa-0">
         <v-col cols="12" sm="6" lg="6" class="mx-0 my-2 px-0 py-0 px-sm-3">
           <!--作品情報-->
@@ -29,14 +29,14 @@
                             <v-icon>mdi-heart</v-icon>
                         </v-btn> -->
 
-            <v-card-actions>
+            <v-card-actions v-if="group.tags.length != 0" class="py-1">
               <v-chip-group column>
                 <v-chip v-for="tag in group.tags" :key="tag.id" disabled>
                   {{ tag.tagname }}
                 </v-chip>
               </v-chip-group>
             </v-card-actions>
-            <v-card-actions v-if="editable == true">
+            <v-card-actions v-if="editable == true" class="py-1">
               <v-btn
                 color="blue-grey"
                 dark
@@ -49,11 +49,13 @@
                 団体情報を編集
               </v-btn>
             </v-card-actions>
-            <v-card-actions>
+            <v-card-actions class="py-1">
               <v-btn color="primary" dark rounded @click="videoViewer = true">
                 <v-icon>mdi-play</v-icon>
                 映像で鑑賞
               </v-btn>
+            </v-card-actions>
+            <v-card-actions class="py-1">
               <v-btn
                 v-if="group.twitter_url != null"
                 icon
