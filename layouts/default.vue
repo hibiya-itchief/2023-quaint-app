@@ -88,18 +88,6 @@
           </v-card>
 
           <v-divider></v-divider>
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>mdi-help-circle</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title
-              ><a
-                style="text-decoration: none; color: inherit"
-                href="https://hibiya-itchief.github.io/quaint-docs/"
-                >使い方ガイド</a
-              ></v-list-item-title
-            >
-          </v-list-item>
         </v-list-item-group>
       </v-list>
       <template #append>
