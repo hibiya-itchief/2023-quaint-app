@@ -11,7 +11,13 @@
             <span class="red--text">編集内容は毎日0:00に反映されます。</span>
             <span>緊急で変更する必要がある場合はIT委員会に伝えて下さい</span>
           </p>
-
+          <p style="text-align: right">
+            <a
+              href="https://hibiya-itchief.github.io/quaint-docs/owner/manage_group/"
+              ><v-icon>mdi-help-circle-outline</v-icon>
+              詳しい編集方法や注意点はこちら
+            </a>
+          </p>
           <v-card class="mx-1 my-1 px-2 py-2" elevation="1">
             <v-card-title class="ma-0 pa-0">
               <p
@@ -529,9 +535,33 @@
                 <v-card-title class="text-subtitle-1 py-2 px-1">
                   {{ event.eventname }}
                   <v-spacer></v-spacer>
+                  <v-dialog
+                    v-if="selected_event"
+                    v-model="delete_event_dialog"
+                    max-width="300"
+                  >
+                    <v-card>
+                      <v-card-title>この公演を削除しますか?</v-card-title>
+                      <v-card-text>この操作は取り消せません</v-card-text>
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                          color="primary"
+                          text
+                          @click="delete_event_dialog = false"
+                          >キャンセル</v-btn
+                        >
+                        <v-btn
+                          color="primary"
+                          @click="DeleteEvent(selected_event)"
+                          >削除</v-btn
+                        >
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
                   <v-icon
                     v-show="change_events_form"
-                    @click="DeleteEvent(event)"
+                    @click="SelectDeleteEvent(event)"
                     >mdi-close-circle</v-icon
                   >
                 </v-card-title>
@@ -551,11 +581,8 @@
             <div v-show="change_events_form" class="mt-2">
               <v-card-text class="mx-0 px-0 py-2">
                 <p class="ma-0 pa-0 text-subtitle-1">公演の追加</p>
-                <v-text-field
-                  v-model="add_eventname"
-                  label="公演名"
-                  value="例)1日目第1公演"
-                ></v-text-field>
+                <v-text-field v-model="add_eventname" label="公演名">
+                </v-text-field>
                 <v-select
                   v-model="add_event_target"
                   :items="add_event_target_list"
@@ -574,21 +601,18 @@
                 <v-text-field
                   v-model="add_event_ends_at"
                   label="公演終了時刻"
-                  value="2023-09-16T10:30"
                   type="datetime-local"
                   suffix="JST"
                 ></v-text-field>
                 <v-text-field
                   v-model="add_event_sell_starts"
                   label="配布開始時刻"
-                  value="2023-09-16T08:30"
                   type="datetime-local"
                   suffix="JST"
                 ></v-text-field>
                 <v-text-field
                   v-model="add_event_sell_ends"
                   label="配布終了時刻"
-                  value="2023-09-16T09:30"
                   type="datetime-local"
                   suffix="JST"
                 ></v-text-field>
@@ -625,10 +649,10 @@
             v-show="$auth.user?.groups?.includes(userGroups.admin)"
             color="red"
             outlined
-            class="ma-4"
+            class="ma-4 font-weight-bold"
             @click="delete_group_dialog = true"
           >
-            ⚠この団体を削除
+            <v-icon color="red">mdi-alert</v-icon>この団体を削除
           </v-btn>
         </v-col>
       </v-row>
@@ -698,6 +722,8 @@ type Data = {
   add_event_sell_starts: string
   add_event_sell_ends: string
   delete_group_dialog: boolean
+  selected_event: Event | null
+  delete_event_dialog: boolean
 }
 
 export default Vue.extend({
@@ -782,6 +808,13 @@ export default Vue.extend({
       add_event_sell_starts: '2023-09-17T08:30',
       add_event_sell_ends: '2023-09-17T09:30',
       delete_group_dialog: false,
+      delete_event_dialog: false,
+      selected_event: null,
+    }
+  },
+  head() {
+    return {
+      title: this.group?.groupname + ' - 団体情報の編集',
     }
   },
   async created() {
@@ -917,6 +950,10 @@ export default Vue.extend({
           })
       }
     },
+    SelectDeleteEvent(event: Event) {
+      this.selected_event = event
+      this.delete_event_dialog = true
+    },
     DeleteEvent(event: Event) {
       this.$axios
         .delete('/groups/' + this.group?.id + '/events/' + event.id)
@@ -996,6 +1033,8 @@ export default Vue.extend({
           this.error_alert = true
           this.$nuxt.refresh()
         })
+
+      this.delete_event_dialog = false
     },
   },
 })

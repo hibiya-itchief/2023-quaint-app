@@ -62,9 +62,7 @@
             <v-img
               v-if="group.public_thumbnail_image_url != null"
               max-height="180px"
-              :src="
-                'data:image/jpeg;base64,' + group.public_thumbnail_image_url
-              "
+              :src="group.public_thumbnail_image_url"
             ></v-img>
             <v-img v-else :class="HashColor(group.id)" height="180px"></v-img>
             <v-card-title class="my-1 py-1"

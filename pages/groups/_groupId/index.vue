@@ -1,9 +1,9 @@
 <template>
   <v-app>
-    <v-btn icon fab to="/groups/">
+    <v-btn icon fab small to="/groups/">
       <v-icon>mdi-chevron-left</v-icon>
     </v-btn>
-    <v-container>
+    <v-container class="px-1 py-0">
       <v-row justify="center" class="ma-0 pa-0">
         <v-col cols="12" sm="6" lg="6" class="mx-0 my-2 px-0 py-0 px-sm-3">
           <!--作品情報-->
@@ -29,14 +29,14 @@
                             <v-icon>mdi-heart</v-icon>
                         </v-btn> -->
 
-            <v-card-actions>
+            <v-card-actions v-if="group.tags.length != 0" class="py-1">
               <v-chip-group column>
                 <v-chip v-for="tag in group.tags" :key="tag.id" disabled>
                   {{ tag.tagname }}
                 </v-chip>
               </v-chip-group>
             </v-card-actions>
-            <v-card-actions v-if="editable == true">
+            <v-card-actions v-if="editable == true" class="py-1">
               <v-btn
                 color="blue-grey"
                 dark
@@ -49,11 +49,13 @@
                 団体情報を編集
               </v-btn>
             </v-card-actions>
-            <v-card-actions>
+            <v-card-actions class="py-1">
               <v-btn color="primary" dark rounded @click="videoViewer = true">
                 <v-icon>mdi-play</v-icon>
                 映像で鑑賞
               </v-btn>
+            </v-card-actions>
+            <v-card-actions class="py-1">
               <v-btn
                 v-if="group.twitter_url != null"
                 icon
@@ -69,6 +71,19 @@
                 ><v-icon>mdi-instagram</v-icon></v-btn
               >
               <v-spacer></v-spacer>
+              <div class="mx-2">
+                <span
+                  class="grey--text text--darken-2 text-caption"
+                  style="display: block"
+                  >過去7日間の閲覧数</span
+                >
+                <div style="text-align: right">
+                  <v-icon>mdi-eye</v-icon>
+                  <span class="text--darken-2 text-subtitle-1">{{
+                    view_count
+                  }}</span>
+                </div>
+              </div>
               <v-btn
                 v-if="IsFavorite(group)"
                 icon
@@ -352,6 +367,7 @@ type Data = {
   displayFavorite: number
   listStock: number[]
   listTakenTickets: number[]
+  view_count: number | string
 }
 export default Vue.extend({
   name: 'IndivisualGroupPage',
@@ -392,6 +408,7 @@ export default Vue.extend({
       displayFavorite: 0,
       listStock: [],
       listTakenTickets: [],
+      view_count: '...',
     }
   },
   head() {
@@ -399,7 +416,7 @@ export default Vue.extend({
       title: this.group?.groupname,
     }
   },
-  async created() {
+  created() {
     if (this.events.length !== 0) {
       const getTicketsInfo = []
       for (let i = 0; i < this.events.length; i++) {
@@ -413,11 +430,12 @@ export default Vue.extend({
           )
         )
       }
-      const ticketsInfo = await Promise.all(getTicketsInfo)
-      for (let i = 0; i < ticketsInfo.length; i++) {
-        this.listStock.push(ticketsInfo[i].stock)
-        this.listTakenTickets.push(ticketsInfo[i].taken_tickets)
-      }
+      Promise.all(getTicketsInfo).then((ticketsInfo) => {
+        for (let i = 0; i < ticketsInfo.length; i++) {
+          this.listStock.push(ticketsInfo[i].stock)
+          this.listTakenTickets.push(ticketsInfo[i].taken_tickets)
+        }
+      })
     }
     // admin権限を持つ もしくは この団体にowner権限を持つユーザーがアクセスするとtrueになりページを編集できる
     // 実際に編集できるかどうかはAPIがJWTで認証するのでここはあくまでフロント側の制御
@@ -432,6 +450,17 @@ export default Vue.extend({
         })
       }
     }
+    this.$axios
+      .$get(
+        '/ga/screenpageview?start_date=7daysAgo&end_date=today&page_path=' +
+          this.$route.path
+      )
+      .then((res) => {
+        this.view_count = res.view
+      })
+      .catch(() => {
+        this.view_count = 'エラー'
+      })
   },
 
   methods: {
@@ -541,6 +570,9 @@ export default Vue.extend({
         new Date(event.sell_ends) < new Date()
       ) {
         this.error_message = '配布時間外です'
+        this.error_alert = true
+      } else if (!this.$auth.loggedIn) {
+        this.error_message = '整理券の取得にはログインが必要です'
         this.error_alert = true
       } else {
         this.selected_event = event

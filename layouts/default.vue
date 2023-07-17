@@ -36,9 +36,15 @@
                 >
                   👑Admin
                 </v-chip>
+                <v-chip
+                  v-show="$auth.user?.groups?.includes(userGroups.owner)"
+                  outlined
+                >
+                  団体代表者
+                </v-chip>
+
                 <!--
                 <v-chip outlined> Entry </v-chip>
-                <v-chip outlined> Owner </v-chip>
                 <v-chip outlined> Authorizer </v-chip>
                 <v-chip outlined> 家族用アカウント </v-chip>-->
                 <v-chip
@@ -115,8 +121,8 @@
 
               <v-divider></v-divider>
               <p class="ma-0 pa-0 text-caption grey--text">
-                © 2023 東京都立日比谷高校 星陵祭チーフ会 IT部隊 | SeiryoFes IT
-                Chief Tokyo Metropolitan Hibiya High School
+                © 2023 東京都立日比谷高等学校 IT委員会 | IT Chief | Tokyo
+                Metropolitan Hibiya High School
               </p>
             </v-list-item-group>
           </v-list>
@@ -155,7 +161,10 @@ export default Vue.extend({
   data() {
     return {
       drawerMenu: false,
-      userGroups: { admin: process.env.AZURE_AD_GROUPS_QUAINT_ADMIN as string },
+      userGroups: {
+        admin: process.env.AZURE_AD_GROUPS_QUAINT_ADMIN as string,
+        owner: process.env.AZURE_AD_GROUPS_QUAINT_OWNER as string,
+      },
       app_env: process.env.QUAINT_ENV,
       api_url: process.env.BASEURL,
     }
