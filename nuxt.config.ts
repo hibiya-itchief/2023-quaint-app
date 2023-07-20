@@ -19,7 +19,7 @@ const nuxtConfig: NuxtConfig = {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' },
+      { hid: 'description', name: 'description', content: '9月16日（土）・17日（日）開催の文化祭「星陵祭」2023の公式サイトです！' },
       { name: 'format-detection', content: 'telephone=no' },
     ],
     link: [
