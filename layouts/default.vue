@@ -61,10 +61,11 @@
                 ユーザーID：{{ $auth.user?.oid ?? $auth.user?.sub }}
                 <!--ADの場合ユーザーオブジェクトIDはoidに入ってる-->
               </p>
-              <p 
-              v-show="$auth.user?.groups?.includes(userGroups.admin)"
-              class="ma-0 pa-0 text-caption grey--text">
-              <a @click="revealToken()">APIトークンを表示</a>
+              <p
+                v-show="$auth.user?.groups?.includes(userGroups.admin)"
+                class="ma-0 pa-0 text-caption grey--text"
+              >
+                <a @click="revealToken()">APIトークンを表示</a>
               </p>
             </v-card-text>
             <v-card-actions>
