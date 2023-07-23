@@ -55,27 +55,37 @@
         >
           <!-- <class="d-flex flex-column">で，「もっと見る」が常に最下部に -->
           <v-card
-            height="100%"
+            height="160px"
             class="d-flex flex-column my-1"
             :to="'/groups/' + group.id"
           >
-            <v-img
-              v-if="group.public_thumbnail_image_url != null"
-              max-height="180px"
-              :src="group.public_thumbnail_image_url"
-            ></v-img>
-            <v-img v-else :class="HashColor(group.id)" height="180px"></v-img>
-            <v-card-title class="my-1 py-1"
-              >{{ group.title }}/{{ group.groupname }}</v-card-title
-            >
-            <v-card-text class="my-1 py-1">{{ group.description }}</v-card-text>
-            <v-card-actions class="my-0 py-0">
-              <v-chip-group column>
-                <v-chip v-for="tag in group.tags" :key="tag.id" disabled>{{
-                  tag.tagname
-                }}</v-chip>
-              </v-chip-group>
-            </v-card-actions>
+            <div class="d-flex flex-no-wrap">
+              <!--v-img でv-imgを挟むのは気持ち悪いよね-->
+              <v-avatar size="100" rounded="0">
+                <v-img
+                  v-if="group.public_thumbnail_image_url != null"
+                  :src="group.public_thumbnail_image_url"
+                ></v-img>
+                <v-img v-else :class="HashColor(group.id)"></v-img>
+              </v-avatar>
+              <div>
+                <v-card-title class="my-1 py-1">
+                  {{ group.title }}/{{ group.groupname }}
+                </v-card-title>
+                <!-- v-cardのheightが一意に定まらないので，Descriptionを無効化．
+                <v-card-text class="my-1 py-1">
+                  {{ group.description }}
+                </v-card-text>
+                -->
+                <v-card-actions class="my-0 py-0">
+                  <v-chip-group column>
+                    <v-chip v-for="tag in group.tags" :key="tag.id" disabled>
+                      {{ tag.tagname }}
+                    </v-chip>
+                  </v-chip-group>
+                </v-card-actions>
+              </div>
+            </div>
           </v-card>
         </v-col>
       </v-row>
