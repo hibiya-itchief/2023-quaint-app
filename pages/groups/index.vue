@@ -49,14 +49,15 @@
           v-show="filterGroups(group)"
           :key="group.id"
           cols="12"
-          md="4"
           sm="6"
-          class="my-0"
+          md="6"
+          lg="4"
+          class="my-0 py-2"
         >
           <!-- <class="d-flex flex-column">で，「もっと見る」が常に最下部に -->
           <v-card
             height="100%"
-            class="d-flex flex-column my-1"
+            class="d-flex flex-column ma-0 pa-2"
             :to="'/groups/' + group.id"
           >
             <div class="d-flex flex-no-wrap">
@@ -67,25 +68,30 @@
                 ></v-img>
                 <v-img v-else :class="HashColor(group.id)"></v-img>
               </v-avatar>
-              <div>
-                <v-card-title class="my-1 py-1">
+              <div class="px-1">
+                <v-card-title class="pt-1">
                   {{ group.title }}
                 </v-card-title>
-                <v-card-subtitle>
+                <v-card-subtitle class="pb-0">
                   {{ group.groupname }}
                 </v-card-subtitle>
+                <v-card-actions class="pb-0">
+                  <v-chip-group column>
+                    <v-chip
+                      v-for="tag in group.tags"
+                      :key="tag.id"
+                      disabled
+                      small
+                    >
+                      {{ tag.tagname }}
+                    </v-chip>
+                  </v-chip-group>
+                </v-card-actions>
                 <!-- v-cardのheightが一意に定まらないので，Descriptionを無効化．
                 <v-card-text class="my-1 py-1">
                   {{ group.description }}
                 </v-card-text>
                 -->
-                <v-card-actions class="my-0 py-0">
-                  <v-chip-group column>
-                    <v-chip v-for="tag in group.tags" :key="tag.id" disabled>
-                      {{ tag.tagname }}
-                    </v-chip>
-                  </v-chip-group>
-                </v-card-actions>
               </div>
             </div>
           </v-card>
