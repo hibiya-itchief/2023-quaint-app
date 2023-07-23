@@ -55,12 +55,11 @@
         >
           <!-- <class="d-flex flex-column">で，「もっと見る」が常に最下部に -->
           <v-card
-            height="160px"
+            height="100%"
             class="d-flex flex-column my-1"
             :to="'/groups/' + group.id"
           >
             <div class="d-flex flex-no-wrap">
-              <!--v-img でv-imgを挟むのは気持ち悪いよね-->
               <v-avatar size="100" rounded="0">
                 <v-img
                   v-if="group.public_thumbnail_image_url != null"
@@ -70,8 +69,11 @@
               </v-avatar>
               <div>
                 <v-card-title class="my-1 py-1">
-                  {{ group.title }}/{{ group.groupname }}
+                  {{ group.title }}
                 </v-card-title>
+                <v-card-subtitle>
+                  {{ group.groupname }}
+                </v-card-subtitle>
                 <!-- v-cardのheightが一意に定まらないので，Descriptionを無効化．
                 <v-card-text class="my-1 py-1">
                   {{ group.description }}
