@@ -89,7 +89,7 @@
                 </v-card-actions>
                 <!-- v-cardのheightが一意に定まらないので，Descriptionを無効化．
                 <v-card-text class="my-1 py-1">
-                  {{ group.description }}
+                  {{ group.description?.substring(0, 30) + '...' }}
                 </v-card-text>
                 -->
               </div>
