@@ -61,34 +61,21 @@
             :to="'/groups/' + group.id"
           >
             <div class="d-flex flex-no-wrap">
-              <div>
-                <v-avatar size="105" rounded="0">
-                  <v-img
-                    v-if="group.public_thumbnail_image_url != null"
-                    :src="group.public_thumbnail_image_url"
-                  ></v-img>
-                  <v-img v-else :class="HashColor(group.id)"></v-img>
-                </v-avatar>
-                <v-card-actions class="px-0 ax-0">
-                  <!--お気に入りボタン：コード未実装-->
-                  <v-btn icon><v-icon>mdi-bookmark-outline</v-icon></v-btn>
-                  <!--配布ステータスボタン：コード未実装-->
-                  <v-chip icon color="gray" label
-                    ><v-icon small>mdi-cancel</v-icon>未発</v-chip
-                  >
-                </v-card-actions>
-              </div>
+              <v-avatar size="100" rounded="0">
+                <v-img
+                  v-if="group.public_thumbnail_image_url != null"
+                  :src="group.public_thumbnail_image_url"
+                ></v-img>
+                <v-img v-else :class="HashColor(group.id)"></v-img>
+              </v-avatar>
               <div class="px-1">
                 <v-card-title class="pt-1">
                   {{ group.title }}
                 </v-card-title>
-                <v-card-subtitle>
+                <v-card-subtitle class="pb-0">
                   {{ group.groupname }}
                 </v-card-subtitle>
-                <v-card-text class="pb-0">
-                  {{ group.description?.substring(0, 30) + '...' }}
-                </v-card-text>
-                <v-card-actions>
+                <v-card-actions class="pb-0">
                   <v-chip-group column>
                     <v-chip
                       v-for="tag in group.tags"
@@ -100,6 +87,11 @@
                     </v-chip>
                   </v-chip-group>
                 </v-card-actions>
+                <!-- v-cardのheightが一意に定まらないので，Descriptionを無効化．
+                <v-card-text class="my-1 py-1">
+                  {{ group.description?.substring(0, 30) + '...' }}
+                </v-card-text>
+                -->
               </div>
             </div>
           </v-card>
