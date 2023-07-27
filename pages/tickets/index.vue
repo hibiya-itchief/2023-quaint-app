@@ -42,7 +42,7 @@
             受付担当者は公演時間と入場人数を確認してください
           </p>
 
-          <!--この部分にUp-Nextを表示; v-if="isUpNext"で条件に合致するか調査-->
+          <!--この部分にUp-Nextを表示; v-if="isUpNext"で条件に合致するか調査
           <v-card>
             <v-card-title>次はこちら</v-card-title>
             <v-card
@@ -53,7 +53,7 @@
               <p>{{ ticketInfo.event.eventname }}</p>
             </v-card>
           </v-card>
-
+-->
           <!--これより下に表示されるv-cardは，v-if="!isUpNext"のみ-->
           <v-card
             v-for="ticketInfo in tickets"
