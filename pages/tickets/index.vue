@@ -216,6 +216,13 @@ export default Vue.extend({
   head: {
     title: '整理券',
   },
+  computed: {
+    /* 
+    ここに，
+    （現在時刻-15分）＜ticketInfo.event.starts_at && ticketInfo.event.ends_at<（現在時刻）
+    となるようなeventをupnNext= []の中に入れる処理を書く
+    */
+  },
   async created() {
     this.fetchTicket()
     try {
