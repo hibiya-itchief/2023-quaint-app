@@ -43,7 +43,7 @@
             受付担当者は公演時間と入場人数を確認してください
           </p>
           <div class="text-center">
-            <v-chip label class="ma-1"
+            <v-chip v-if="time" label class="ma-1"
               >{{ time }} <span class="text-h5">{{ second }} </span></v-chip
             >
           </div>
@@ -69,8 +69,10 @@
                     class="ma-2"
                   ></v-img>
                   <div class="ma-2">
-                    <v-list-item-subtitle>
-                      {{ ticketInfo.event.eventname }}</v-list-item-subtitle
+                    <v-list-item-subtitle
+                      >{{ ticketInfo.event.eventname }}・{{
+                        DateFormatter(ticketInfo.event.starts_at)
+                      }}</v-list-item-subtitle
                     >
                     <v-list-item-title class="text-h7">
                       {{ ticketInfo.group.title }}
@@ -117,9 +119,9 @@
                       <v-icon>mdi-clock-time-nine</v-icon
                       ><span class="grey--text text--darken-2">公演 </span>
                       <span class="text-h5">{{
-                        DateFormatter(ticketInfo.event.starts_at)
+                        TimeFormatter(ticketInfo.event.starts_at)
                       }}</span>
-                      -{{ DateFormatter(ticketInfo.event.ends_at) }}
+                      -{{ TimeFormatter(ticketInfo.event.ends_at) }}
                     </p>
                     <v-spacer></v-spacer>
                     <p class="text-body-2">
@@ -251,11 +253,11 @@ export default Vue.extend({
         this.qrcodeUrl = await getQRCodeDataUrl(this.$auth.user?.sub as string)
       }
     } catch {}
-    // 100msごとに現在時刻を取得
-    setInterval(this.getNow, 100)
+    // 500msごとに現在時刻を取得
+    setInterval(this.getNow, 500)
 
-    // 10sごとに，開場中かどうかを判定
-    setInterval(this.isUpNext, 1000 * 10)
+    // 10sごとに，開場中かどうかを判定するつもりだったが，エラーが出るので止め
+    // setInterval(this.isUpNext, 10000)
   },
 
   methods: {
@@ -326,7 +328,7 @@ export default Vue.extend({
       })
       this.tickets = ticketInfos
     },
-    DateFormatter(inputDate: string) {
+    TimeFormatter(inputDate: string) {
       const d = new Date(inputDate)
       return (
         /*
@@ -340,6 +342,10 @@ export default Vue.extend({
         ':' +
         d.getMinutes().toString().padStart(2, '0')
       )
+    },
+    DateFormatter(inputDate: string) {
+      const d = new Date(inputDate)
+      return d.getMonth() + 1 + '/' + d.getDate()
     },
     selectCancelTicket(ticketInfo: TicketInfo) {
       this.cancelDialog = true
