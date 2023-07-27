@@ -38,9 +38,12 @@
           </v-card>
 
           <!--現在の時刻を表示-->
-          <div class="text-center">
+          <div class="text-center pa-1">
             <v-chip v-if="time" label class="ma-1"
               >{{ time }} <span class="text-h5">{{ second }} </span></v-chip
+            >
+            <v-btn class="mx-1 my-1" color="primary" @click="fetchTicket()"
+              ><v-icon>mdi-reload</v-icon>再読み込み</v-btn
             >
           </div>
 
@@ -182,10 +185,6 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
-
-          <v-btn class="mx-1 my-3" color="primary" @click="fetchTicket()"
-            ><v-icon>mdi-reload</v-icon>再読み込み</v-btn
-          >
         </v-col>
       </v-row>
       <v-snackbar v-model="success_alert" color="success" elevation="2">
