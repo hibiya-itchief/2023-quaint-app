@@ -200,7 +200,7 @@ type TicketInfo = {
 type Data = {
   groups: Group[]
   events: Event[]
-  upNexts: []
+
   tickets: TicketInfo[]
   cancelDialog: boolean
   selectedTicket: TicketInfo | null
@@ -219,7 +219,7 @@ export default Vue.extend({
       groups: [],
       events: [],
       tickets: [],
-      upNexts: [],
+
       cancelDialog: false,
       selectedTicket: null,
       display_userid: false,
