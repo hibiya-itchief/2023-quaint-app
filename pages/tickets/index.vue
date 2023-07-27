@@ -40,14 +40,29 @@
             <v-chip v-if="time" label class="ma-1"
               >{{ time }} <span class="text-h5">{{ second }} </span></v-chip
             >
+          </div>
+
+          <!--
             <p class="mx-1 my-0 py-0 text-caption grey--text">
               この画面を観劇したいクラスの受付担当に見せてください
             </p>
             <p class="mx-1 my-0 py-0 text-caption grey--text">
               受付担当者は公演時間と入場人数を確認してください
             </p>
-          </div>
-          <v-card flat>
+            -->
+          <v-card v-if="tickets.length == 0" class="ma-1 pa-2">
+            <div>
+              <v-card-title>まだ整理券を取得していません</v-card-title>
+              <v-card-actions>
+                <v-btn :href="'/groups'" block
+                  >次に見たい公演を探しに行きましょう✨</v-btn
+                >
+              </v-card-actions>
+            </div>
+          </v-card>
+
+          <!--取得した整理券一覧-->
+          <v-card flat class="ma-1">
             <v-expansion-panels>
               <v-expansion-panel
                 v-for="ticketInfo in tickets"
@@ -169,12 +184,7 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
-          <div v-if="tickets.length == 0" class="pa-3">
-            <p>ここに表示するものはありません</p>
-            <a href="/groups" class="amber--text text--darken-4"
-              >次に見たい公演を探しに行きましょう✨</a
-            >
-          </div>
+
           <v-btn class="mx-1 my-3" color="primary" @click="fetchTicket()"
             ><v-icon>mdi-reload</v-icon>再読み込み</v-btn
           >
