@@ -2,7 +2,7 @@
   <v-app>
     <v-container name="ticket_container" class="ma-0 pa-0">
       <v-row class="ma-0 pa-0" justify="center" align-content="center">
-        <v-col class="ma-0 pa-0" col="6" md="6" sm="12">
+        <v-col col="6" md="6" sm="12">
           <v-card
             v-if="
               !(
@@ -41,94 +41,102 @@
           <p class="mx-1 my-0 py-0 text-caption grey--text">
             受付担当者は公演時間と入場人数を確認してください
           </p>
-          <div
+
+          <v-card
             v-for="ticketInfo in tickets"
             :key="ticketInfo.ticket.id"
-            class="my-2"
+            max-width="100%"
+            outlined
+            rounded
+            elevation="2"
           >
-            <v-card
-              class="mx-auto"
-              max-width="100%"
-              outlined
-              rounded
-              elevation="2"
-            >
-              <v-list-item two-line>
-                <v-list-item-content>
-                  <v-list-item-title class="text-h7 mb-1"
-                    >{{ ticketInfo.group.title }} -
-                    {{ ticketInfo.group.groupname }}</v-list-item-title
-                  >
-                  <v-list-item-subtitle>{{
-                    ticketInfo.event.eventname
-                  }}</v-list-item-subtitle>
-                </v-list-item-content>
+            <v-list-item two-line>
+              <v-list-item-content>
+                <!--
+                <v-img
+                  v-if="ticketInfo.group.public_thumbnail_image_url != null"
+                  :src="ticketInfo.group.public_thumbnail_image_url"
+                  max-width="20px"
+                ></v-img>
+              -->
+                <v-list-item-title class="text-h7 mb-1">
+                  【{{ ticketInfo.event.eventname }}】{{
+                    ticketInfo.group.title
+                  }}
+                </v-list-item-title>
+                <v-list-item-subtitle>
+                  {{ ticketInfo.group.groupname }}</v-list-item-subtitle
+                ></v-list-item-content
+              >
+              <v-card-actions>
+                <v-btn
+                  icon
+                  @click="ticketInfo.detailShow = !ticketInfo.detailShow"
+                >
+                  <v-icon>{{
+                    ticketInfo.detailShow
+                      ? 'mdi-chevron-up'
+                      : 'mdi-chevron-down'
+                  }}</v-icon>
+                </v-btn>
+              </v-card-actions>
+            </v-list-item>
+            <v-expand-transition>
+              <div v-show="ticketInfo.detailShow">
+                <v-divider></v-divider>
                 <v-card-actions>
                   <v-btn
-                    icon
-                    @click="ticketInfo.detailShow = !ticketInfo.detailShow"
-                  >
-                    <v-icon>{{
-                      ticketInfo.detailShow
-                        ? 'mdi-chevron-up'
-                        : 'mdi-chevron-down'
-                    }}</v-icon>
+                    class="text-body-2"
+                    :href="'/groups/' + ticketInfo.group.id"
+                    >詳細を見る
                   </v-btn>
                 </v-card-actions>
-              </v-list-item>
-              <v-expand-transition>
-                <div v-show="ticketInfo.detailShow" class="pa-1">
-                  <v-divider></v-divider>
-                  <v-card-text class="pa-1">
-                    <a
-                      class="text-body-2 mx-0 my-0 pa-0"
-                      :href="'/groups/' + ticketInfo.group.id"
-                      >{{ ticketInfo.group.groupname }}の団体紹介ページ</a
-                    >
-                    <p class="text-body-2 mx-0 my-0 pa-0">
-                      <v-icon>mdi-clock-time-nine</v-icon
-                      ><span class="grey--text text--darken-2">開幕時刻：</span
-                      >{{ DateFormatter(ticketInfo.event.starts_at) }} ~
-                      {{ DateFormatter(ticketInfo.event.ends_at) }}
-                    </p>
-                    <p class="text-body-2 mx-0 my-0 pa-0">
-                      <v-icon>mdi-account-supervisor</v-icon
-                      ><span class="grey--text text--darken-2"
-                        >同時入場人数：</span
-                      >{{ ticketInfo.ticket.person }}
-                    </p>
-                    <p class="text-body-2 mx-0 my-0 pa-0">
-                      <span class="grey--text text--darken-2">ID：</span
-                      >{{ ticketInfo.ticket.id }}
-                    </p>
-                    <v-btn @click="selectCancelTicket(ticketInfo)">
-                      <v-icon>mdi-close</v-icon>
-                      <p class="pa-0 ma-0">このチケットをキャンセル</p>
-                    </v-btn>
-                  </v-card-text>
-                </div>
-              </v-expand-transition>
-            </v-card>
-          </div>
-          <v-dialog
-            v-if="selectedTicket"
-            v-model="cancelDialog"
-            max-width="300"
-          >
+                <v-card-text>
+                  <p class="text-body-2">
+                    <v-icon>mdi-clock-time-nine</v-icon
+                    ><span class="grey--text text--darken-2">公演:</span
+                    >{{ DateFormatter(ticketInfo.event.starts_at) }} -
+                    {{ DateFormatter(ticketInfo.event.ends_at) }}
+                  </p>
+                  <p class="text-body-2">
+                    <v-icon>mdi-account-supervisor</v-icon
+                    ><span class="grey--text text--darken-2">人数:</span
+                    >{{ ticketInfo.ticket.person }}
+                  </p>
+                </v-card-text>
+                <v-card-actions
+                  ><v-btn color="error" @click="selectCancelTicket(ticketInfo)">
+                    <v-icon>mdi-close</v-icon>
+                    キャンセル
+                  </v-btn></v-card-actions
+                >
+                <v-card-text>
+                  <p class="text-body-2 grey--text">
+                    ID: {{ ticketInfo.ticket.id }}
+                  </p>
+                </v-card-text>
+              </div>
+            </v-expand-transition>
+          </v-card>
+
+          <v-dialog v-if="selectedTicket" v-model="cancelDialog">
             <v-card>
-              <v-card-title class="text-h5"
-                >{{ selectedTicket.group.title }} -
-                {{
-                  selectedTicket.group.groupname
-                }}の整理券をキャンセルしてもよろしいですか？</v-card-title
-              >
-              <v-card-text>このアクションは取り消せません</v-card-text>
+              <v-card-title class="text-h5">
+                本当にキャンセルしますか？
+              </v-card-title>
+              <v-card-title>
+                {{ selectedTicket.group.title }}
+              </v-card-title>
+              <v-card-subtitle>{{
+                selectedTicket.group.groupname
+              }}</v-card-subtitle>
+              <v-card-text>この操作は取り消せません</v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn text @click="cancelDialog = false">いいえ</v-btn>
-                <v-btn color="primary" @click="CancelTicket(selectedTicket)"
-                  >はい</v-btn
+                <v-btn color="primary" @click="cancelDialog = false"
+                  >いいえ</v-btn
                 >
+                <v-btn text @click="CancelTicket(selectedTicket)">はい</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -139,7 +147,7 @@
             >
           </div>
           <v-btn class="mx-1 my-3" color="primary" @click="fetchTicket()"
-            >再読み込み</v-btn
+            ><v-icon>mdi-reload</v-icon>再読み込み</v-btn
           >
         </v-col>
       </v-row>
