@@ -35,17 +35,22 @@
             </div>
           </v-card>
           <div class="my-3" />
+
           <p class="mx-1 my-0 py-0 text-caption grey--text">
             この画面を観劇したいクラスの受付担当に見せてください
           </p>
           <p class="mx-1 my-0 py-0 text-caption grey--text">
             受付担当者は公演時間と入場人数を確認してください
           </p>
-
+          <div class="text-center">
+            <v-chip label class="ma-1"
+              >{{ time }} <span class="text-h5">{{ second }} </span></v-chip
+            >
+          </div>
           <v-card
             v-for="ticketInfo in tickets"
             :key="ticketInfo.ticket.id"
-            class="ma-2 pa-2"
+            class="ma-1 pa-1"
             max-width="100%"
             outlined
             rounded
@@ -59,33 +64,36 @@
                   <v-img
                     v-if="ticketInfo.group.public_thumbnail_image_url != null"
                     :src="ticketInfo.group.public_thumbnail_image_url"
-                    max-width="40px"
-                    class="mx-2"
+                    max-width="60px"
+                    height="100px"
+                    class="ma-2"
                   ></v-img>
-                  <div>
-                    <v-list-item-title class="text-h7 mb-1">
-                      【{{ ticketInfo.event.eventname }}】{{
-                        ticketInfo.group.title
-                      }}
-                      <v-chip
-                        v-if="
-                          isUpNext(
-                            new Date(ticketInfo.event.starts_at),
-                            new Date(ticketInfo.event.ends_at)
-                          )
-                        "
-                        color="primary"
-                        outlined
-                        class="mx-2"
-                        ><v-icon>mdi-theater</v-icon>開場中</v-chip
-                      >
-                    </v-list-item-title>
+                  <div class="ma-2">
                     <v-list-item-subtitle>
+                      {{ ticketInfo.event.eventname }}</v-list-item-subtitle
+                    >
+                    <v-list-item-title class="text-h7">
+                      {{ ticketInfo.group.title }}
+                    </v-list-item-title>
+                    <v-list-item-subtitle class="mb-4">
                       {{ ticketInfo.group.groupname }}</v-list-item-subtitle
+                    >
+                    <v-chip
+                      v-if="
+                        isUpNext(
+                          new Date(ticketInfo.event.starts_at),
+                          new Date(ticketInfo.event.ends_at)
+                        )
+                      "
+                      color="primary"
+                      outlined
+                      label
+                      ><v-icon>mdi-theater</v-icon>開場中</v-chip
                     >
                   </div>
                 </div>
               </v-list-item-content>
+
               <v-card-actions>
                 <v-btn
                   icon
@@ -199,7 +207,6 @@ type TicketInfo = {
 type Data = {
   groups: Group[]
   events: Event[]
-
   tickets: TicketInfo[]
   cancelDialog: boolean
   selectedTicket: TicketInfo | null
@@ -209,6 +216,8 @@ type Data = {
   error_alert: boolean
   success_message: string
   error_message: string
+  time: string
+  second: string
 }
 export default Vue.extend({
   name: 'UsersTicketsPage',
@@ -218,7 +227,6 @@ export default Vue.extend({
       groups: [],
       events: [],
       tickets: [],
-
       cancelDialog: false,
       selectedTicket: null,
       display_userid: false,
@@ -227,6 +235,8 @@ export default Vue.extend({
       error_alert: false,
       success_message: '',
       error_message: '',
+      time: '',
+      second: '',
     }
   },
   head: {
@@ -241,8 +251,27 @@ export default Vue.extend({
         this.qrcodeUrl = await getQRCodeDataUrl(this.$auth.user?.sub as string)
       }
     } catch {}
+    // 100msごとに現在時刻を取得
+    setInterval(this.getNow, 100)
   },
+
   methods: {
+    // 現在時刻を取得
+    getNow: function () {
+      const today = new Date()
+      const date =
+        today.getFullYear() +
+        '-' +
+        (today.getMonth() + 1) +
+        '-' +
+        today.getDate()
+      const time = today.getHours() + ':' + today.getMinutes()
+      const dateTime = date + ' ' + time + ':'
+      const seconds = today.getSeconds()
+      this.time = dateTime
+      this.second = seconds + ''
+    },
+
     // upNextかどうかを判定する関数関数
     isUpNext: function (start: Date, end: Date) {
       // ここに，upNextかどうか判定する関数
@@ -252,17 +281,12 @@ export default Vue.extend({
       // 開演20分前の時刻を計算する
       const MinutesBeforeStart = new Date(start.getTime() - 1000 * 60 * 20)
 
+      // 「 開演20分前<現在時刻かつ現在時刻<終演時刻」を判定
       if (MinutesBeforeStart < currentTime && currentTime < end) {
         return true
       } else {
         return false
       }
-
-      /* 
-    ここに，
-    （現在時刻-15分）＜ticketInfo.event.starts_at && ticketInfo.event.ends_at<（現在時刻）
-    となるようなeventをupnNext= []の中に入れる処理を書く
-    */
     },
     async fetchTicket() {
       const tickets: Ticket[] = await this.$axios.$get('/users/me/tickets')
