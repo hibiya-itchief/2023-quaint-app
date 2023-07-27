@@ -70,73 +70,69 @@
                 focusable
               >
                 <v-expansion-panel-header>
-                  <v-list-item two-line>
-                    <div class="d-flex flex-no-wrap">
-                      <v-img
+                  <v-list-item>
+                    <v-img
+                      v-if="ticketInfo.group.public_thumbnail_image_url != null"
+                      :src="ticketInfo.group.public_thumbnail_image_url"
+                      max-width="100px"
+                      height="165px"
+                      class="mr-2"
+                    ></v-img>
+                    <div class="ma-2">
+                      <v-list-item-subtitle
+                        >{{ ticketInfo.event.eventname }}・{{
+                          DateFormatter(ticketInfo.event.starts_at)
+                        }}</v-list-item-subtitle
+                      >
+                      <v-list-item-title class="text-h7">
+                        {{ ticketInfo.group.title }}
+                      </v-list-item-title>
+                      <v-list-item-subtitle>
+                        {{ ticketInfo.group.groupname }}</v-list-item-subtitle
+                      >
+                      <v-list-item-subtitle
+                        class="mt-2 grey--text text--darken-2"
+                      >
+                        <span class="text-h5"
+                          ><v-icon>mdi-clock-time-nine</v-icon
+                          >{{ TimeFormatter(ticketInfo.event.starts_at) }}</span
+                        >
+                        -{{ TimeFormatter(ticketInfo.event.ends_at) }}
+                      </v-list-item-subtitle>
+                      <v-list-item-subtitle
+                        class="mb-2 grey--text text--darken-2"
+                      >
+                        <span class="text-h5"
+                          ><v-icon>mdi-account-supervisor</v-icon
+                          >{{ ticketInfo.ticket.person }}</span
+                        >人
+                      </v-list-item-subtitle>
+
+                      <v-chip
+                        v-if="isUsed(new Date(ticketInfo.event.ends_at))"
+                        color="error"
+                        outlined
+                        label
+                        ><v-icon>mdi-check</v-icon>公演終了</v-chip
+                      >
+                      <v-chip
                         v-if="
-                          ticketInfo.group.public_thumbnail_image_url != null
+                          isUpNext(
+                            new Date(ticketInfo.event.starts_at),
+                            new Date(ticketInfo.event.ends_at)
+                          )
                         "
-                        :src="ticketInfo.group.public_thumbnail_image_url"
-                        max-width="60px"
-                        height="100px"
-                        class="ma-2"
-                      ></v-img>
-                      <div class="ma-2">
-                        <v-list-item-subtitle
-                          >{{ ticketInfo.event.eventname }}・{{
-                            DateFormatter(ticketInfo.event.starts_at)
-                          }}</v-list-item-subtitle
-                        >
-                        <v-list-item-title class="text-h7">
-                          {{ ticketInfo.group.title }}
-                        </v-list-item-title>
-                        <v-list-item-subtitle class="mb-4">
-                          {{ ticketInfo.group.groupname }}</v-list-item-subtitle
-                        >
-                        <v-chip
-                          v-if="isUsed(new Date(ticketInfo.event.ends_at))"
-                          color="error"
-                          outlined
-                          label
-                          ><v-icon>mdi-check</v-icon>公演終了</v-chip
-                        >
-                        <v-chip
-                          v-if="
-                            isUpNext(
-                              new Date(ticketInfo.event.starts_at),
-                              new Date(ticketInfo.event.ends_at)
-                            )
-                          "
-                          color="primary"
-                          outlined
-                          label
-                          ><v-icon>mdi-theater</v-icon>開場中</v-chip
-                        >
-                      </div>
+                        color="primary"
+                        outlined
+                        label
+                        ><v-icon>mdi-theater</v-icon>開場中</v-chip
+                      >
                     </div>
                   </v-list-item>
                 </v-expansion-panel-header>
                 <v-expansion-panel-content>
                   <v-divider></v-divider>
                   <v-card-text>
-                    <div class="d-flex flex-no-wrap">
-                      <p class="text-body-2">
-                        <v-icon>mdi-clock-time-nine</v-icon
-                        ><span class="grey--text text--darken-2">公演 </span>
-                        <span class="text-h5">{{
-                          TimeFormatter(ticketInfo.event.starts_at)
-                        }}</span>
-                        -{{ TimeFormatter(ticketInfo.event.ends_at) }}
-                      </p>
-                      <v-spacer></v-spacer>
-                      <p class="text-body-2">
-                        <v-icon>mdi-account-supervisor</v-icon
-                        ><span class="grey--text text--darken-2">人数 </span
-                        ><span class="text-h5">{{
-                          ticketInfo.ticket.person
-                        }}</span>
-                      </p>
-                    </div>
                     <p class="text-body-2 grey--text mb-0">
                       ID: {{ ticketInfo.ticket.id }}
                     </p>
