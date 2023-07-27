@@ -45,6 +45,7 @@
           <v-card
             v-for="ticketInfo in tickets"
             :key="ticketInfo.ticket.id"
+            class="ma-2 pa-2"
             max-width="100%"
             outlined
             rounded
@@ -52,22 +53,25 @@
           >
             <v-list-item two-line>
               <v-list-item-content>
-                <!--
-                <v-img
-                  v-if="ticketInfo.group.public_thumbnail_image_url != null"
-                  :src="ticketInfo.group.public_thumbnail_image_url"
-                  max-width="20px"
-                ></v-img>
-              -->
-                <v-list-item-title class="text-h7 mb-1">
-                  【{{ ticketInfo.event.eventname }}】{{
-                    ticketInfo.group.title
-                  }}
-                </v-list-item-title>
-                <v-list-item-subtitle>
-                  {{ ticketInfo.group.groupname }}</v-list-item-subtitle
-                ></v-list-item-content
-              >
+                <div class="d-flex flex-no-wrap">
+                  <v-img
+                    v-if="ticketInfo.group.public_thumbnail_image_url != null"
+                    :src="ticketInfo.group.public_thumbnail_image_url"
+                    max-width="40px"
+                    class="mx-2"
+                  ></v-img>
+                  <div>
+                    <v-list-item-title class="text-h7 mb-1">
+                      【{{ ticketInfo.event.eventname }}】{{
+                        ticketInfo.group.title
+                      }}
+                    </v-list-item-title>
+                    <v-list-item-subtitle>
+                      {{ ticketInfo.group.groupname }}</v-list-item-subtitle
+                    >
+                  </div>
+                </div>
+              </v-list-item-content>
               <v-card-actions>
                 <v-btn
                   icon
@@ -84,48 +88,55 @@
             <v-expand-transition>
               <div v-show="ticketInfo.detailShow">
                 <v-divider></v-divider>
-                <v-card-actions>
-                  <v-btn
-                    class="text-body-2"
-                    :href="'/groups/' + ticketInfo.group.id"
-                    >詳細を見る
-                  </v-btn>
-                </v-card-actions>
+
                 <v-card-text>
-                  <p class="text-body-2">
-                    <v-icon>mdi-clock-time-nine</v-icon
-                    ><span class="grey--text text--darken-2">公演:</span
-                    >{{ DateFormatter(ticketInfo.event.starts_at) }} -
-                    {{ DateFormatter(ticketInfo.event.ends_at) }}
-                  </p>
-                  <p class="text-body-2">
-                    <v-icon>mdi-account-supervisor</v-icon
-                    ><span class="grey--text text--darken-2">人数:</span
-                    >{{ ticketInfo.ticket.person }}
-                  </p>
-                </v-card-text>
-                <v-card-actions
-                  ><v-btn color="error" @click="selectCancelTicket(ticketInfo)">
-                    <v-icon>mdi-close</v-icon>
-                    キャンセル
-                  </v-btn></v-card-actions
-                >
-                <v-card-text>
-                  <p class="text-body-2 grey--text">
+                  <div class="d-flex flex-no-wrap">
+                    <p class="text-body-2">
+                      <v-icon>mdi-clock-time-nine</v-icon
+                      ><span class="grey--text text--darken-2">公演:</span>
+                      <span class="text-h5">{{
+                        DateFormatter(ticketInfo.event.starts_at)
+                      }}</span>
+                      -{{ DateFormatter(ticketInfo.event.ends_at) }}
+                    </p>
+                    <v-spacer></v-spacer>
+                    <p class="text-body-2">
+                      <v-icon>mdi-account-supervisor</v-icon
+                      ><span class="grey--text text--darken-2">人数:</span
+                      ><span class="text-h5">{{
+                        ticketInfo.ticket.person
+                      }}</span>
+                    </p>
+                  </div>
+                  <p class="text-body-2 grey--text mb-0">
                     ID: {{ ticketInfo.ticket.id }}
                   </p>
                 </v-card-text>
+                <v-card-actions>
+                  <v-btn :href="'/groups/' + ticketInfo.group.id"
+                    >公演詳細
+                  </v-btn>
+                  <v-spacer></v-spacer>
+                  <v-btn color="error" @click="selectCancelTicket(ticketInfo)">
+                    <v-icon>mdi-close</v-icon>
+                    整理券をキャンセル
+                  </v-btn>
+                </v-card-actions>
               </div>
             </v-expand-transition>
           </v-card>
 
+          <!--キャンセルの有無を問うダイアログ-->
           <v-dialog v-if="selectedTicket" v-model="cancelDialog">
             <v-card>
               <v-card-title class="text-h5">
                 本当にキャンセルしますか？
               </v-card-title>
+
               <v-card-title>
-                {{ selectedTicket.group.title }}
+                【{{ selectedTicket.event.eventname }}】{{
+                  selectedTicket.group.title
+                }}
               </v-card-title>
               <v-card-subtitle>{{
                 selectedTicket.group.groupname
@@ -133,10 +144,10 @@
               <v-card-text>この操作は取り消せません</v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="primary" @click="cancelDialog = false"
-                  >いいえ</v-btn
+                <v-btn text @click="cancelDialog = false">いいえ</v-btn>
+                <v-btn color="error" @click="CancelTicket(selectedTicket)"
+                  >はい</v-btn
                 >
-                <v-btn text @click="CancelTicket(selectedTicket)">はい</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -254,11 +265,13 @@ export default Vue.extend({
     DateFormatter(inputDate: string) {
       const d = new Date(inputDate)
       return (
+        /*
         d.getMonth() +
         1 +
         '月' +
         d.getDate() +
         '日 ' +
+        */
         d.getHours().toString().padStart(2, '0') +
         ':' +
         d.getMinutes().toString().padStart(2, '0')
