@@ -60,14 +60,40 @@
             class="d-flex flex-column ma-0 pa-2"
             :to="'/groups/' + group.id"
           >
+            <div v-if="!$vuetify.breakpoint.xs">
+              <v-img
+                v-if="group.public_thumbnail_image_url != null"
+                height="180px"
+                aspect-ratio="4/3"
+                contain
+                :src="group.public_thumbnail_image_url"
+              ></v-img>
+              <v-img
+                v-else
+                :class="HashColor(group.id)"
+                height="180px"
+                aspect-ratio="4/3"
+                contain
+              ></v-img>
+            </div>
             <div class="d-flex flex-no-wrap">
-              <v-avatar size="100" rounded="0">
+              <div v-if="$vuetify.breakpoint.xs">
+                <!--<v-avatar v-if="$vuetify.breakpoint.xs" size="100" rounded="0">-->
                 <v-img
                   v-if="group.public_thumbnail_image_url != null"
+                  height="120px"
+                  width="160px"
+                  contain
                   :src="group.public_thumbnail_image_url"
                 ></v-img>
-                <v-img v-else :class="HashColor(group.id)"></v-img>
-              </v-avatar>
+                <v-img
+                  v-else
+                  :class="HashColor(group.id)"
+                  height="120px"
+                  width="160px"
+                ></v-img>
+                <!--</v-avatar>-->
+              </div>
               <div class="px-1">
                 <v-card-title class="pt-1">
                   {{ group.title }}
