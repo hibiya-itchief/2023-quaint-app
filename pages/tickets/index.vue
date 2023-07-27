@@ -27,7 +27,7 @@
               <a
                 class="text-subtitle-2"
                 @click="display_userid = !display_userid"
-                >ユーザーIDを表示：</a
+                >ユーザーIDを表示: </a
               ><span v-show="display_userid"
                 >{{ $auth.user?.oid ?? $auth.user?.sub }}
                 <!--ADの場合ユーザーオブジェクトIDはoidに入ってる--></span
@@ -42,19 +42,6 @@
             受付担当者は公演時間と入場人数を確認してください
           </p>
 
-          <!--この部分にUp-Nextを表示; v-if="isUpNext"で条件に合致するか調査
-          <v-card>
-            <v-card-title>次はこちら</v-card-title>
-            <v-card
-              v-for="ticketInfo in tickets"
-              :key="ticketInfo.ticket.id"
-              class="ma-2 pa-2"
-            >
-              <p>{{ ticketInfo.event.eventname }}</p>
-            </v-card>
-          </v-card>
--->
-          <!--これより下に表示されるv-cardは，v-if="!isUpNext"のみ-->
           <v-card
             v-for="ticketInfo in tickets"
             :key="ticketInfo.ticket.id"
@@ -64,6 +51,8 @@
             rounded
             elevation="2"
           >
+            <!--公演の開始15分前-公演終了までの場合み表示されるdiv-->
+
             <v-list-item two-line>
               <v-list-item-content>
                 <div class="d-flex flex-no-wrap">
@@ -78,6 +67,18 @@
                       【{{ ticketInfo.event.eventname }}】{{
                         ticketInfo.group.title
                       }}
+                      <v-chip
+                        v-if="
+                          isUpNext(
+                            new Date(ticketInfo.event.starts_at),
+                            new Date(ticketInfo.event.ends_at)
+                          )
+                        "
+                        color="primary"
+                        outlined
+                        class="mx-2"
+                        ><v-icon>mdi-theater</v-icon>開場中</v-chip
+                      >
                     </v-list-item-title>
                     <v-list-item-subtitle>
                       {{ ticketInfo.group.groupname }}</v-list-item-subtitle
@@ -106,7 +107,7 @@
                   <div class="d-flex flex-no-wrap">
                     <p class="text-body-2">
                       <v-icon>mdi-clock-time-nine</v-icon
-                      ><span class="grey--text text--darken-2">公演:</span>
+                      ><span class="grey--text text--darken-2">公演 </span>
                       <span class="text-h5">{{
                         DateFormatter(ticketInfo.event.starts_at)
                       }}</span>
@@ -115,7 +116,7 @@
                     <v-spacer></v-spacer>
                     <p class="text-body-2">
                       <v-icon>mdi-account-supervisor</v-icon
-                      ><span class="grey--text text--darken-2">人数:</span
+                      ><span class="grey--text text--darken-2">人数 </span
                       ><span class="text-h5">{{
                         ticketInfo.ticket.person
                       }}</span>
@@ -181,8 +182,6 @@
       <v-snackbar v-model="error_alert" color="red" elevation="2">
         {{ error_message }}
       </v-snackbar>
-
-      <p>{{ isUpNexts }}</p>
     </v-container>
   </v-app>
 </template>
@@ -233,19 +232,6 @@ export default Vue.extend({
   head: {
     title: '整理券',
   },
-  computed: {
-    // upNextsにデータを入れる関数
-    isUpNexts: function () {
-      // ここに，upNextかどうか判定する関数
-      return Date.now()
-    },
-
-    /* 
-    ここに，
-    （現在時刻-15分）＜ticketInfo.event.starts_at && ticketInfo.event.ends_at<（現在時刻）
-    となるようなeventをupnNext= []の中に入れる処理を書く
-    */
-  },
   async created() {
     this.fetchTicket()
     try {
@@ -257,6 +243,27 @@ export default Vue.extend({
     } catch {}
   },
   methods: {
+    // upNextかどうかを判定する関数関数
+    isUpNext: function (start: Date, end: Date) {
+      // ここに，upNextかどうか判定する関数
+      // ここにupNextかどうか判定する関数
+      const date = new Date()
+      const currentTime: Date = new Date(date.getTime())
+      // 開演20分前の時刻を計算する
+      const MinutesBeforeStart = new Date(start.getTime() - 1000 * 60 * 20)
+
+      if (MinutesBeforeStart < currentTime && currentTime < end) {
+        return true
+      } else {
+        return false
+      }
+
+      /* 
+    ここに，
+    （現在時刻-15分）＜ticketInfo.event.starts_at && ticketInfo.event.ends_at<（現在時刻）
+    となるようなeventをupnNext= []の中に入れる処理を書く
+    */
+    },
     async fetchTicket() {
       const tickets: Ticket[] = await this.$axios.$get('/users/me/tickets')
 
