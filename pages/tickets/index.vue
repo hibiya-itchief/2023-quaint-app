@@ -42,6 +42,19 @@
             受付担当者は公演時間と入場人数を確認してください
           </p>
 
+          <!--この部分にUp-Nextを表示; v-if="isUpNext"で条件に合致するか調査-->
+          <v-card>
+            <v-card-title>次はこちら</v-card-title>
+            <v-card
+              v-for="ticketInfo in tickets"
+              :key="ticketInfo.ticket.id"
+              class="ma-2 pa-2"
+            >
+              <p>{{ ticketInfo.event.eventname }}</p>
+            </v-card>
+          </v-card>
+
+          <!--これより下に表示されるv-cardは，v-if="!isUpNext"のみ-->
           <v-card
             v-for="ticketInfo in tickets"
             :key="ticketInfo.ticket.id"
@@ -168,6 +181,8 @@
       <v-snackbar v-model="error_alert" color="red" elevation="2">
         {{ error_message }}
       </v-snackbar>
+
+      <p>{{ isUpNexts }}</p>
     </v-container>
   </v-app>
 </template>
@@ -185,6 +200,7 @@ type TicketInfo = {
 type Data = {
   groups: Group[]
   events: Event[]
+  upNexts: []
   tickets: TicketInfo[]
   cancelDialog: boolean
   selectedTicket: TicketInfo | null
@@ -203,6 +219,7 @@ export default Vue.extend({
       groups: [],
       events: [],
       tickets: [],
+      upNexts: [],
       cancelDialog: false,
       selectedTicket: null,
       display_userid: false,
@@ -217,6 +234,12 @@ export default Vue.extend({
     title: '整理券',
   },
   computed: {
+    // upNextsにデータを入れる関数
+    isUpNexts: function () {
+      // ここに，upNextかどうか判定する関数
+      return Date.now()
+    },
+
     /* 
     ここに，
     （現在時刻-15分）＜ticketInfo.event.starts_at && ticketInfo.event.ends_at<（現在時刻）
