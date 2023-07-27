@@ -50,7 +50,7 @@
           :key="group.id"
           cols="12"
           sm="6"
-          md="6"
+          md="4"
           lg="4"
           class="my-0 py-2"
         >
@@ -75,6 +75,9 @@
                 <v-card-subtitle class="pb-0">
                   {{ group.groupname }}
                 </v-card-subtitle>
+                <v-card-text class="my-1 py-1 text-caption grey--text">
+                  {{ group.description?.substring(0, 50) + '...' }}
+                </v-card-text>
                 <v-card-actions class="pb-0">
                   <v-chip-group column>
                     <v-chip
@@ -87,11 +90,6 @@
                     </v-chip>
                   </v-chip-group>
                 </v-card-actions>
-                <!-- v-cardのheightが一意に定まらないので，Descriptionを無効化．
-                <v-card-text class="my-1 py-1">
-                  {{ group.description?.substring(0, 30) + '...' }}
-                </v-card-text>
-                -->
               </div>
             </div>
           </v-card>
