@@ -10,20 +10,22 @@
                 $auth.$state.strategy === 'ad'
               )
             "
-            outlined
           >
-            <v-card-title class="ma-3 pa-0 red--text text-subtitle-1">
-              <v-icon color="red">mdi-alert-circle</v-icon>
-              未アクティベートなアカウント
-            </v-card-title>
-            <p class="caption mx-3 my-1 grey--text text--darken-1">
-              整理券を取得・使用するには校内への入場処理が必要です。以下のQRコードまたはユーザーIDを校門にいるチーフ会の生徒に提示してください
-            </p>
-            <p class="caption mx-3 my-1 grey--text text--darken-1">
-              ※本校生徒のアカウントは開場と同時にアクティベートされます
-            </p>
-            <img class="mx-1 my-0" style="display: block" :src="qrcodeUrl" />
-            <div class="mx-3 my-1">
+            <v-card-title>まずは日比谷高校に入場しよう！</v-card-title>
+            <v-card-text>
+              【保護者】校門にいる係生徒に以下のQRコードを提示してください。保護者のみなさんが整理券を取得・使用するには校内への入場が必要です。
+            </v-card-text>
+            <v-card-text>
+              【日比谷生】開場時間になると操作できるようになります。校門での入校処理は不要です。
+            </v-card-text>
+            <v-img
+              class="mx-auto my-0"
+              style="display: block"
+              :src="qrcodeUrl"
+              width="90%"
+            />
+            <!--mx-autoで画像を中央寄せに-->
+            <v-card-text class="mx-3 my-1">
               <a
                 class="text-subtitle-2"
                 @click="display_userid = !display_userid"
@@ -32,7 +34,7 @@
                 >{{ $auth.user?.oid ?? $auth.user?.sub }}
                 <!--ADの場合ユーザーオブジェクトIDはoidに入ってる--></span
               >
-            </div>
+            </v-card-text>
           </v-card>
 
           <!--現在の時刻を表示-->
