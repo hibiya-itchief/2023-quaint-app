@@ -78,18 +78,21 @@
             </div>
             <div class="d-flex flex-no-wrap">
               <div v-if="$vuetify.breakpoint.xs">
+                <!--<v-avatar v-if="$vuetify.breakpoint.xs" size="100" rounded="0">-->
                 <v-img
                   v-if="group.public_thumbnail_image_url != null"
                   height="120px"
-                  width="120px"
+                  width="160px"
+                  contain
                   :src="group.public_thumbnail_image_url"
                 ></v-img>
                 <v-img
                   v-else
                   :class="HashColor(group.id)"
                   height="120px"
-                  width="120px"
+                  width="160px"
                 ></v-img>
+                <!--</v-avatar>-->
               </div>
               <div class="px-1">
                 <v-card-title class="pt-1">
@@ -98,10 +101,7 @@
                 <v-card-subtitle class="pb-0">
                   {{ group.groupname }}
                 </v-card-subtitle>
-                <v-card-text
-                  v-if="!$vuetify.breakpoint.xs"
-                  class="my-1 py-1 text-caption grey--text"
-                >
+                <v-card-text class="my-1 py-1 text-caption grey--text">
                   {{ group.description?.substring(0, 50) + '...' }}
                 </v-card-text>
                 <v-card-actions class="pb-0">
