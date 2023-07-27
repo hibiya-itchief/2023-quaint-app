@@ -108,7 +108,7 @@
               </v-card-actions>
             </v-list-item>
             <v-expand-transition>
-              <div v-show="ticketInfo.detailShow">
+              <div v-show="ticketInfo.detailShow" class="ma-2">
                 <v-divider></v-divider>
 
                 <v-card-text>
@@ -253,6 +253,9 @@ export default Vue.extend({
     } catch {}
     // 100msごとに現在時刻を取得
     setInterval(this.getNow, 100)
+
+    // 10sごとに，開場中かどうかを判定
+    setInterval(this.isUpNext, 1000 * 10)
   },
 
   methods: {
