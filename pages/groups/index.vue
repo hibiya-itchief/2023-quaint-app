@@ -81,16 +81,15 @@
                 <!--<v-avatar v-if="$vuetify.breakpoint.xs" size="100" rounded="0">-->
                 <v-img
                   v-if="group.public_thumbnail_image_url != null"
-                  height="120px"
-                  width="160px"
-                  contain
+                  height="140px"
+                  width="100px"
                   :src="group.public_thumbnail_image_url"
                 ></v-img>
                 <v-img
                   v-else
                   :class="HashColor(group.id)"
-                  height="120px"
-                  width="160px"
+                  height="140px"
+                  width="100px"
                 ></v-img>
                 <!--</v-avatar>-->
               </div>
