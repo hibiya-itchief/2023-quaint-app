@@ -203,7 +203,6 @@
                     "
                     color="grey"
                     outlined
-                    disabled
                     >時間外<v-icon>mdi-cancel</v-icon></v-btn
                   >
                   <v-btn
@@ -220,9 +219,9 @@
                       checkTakenTickets(index) / checkStock(index) >= 0.8 &&
                       checkTakenTickets(index) < checkStock(index)
                     "
-                    color="amber"
+                    color="orange"
                     outlined
-                    >僅少<v-icon>mdi-triangle</v-icon></v-btn
+                    >僅少<v-icon>mdi-triangle-outline</v-icon></v-btn
                   >
                   <v-btn
                     v-else-if="checkTakenTickets(index) >= checkStock(index)"
