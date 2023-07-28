@@ -157,7 +157,7 @@
               <v-spacer></v-spacer>
             </v-card-title>
             <v-card-subtitle
-              >現地で見たい公演の整理券を取得できます。</v-card-subtitle
+              >現地で見たい公演の整理券を取得できます。整理券配布は開演20分前から始まります。</v-card-subtitle
             >
             <v-card-text v-show="!$auth.loggedIn" class="red--text"
               >整理券の取得には<NuxtLink to="/login">ログイン</NuxtLink
@@ -232,27 +232,27 @@
                   >
                   <!--ここまで配布ステータスの条件分岐-->
                 </v-card-title>
-                <v-card-subtitle class="pb-2">
+                <v-card-subtitle>
+                  <!--必要性が低いため配布時間を非表示
                   <p class="ma-0 pa-0">
-                    <v-icon>mdi-ticket-account</v-icon>配布:
+                    <v-icon>mdi-ticket-account</v-icon>配布
                     <span class="text-h5">{{
                       DateFormatter(event.sell_starts)
                     }}</span>
                     -
                     {{ DateFormatter(event.sell_ends) }}
                   </p>
-                  <p class="ma-0 pa-0">
-                    <v-icon>mdi-clock</v-icon>公演:
-                    <span class="text-h5">{{
-                      DateFormatter(event.starts_at)
-                    }}</span>
-                    -
-                    {{ DateFormatter(event.ends_at) }}
-                  </p>
+                -->
+                  <v-icon>mdi-clock</v-icon
+                  ><span class="text-h5 py-2">
+                    {{ DateFormatter(event.starts_at) }}</span
+                  >
+                  -
+                  {{ DateFormatter(event.ends_at) }}
                 </v-card-subtitle>
               </v-card>
             </div>
-            <v-dialog v-if="selected_event" v-model="dialog" max-width="300">
+            <v-dialog v-if="selected_event" v-model="dialog" max-width="650">
               <v-card class="pa-2">
                 <v-card-title>この公演の整理券をとりますか？</v-card-title>
 
@@ -262,20 +262,24 @@
                   }}
                 </v-card-title>
                 <v-card-subtitle>
-                  <v-icon>mdi-clock</v-icon>公演:
-                  <span class="text-h5">{{
-                    DateFormatter(selected_event.starts_at)
-                  }}</span>
+                  <span class="text-h5"
+                    ><v-icon>mdi-clock-time-nine</v-icon>
+                    {{ DateFormatter(selected_event.starts_at) }}
+                  </span>
                   -
                   {{ DateFormatter(selected_event.ends_at) }}
                 </v-card-subtitle>
 
                 <v-card-actions>
-                  <p v-if="$auth.$state.strategy == 'ad'">席数：1席</p>
-                  <p v-else class="ma-0 pa-0 text-subtitle-2">
+                  <v-card-subtitle v-if="$auth.$state.strategy == 'ad'"
+                    ><span class="text-h5"
+                      ><v-icon>mdi-account-supervisor</v-icon>1</span
+                    >人</v-card-subtitle
+                  >
+                  <v-card-subtitle v-else class="text-subtitle-2">
                     <v-icon>mdi-account-plus</v-icon
                     >同時に入場する人数(ご家族など)
-                  </p>
+                  </v-card-subtitle>
                   <v-slider
                     v-if="$auth.$state.strategy != 'ad'"
                     v-model="ticket_person"
