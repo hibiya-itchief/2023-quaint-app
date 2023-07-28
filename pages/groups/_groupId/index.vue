@@ -260,7 +260,7 @@
                     group?.groupname
                   }}
                 </v-card-title>
-                <v-card-subtitle>
+                <v-card-subtitle class="py-2">
                   <span class="text-h5"
                     ><v-icon>mdi-clock-time-nine</v-icon>
                     {{ DateFormatter(selected_event.starts_at) }}
