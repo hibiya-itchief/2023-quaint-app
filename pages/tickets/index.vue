@@ -3,6 +3,7 @@
     <v-container name="ticket_container" class="ma-0 pa-0">
       <v-row class="ma-0 pa-0" justify="center" align-content="center">
         <v-col col="6" md="6" sm="12">
+          <!--校内への入場処理が行われていない場合に，入場処理を促すメッセージと処理用のQRコードを表示-->
           <v-card
             v-if="
               !(
@@ -25,6 +26,14 @@
               width="90%"
             />
             <!--mx-autoで画像を中央寄せに-->
+            <v-card-text
+              >ユーザーIDを表示:{{
+                $auth.user?.oid ?? $auth.user?.sub
+              }}</v-card-text
+            >
+
+            <!--
+              ユーザIDの表示/非表示切り替えは不要と判断し以下の実装を削除
             <v-card-text class="mx-3 my-1">
               <a
                 class="text-subtitle-2"
@@ -32,12 +41,14 @@
                 >ユーザーIDを表示: </a
               ><span v-show="display_userid"
                 >{{ $auth.user?.oid ?? $auth.user?.sub }}
-                <!--ADの場合ユーザーオブジェクトIDはoidに入ってる--></span
+                </span
               >
+            
             </v-card-text>
+            -->
           </v-card>
 
-          <!--現在の時刻を表示-->
+          <!--現在時刻を表示-->
           <div class="text-center pa-1">
             <v-chip v-if="time" label class="ma-1"
               >{{ time }} <span class="text-h5">{{ second }} </span></v-chip
@@ -48,13 +59,16 @@
           </div>
 
           <!--
+            不要だと判断し，業務連絡を非表示
             <p class="mx-1 my-0 py-0 text-caption grey--text">
               この画面を観劇したいクラスの受付担当に見せてください
             </p>
             <p class="mx-1 my-0 py-0 text-caption grey--text">
               受付担当者は公演時間と入場人数を確認してください
             </p>
-            -->
+          -->
+
+          <!--整理券未取得の場合に，「探す」タブへ誘導-->
           <v-card
             v-if="
               tickets.length == 0 &&
@@ -91,12 +105,10 @@
                       class="mr-2"
                     ></v-img>
                     <div class="ma-2">
-                      <v-list-item-subtitle
-                        >{{ ticketInfo.event.eventname
-                        }}<!--・{{
-                          DateFormatter(ticketInfo.event.starts_at)
-                        }}--></v-list-item-subtitle
-                      >
+                      <!--取得した整理券の情報を表示-->
+                      <v-list-item-subtitle>{{
+                        ticketInfo.event.eventname
+                      }}</v-list-item-subtitle>
                       <v-list-item-title class="text-h7">
                         {{ ticketInfo.group.title }}
                       </v-list-item-title>
@@ -120,6 +132,8 @@
                           >{{ ticketInfo.ticket.person }}</span
                         >人
                       </v-list-item-subtitle>
+
+                      <!--整理券の状況を「開場前」（開演20分前まで），「開場中」（開演20分前から終演），「公演終了」（終演以降）に分けて表示-->
                       <v-chip
                         v-if="
                           isUpNext(
@@ -127,7 +141,7 @@
                             new Date(ticketInfo.event.ends_at)
                           )
                         "
-                        color="primary"
+                        color="green"
                         outlined
                         label
                         ><v-icon>mdi-theater</v-icon>開場中</v-chip
@@ -139,7 +153,7 @@
                         label
                         ><v-icon>mdi-check</v-icon>公演終了</v-chip
                       >
-                      <v-chip v-else color="green" outlined label>
+                      <v-chip v-else color="primary" outlined label>
                         <v-icon>mdi-account-clock</v-icon>開場前
                       </v-chip>
                     </div>
@@ -157,6 +171,8 @@
                       >公演詳細
                     </v-btn>
                     <v-spacer></v-spacer>
+
+                    <!--終演時刻前の時だけ「整理券をキャンセル」ボタンを表示-->
                     <v-btn
                       v-if="!isUsed(new Date(ticketInfo.event.ends_at))"
                       color="error"
@@ -171,7 +187,7 @@
             </v-expansion-panels>
           </v-card>
 
-          <!--キャンセルの有無を問うダイアログ-->
+          <!--整理券キャンセルの有無を問うダイアログ-->
           <v-dialog
             v-if="selectedTicket"
             v-model="cancelDialog"
@@ -181,7 +197,6 @@
               <v-card-title class="text-h5">
                 本当にキャンセルしますか？
               </v-card-title>
-
               <v-card-title>
                 【{{ selectedTicket.event.eventname }}】{{
                   selectedTicket.group.title
@@ -227,7 +242,8 @@ type Data = {
   tickets: TicketInfo[]
   cancelDialog: boolean
   selectedTicket: TicketInfo | null
-  display_userid: boolean
+  // template内の実装で該当部分を削除したため不要
+  // display_userid: boolean
   qrcodeUrl: string
   success_alert: boolean
   error_alert: boolean
@@ -246,7 +262,8 @@ export default Vue.extend({
       tickets: [],
       cancelDialog: false,
       selectedTicket: null,
-      display_userid: false,
+      // template内の実装で該当部分を削除したため不要
+      // display_userid: false,
       qrcodeUrl: '',
       success_alert: false,
       error_alert: false,
@@ -270,9 +287,6 @@ export default Vue.extend({
     } catch {}
     // 500msごとに現在時刻を取得
     setInterval(this.getNow, 500)
-
-    // 10sごとに，開場中かどうかを判定するつもりだったが，エラーが出るので止め
-    // setInterval(this.isUpNext, 10000)
   },
 
   methods: {
@@ -292,16 +306,16 @@ export default Vue.extend({
       this.second = seconds + ''
     },
 
-    // upNextかどうかを判定する関数関数
+    // upNext（開演X分前から終演時刻まで）かどうかを判定するmethod
+    // 引数には（開演時刻，終演時刻）を代入
     isUpNext: function (start: Date, end: Date) {
-      // ここに，upNextかどうか判定する関数
-      // ここにupNextかどうか判定する関数
       const date = new Date()
+      // 現在時刻を取得
       const currentTime: Date = new Date(date.getTime())
       // 開演20分前の時刻を計算する
       const MinutesBeforeStart = new Date(start.getTime() - 1000 * 60 * 20)
 
-      // 「 開演20分前<現在時刻かつ現在時刻<終演時刻」を判定
+      // 「 開演20分前<現在時刻」かつ「現在時刻<終演時刻」を判定
       if (MinutesBeforeStart < currentTime && currentTime < end) {
         return true
       } else {
@@ -310,11 +324,12 @@ export default Vue.extend({
     },
 
     // 整理券が使用されたかどうか判定するmethod（時間だけで管理している）
+    // 引数には（終演時刻）を代入
     isUsed: function (end: Date) {
       const date = new Date()
       const currentTime: Date = new Date(date.getTime())
 
-      // 「 終演時刻<現在時刻」を判定
+      // 「終演時刻<現在時刻」を判定
       if (end < currentTime) {
         return true
       } else {
