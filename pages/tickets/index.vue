@@ -74,7 +74,7 @@
                 :key="ticketInfo.ticket.id"
                 focusable
               >
-                <v-expansion-panel-header>
+                <v-expansion-panel-header class="pa-1">
                   <v-list-item>
                     <v-img
                       v-if="ticketInfo.group.public_thumbnail_image_url != null"
@@ -138,10 +138,10 @@
                     </div>
                   </v-list-item>
                 </v-expansion-panel-header>
-                <v-expansion-panel-content>
+                <v-expansion-panel-content class="pa-1">
                   <v-divider></v-divider>
                   <v-card-text>
-                    <p class="text-body-2 grey--text mb-0">
+                    <p class="text-body-2 grey--text">
                       ID: {{ ticketInfo.ticket.id }}
                     </p>
                   </v-card-text>
