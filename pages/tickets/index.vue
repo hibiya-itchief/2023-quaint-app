@@ -85,9 +85,10 @@
                     ></v-img>
                     <div class="ma-2">
                       <v-list-item-subtitle
-                        >{{ ticketInfo.event.eventname }}・{{
+                        >{{ ticketInfo.event.eventname
+                        }}<!--・{{
                           DateFormatter(ticketInfo.event.starts_at)
-                        }}</v-list-item-subtitle
+                        }}--></v-list-item-subtitle
                       >
                       <v-list-item-title class="text-h7">
                         {{ ticketInfo.group.title }}
