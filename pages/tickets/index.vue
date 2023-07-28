@@ -165,7 +165,11 @@
           </v-card>
 
           <!--キャンセルの有無を問うダイアログ-->
-          <v-dialog v-if="selectedTicket" v-model="cancelDialog">
+          <v-dialog
+            v-if="selectedTicket"
+            v-model="cancelDialog"
+            max-width="500"
+          >
             <v-card>
               <v-card-title class="text-h5">
                 本当にキャンセルしますか？
