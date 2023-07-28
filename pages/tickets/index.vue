@@ -27,9 +27,7 @@
             />
             <!--mx-autoで画像を中央寄せに-->
             <v-card-text
-              >ユーザーIDを表示:{{
-                $auth.user?.oid ?? $auth.user?.sub
-              }}</v-card-text
+              >User ID:{{ $auth.user?.oid ?? $auth.user?.sub }}</v-card-text
             >
 
             <!--
