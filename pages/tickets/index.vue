@@ -148,6 +148,7 @@
                     </v-btn>
                     <v-spacer></v-spacer>
                     <v-btn
+                      v-if="!isUsed(new Date(ticketInfo.event.ends_at))"
                       color="error"
                       @click="selectCancelTicket(ticketInfo)"
                     >
