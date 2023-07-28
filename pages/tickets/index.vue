@@ -113,14 +113,6 @@
                           >{{ ticketInfo.ticket.person }}</span
                         >人
                       </v-list-item-subtitle>
-
-                      <v-chip
-                        v-if="isUsed(new Date(ticketInfo.event.ends_at))"
-                        color="error"
-                        outlined
-                        label
-                        ><v-icon>mdi-check</v-icon>公演終了</v-chip
-                      >
                       <v-chip
                         v-if="
                           isUpNext(
@@ -133,6 +125,16 @@
                         label
                         ><v-icon>mdi-theater</v-icon>開場中</v-chip
                       >
+                      <v-chip
+                        v-else-if="isUsed(new Date(ticketInfo.event.ends_at))"
+                        color="error"
+                        outlined
+                        label
+                        ><v-icon>mdi-check</v-icon>公演終了</v-chip
+                      >
+                      <v-chip v-else color="green" outlined label>
+                        <v-icon>mdi-account-clock</v-icon>開場前
+                      </v-chip>
                     </div>
                   </v-list-item>
                 </v-expansion-panel-header>
