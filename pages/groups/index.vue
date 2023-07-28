@@ -82,29 +82,28 @@
                 <v-img
                   v-if="group.public_thumbnail_image_url != null"
                   height="120px"
-                  width="160px"
-                  contain
+                  width="90px"
                   :src="group.public_thumbnail_image_url"
                 ></v-img>
                 <v-img
                   v-else
                   :class="HashColor(group.id)"
                   height="120px"
-                  width="160px"
+                  width="90px"
                 ></v-img>
                 <!--</v-avatar>-->
               </div>
               <div class="px-1">
-                <v-card-title class="pt-1">
+                <v-card-title class="pb-2">
                   {{ group.title }}
                 </v-card-title>
                 <v-card-subtitle class="pb-0">
                   {{ group.groupname }}
                 </v-card-subtitle>
-                <v-card-text class="my-1 py-1 text-caption grey--text">
-                  {{ group.description?.substring(0, 50) + '...' }}
+                <v-card-text class="my-0 py-0 text-caption grey--text">
+                  {{ group.description?.substring(0, 18) + '...' }}
                 </v-card-text>
-                <v-card-actions class="pb-0">
+                <v-card-actions class="py-0">
                   <v-chip-group column>
                     <v-chip
                       v-for="tag in group.tags"
