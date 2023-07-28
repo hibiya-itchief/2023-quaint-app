@@ -203,6 +203,7 @@
                     "
                     color="grey"
                     outlined
+                    disabled
                     >時間外<v-icon>mdi-cancel</v-icon></v-btn
                   >
                   <v-btn
@@ -251,7 +252,7 @@
                 </v-card-subtitle>
               </v-card>
             </div>
-            <v-dialog v-if="selected_event" v-model="dialog" width="100%">
+            <v-dialog v-if="selected_event" v-model="dialog" max-width="300">
               <v-card class="pa-2">
                 <v-card-title>この公演の整理券をとりますか？</v-card-title>
 
