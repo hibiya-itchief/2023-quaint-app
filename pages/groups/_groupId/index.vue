@@ -227,7 +227,7 @@
                     v-else-if="checkTakenTickets(index) >= checkStock(index)"
                     color="red"
                     outlined
-                    >配布終了<v-icon>mdi-close</v-icon></v-btn
+                    >完売<v-icon>mdi-close</v-icon></v-btn
                   >
                   <!--ここまで配布ステータスの条件分岐-->
                 </v-card-title>
@@ -269,30 +269,31 @@
                   {{ DateFormatter(selected_event.ends_at) }}
                 </v-card-subtitle>
 
-                <v-card-actions>
-                  <v-card-subtitle v-if="$auth.$state.strategy == 'ad'"
-                    ><span class="text-h5"
-                      ><v-icon>mdi-account-supervisor</v-icon>1</span
-                    >人</v-card-subtitle
-                  >
-                  <v-card-subtitle v-else class="text-subtitle-2">
+                <v-card-subtitle v-if="$auth.$state.strategy == 'ad'"
+                  ><span class="text-h5"
+                    ><v-icon>mdi-account-supervisor</v-icon>1</span
+                  >人</v-card-subtitle
+                >
+                <div v-else>
+                  <v-card-subtitle>
                     <v-icon>mdi-account-plus</v-icon
                     >同時に入場する人数(ご家族など)
                   </v-card-subtitle>
-                  <v-slider
-                    v-if="$auth.$state.strategy != 'ad'"
-                    v-model="ticket_person"
-                    :tick-labels="person_labels"
-                    min="1"
-                    max="3"
-                  >
-                    <template #thumb-label="props">
-                      <v-icon dark>
-                        {{ person_icons[props.value - 1] }}
-                      </v-icon>
-                    </template>
-                  </v-slider>
-                </v-card-actions>
+                  <v-card-actions>
+                    <v-slider
+                      v-model="ticket_person"
+                      :tick-labels="person_labels"
+                      min="1"
+                      max="3"
+                    >
+                      <template #thumb-label="props">
+                        <v-icon dark>
+                          {{ person_icons[props.value - 1] }}
+                        </v-icon>
+                      </template>
+                    </v-slider>
+                  </v-card-actions>
+                </div>
                 <v-card-actions class="px-1">
                   <v-spacer></v-spacer>
 
