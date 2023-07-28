@@ -55,7 +55,14 @@
               受付担当者は公演時間と入場人数を確認してください
             </p>
             -->
-          <v-card v-if="tickets.length == 0" class="ma-1 pa-2">
+          <v-card
+            v-if="
+              tickets.length == 0 &&
+              ($auth.user?.jobTitle?.includes('Visited') ||
+                $auth.$state.strategy === 'ad')
+            "
+            class="ma-1 pa-2"
+          >
             <div>
               <v-card-title>まだ整理券を取得していません</v-card-title>
               <v-card-actions>
