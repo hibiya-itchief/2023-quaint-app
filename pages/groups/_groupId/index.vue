@@ -1,13 +1,13 @@
 <template>
   <v-app>
-    <v-btn icon fab small to="/groups/">
-      <v-icon>mdi-chevron-left</v-icon>
-    </v-btn>
     <v-container class="px-1 py-0">
       <v-row justify="center" class="ma-0 pa-0">
         <v-col cols="12" sm="6" lg="6" class="mx-0 my-2 px-0 py-0 px-sm-3">
           <!--作品情報-->
           <!--タイトル，団体，お気に入り，映像で鑑賞ボタン-->
+          <v-btn icon fab small to="/groups/">
+            <v-icon>mdi-chevron-left</v-icon>
+          </v-btn>
           <v-card v-if="group">
             <v-img
               v-if="group.public_thumbnail_image_url != null"
