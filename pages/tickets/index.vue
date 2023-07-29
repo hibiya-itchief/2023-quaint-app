@@ -3,6 +3,20 @@
     <v-container name="ticket_container">
       <v-row justify="center" align-content="center">
         <v-col cols="12" sm="6" lg="6">
+          <!--現在時刻を表示・現在時刻を取得するとv-progress-linearが正常に動作しないため非表示-->
+          <!--
+            <v-chip v-if="time" label class="ma-1"
+              >{{ time }} <span class="text-h5">{{ seconds }} </span></v-chip
+            >
+            -->
+
+          <!--再読み込みボタン-->
+          <div class="text-center pa-1">
+            <v-btn class="mx-1 my-1" color="primary" @click="fetchTicket()"
+              ><v-icon>mdi-reload</v-icon>再読み込み</v-btn
+            >
+          </div>
+
           <!--校内への入場処理が行われていない場合に，入場処理を促すメッセージと処理用のQRコードを表示-->
           <!--ここのデザインをもうちょっと可愛く出来ないかな-->
           <v-card
@@ -46,20 +60,6 @@
             </v-card-text>
             -->
           </v-card>
-
-          <!--現在時刻を表示・現在時刻を取得するとv-progress-linearが正常に動作しないため非表示-->
-          <!--
-            <v-chip v-if="time" label class="ma-1"
-              >{{ time }} <span class="text-h5">{{ seconds }} </span></v-chip
-            >
-            -->
-
-          <!--再読み込みボタン-->
-          <div class="text-center pa-1">
-            <v-btn class="mx-1 my-1" color="primary" @click="fetchTicket()"
-              ><v-icon>mdi-reload</v-icon>再読み込み</v-btn
-            >
-          </div>
 
           <!--
             不要だと判断し，業務連絡を非表示
