@@ -254,15 +254,17 @@
                 </div>
               </v-card>
             </div>
-            <v-dialog v-if="selected_event" v-model="dialog" max-width="650">
+            <v-dialog v-if="selected_event" v-model="dialog" max-width="200">
               <v-card class="pa-2">
                 <v-card-title>この公演の整理券をとりますか？</v-card-title>
 
-                <v-card-title class="mb-2"
-                  >【{{ selected_event.eventname }}】{{ group?.title }} /{{
-                    group?.groupname
-                  }}
-                </v-card-title>
+                <v-card-subtitle class="pt-5 pb-2">{{
+                  selected_event.eventname
+                }}</v-card-subtitle>
+                <v-card-title class="mb-2">{{ group?.title }} </v-card-title>
+                <v-card-subtitle>
+                  {{ group?.groupname }}
+                </v-card-subtitle>
                 <v-card-subtitle class="py-2">
                   <span class="text-h5"
                     ><v-icon>mdi-clock-time-nine</v-icon>
