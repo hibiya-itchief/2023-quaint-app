@@ -157,7 +157,7 @@
               <v-spacer></v-spacer>
             </v-card-title>
             <v-card-subtitle
-              >現地で見たい公演の整理券を取得できます。整理券配布は開演20分前から始まります。</v-card-subtitle
+              >現地で見たい公演の整理券を取得できます。開演20分前から配布されます。</v-card-subtitle
             >
             <v-card-text v-show="!$auth.loggedIn" class="red--text"
               >整理券の取得には<NuxtLink to="/login">ログイン</NuxtLink
