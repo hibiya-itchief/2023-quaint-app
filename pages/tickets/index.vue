@@ -88,6 +88,7 @@
             </div>
           </v-card>
 
+          <!--開場中の整理券がある場合に上部に大きく表示-->
           <div
             v-for="ticketInfo in tickets"
             :key="ticketInfo.ticket.id"
@@ -114,7 +115,7 @@
               >
               <v-divider></v-divider>
 
-              <v-card-title class="text-h7">
+              <v-card-title class="text-h7 pt-1">
                 {{ ticketInfo.group.title }}
               </v-card-title>
               <v-card-subtitle class="pb-0">
@@ -122,12 +123,22 @@
               >
 
               <v-card-subtitle class="grey--text text--darken-2">
+                <!--日付：画面がごちゃごちゃするため省略．1日目の整理券を画面収録して2日目に使う人が現れるなどしたら，実装が必要-->
+                <!--
+                <span class="text-h3"
+                  ><v-icon>mdi-calendar</v-icon
+                  >{{ dateFormatter(ticketInfo.event.starts_at) }}</span
+                >
+                -->
+                <v-spacer></v-spacer>
+                <!--上演時刻-->
                 <span class="text-h3"
                   ><v-icon>mdi-clock-time-nine</v-icon
                   >{{ timeFormatter(ticketInfo.event.starts_at) }}</span
                 >
                 -{{ timeFormatter(ticketInfo.event.ends_at) }}
-                <v-spacer> </v-spacer>
+                <v-spacer></v-spacer>
+                <!--入場人数-->
                 <span class="text-h3"
                   ><v-icon>mdi-account-supervisor</v-icon
                   >{{ ticketInfo.ticket.person }}</span
