@@ -190,8 +190,16 @@
             <v-btn class="ma-2" color="primary" @click="$nuxt.refresh()"
               ><v-icon>mdi-reload</v-icon>再読み込み</v-btn
             >
+            <v-card-subtitle>{{
+              DateFormatter(new Date().toDateString())
+            }}</v-card-subtitle>
             <div v-for="(event, index) in events" :key="event.id">
-              <v-card class="ma-2" @click.stop="selectEvent(event)">
+              <!--本日公演がある整理券のみ表示-->
+              <v-card
+                v-if="isToday(event.starts_at)"
+                class="ma-2"
+                @click.stop="selectEvent(event)"
+              >
                 <v-card-title>
                   {{ event.eventname }}
                   <v-spacer></v-spacer>
@@ -493,6 +501,17 @@ export default Vue.extend({
     },
     checkTakenTickets(index: number) {
       return this.listTakenTickets[index]
+    },
+
+    // 公演日が今日かどうか判断するmethod
+    isToday(inputDate: string) {
+      const today = new Date()
+      const startDate = new Date(inputDate)
+      if (startDate.toDateString() === today.toDateString()) {
+        return true
+      } else {
+        return false
+      }
     },
     DateFormatter(inputDate: string) {
       const d = new Date(inputDate)
