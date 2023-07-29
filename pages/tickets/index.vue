@@ -1,9 +1,10 @@
 <template>
   <v-app>
-    <v-container name="ticket_container" class="ma-0 pa-0">
-      <v-row class="ma-0 pa-0" justify="center" align-content="center">
-        <v-col col="6" md="6" sm="12">
+    <v-container name="ticket_container">
+      <v-row justify="center" align-content="center">
+        <v-col cols="12" sm="6" lg="6">
           <!--校内への入場処理が行われていない場合に，入場処理を促すメッセージと処理用のQRコードを表示-->
+          <!--ここのデザインをもうちょっと可愛く出来ないかな-->
           <v-card
             v-if="
               !(
@@ -12,14 +13,13 @@
               )
             "
           >
-            <v-card-title>まずは日比谷高校に入場しよう！</v-card-title>
-            <v-card-text>
-              【保護者】校門にいる係生徒に以下のQRコードまたはUser
-              IDを提示してください。保護者のみなさんが整理券を取得・使用するには校内への入場が必要です。
-            </v-card-text>
-            <v-card-text>
-              【日比谷生】開場時間になると操作できるようになります。校門での入校処理は不要です。
-            </v-card-text>
+            <v-card-title class="text-h5">🥳星陵祭へようこそ！</v-card-title>
+            <v-card-subtitle class="text-h6"
+              >校門でこの画面をご提示ください。</v-card-subtitle
+            >
+            <v-card-text
+              >※日比谷生の入場手続きは不要です。そのままお待ちください。</v-card-text
+            >
             <v-img
               class="mx-auto my-0"
               style="display: block"
@@ -53,6 +53,8 @@
               >{{ time }} <span class="text-h5">{{ seconds }} </span></v-chip
             >
             -->
+
+          <!--再読み込みボタン-->
           <div class="text-center pa-1">
             <v-btn class="mx-1 my-1" color="primary" @click="fetchTicket()"
               ><v-icon>mdi-reload</v-icon>再読み込み</v-btn
@@ -101,7 +103,6 @@
                   new Date(ticketInfo.event.ends_at)
                 )
               "
-              class="pa-3 ma-3"
             >
               <v-card-title class="mb-2"
                 ><v-icon>mdi-ticket</v-icon>整理券
@@ -115,7 +116,7 @@
               >
               <v-divider></v-divider>
 
-              <v-card-title class="text-h7 pt-1">
+              <v-card-title class="text-h7">
                 {{ ticketInfo.group.title }}
               </v-card-title>
               <v-card-subtitle class="pb-0">
@@ -152,13 +153,19 @@
               <v-img
                 v-if="ticketInfo.group.public_thumbnail_image_url != null"
                 :src="ticketInfo.group.public_thumbnail_image_url"
-                max-width="100%"
-                height="130px"
+                width="100%"
+                max-height="130px"
               ></v-img>
             </v-card>
           </div>
+        </v-col>
+        <v-col cols="12" sm="6" lg="6">
           <!--取得した整理券一覧-->
-          <v-card flat class="ma-1">
+          <v-card v-if="tickets.length !== 0">
+            <v-card-title
+              ><v-icon>mdi-ticket-account</v-icon>あなたの整理券</v-card-title
+            >
+
             <v-expansion-panels>
               <v-expansion-panel
                 v-for="ticketInfo in tickets"
