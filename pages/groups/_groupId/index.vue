@@ -191,10 +191,31 @@
               ><v-icon>mdi-reload</v-icon>再読み込み</v-btn
             >
             <div v-for="(event, index) in events" :key="event.id">
-              <v-card class="ma-2" @click.stop="selectEvent(event)">
-                <v-card-title>
-                  {{ event.eventname }}
+              <v-card class="ma-2 d-flex" @click.stop="selectEvent(event)">
+                <div>
+                  <v-card-text color="grey" class="pt-1 pb-0 mb-0">
+                    {{ event.eventname }}
+                  </v-card-text>
                   <v-spacer></v-spacer>
+                  <v-card-title class="pt-0 pb-1 text-h5">
+                    <!--必要性が低いため配布時間を非表示
+                  <p class="ma-0 pa-0">
+                    <v-icon>mdi-ticket-account</v-icon>配布
+                    <span class="text-h5">{{
+                      timeFormatter(event.sell_starts)
+                    }}</span>
+                    -
+                    {{ timeFormatter(event.sell_ends) }}
+                  </p>
+                -->
+                    {{ timeFormatter(event.starts_at) }}
+                    <span class="caption">
+                      -{{ timeFormatter(event.ends_at) }}</span
+                    >
+                  </v-card-title>
+                </div>
+                <v-spacer></v-spacer>
+                <div class="my-auto mx-2">
                   <!--ここから配布ステータスの条件分岐-->
                   <v-btn
                     v-if="
@@ -230,25 +251,7 @@
                     >完売<v-icon>mdi-close</v-icon></v-btn
                   >
                   <!--ここまで配布ステータスの条件分岐-->
-                </v-card-title>
-                <v-card-subtitle>
-                  <!--必要性が低いため配布時間を非表示
-                  <p class="ma-0 pa-0">
-                    <v-icon>mdi-ticket-account</v-icon>配布
-                    <span class="text-h5">{{
-                      timeFormatter(event.sell_starts)
-                    }}</span>
-                    -
-                    {{ timeFormatter(event.sell_ends) }}
-                  </p>
-                -->
-                  <v-icon>mdi-clock</v-icon
-                  ><span class="text-h5 py-2">
-                    {{ timeFormatter(event.starts_at) }}</span
-                  >
-                  -
-                  {{ timeFormatter(event.ends_at) }}
-                </v-card-subtitle>
+                </div>
               </v-card>
             </div>
             <v-dialog v-if="selected_event" v-model="dialog" max-width="650">
