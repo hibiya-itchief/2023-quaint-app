@@ -236,18 +236,18 @@
                   <p class="ma-0 pa-0">
                     <v-icon>mdi-ticket-account</v-icon>配布
                     <span class="text-h5">{{
-                      DateFormatter(event.sell_starts)
+                      timeFormatter(event.sell_starts)
                     }}</span>
                     -
-                    {{ DateFormatter(event.sell_ends) }}
+                    {{ timeFormatter(event.sell_ends) }}
                   </p>
                 -->
                   <v-icon>mdi-clock</v-icon
                   ><span class="text-h5 py-2">
-                    {{ DateFormatter(event.starts_at) }}</span
+                    {{ timeFormatter(event.starts_at) }}</span
                   >
                   -
-                  {{ DateFormatter(event.ends_at) }}
+                  {{ timeFormatter(event.ends_at) }}
                 </v-card-subtitle>
               </v-card>
             </div>
@@ -263,10 +263,10 @@
                 <v-card-subtitle class="py-2">
                   <span class="text-h5"
                     ><v-icon>mdi-clock-time-nine</v-icon>
-                    {{ DateFormatter(selected_event.starts_at) }}
+                    {{ timeFormatter(selected_event.starts_at) }}
                   </span>
                   -
-                  {{ DateFormatter(selected_event.ends_at) }}
+                  {{ timeFormatter(selected_event.ends_at) }}
                 </v-card-subtitle>
 
                 <v-card-subtitle v-if="$auth.$state.strategy == 'ad'"
@@ -494,16 +494,13 @@ export default Vue.extend({
     checkTakenTickets(index: number) {
       return this.listTakenTickets[index]
     },
-    DateFormatter(inputDate: string) {
+    dateFormatter(inputDate: string) {
+      const d = new Date(inputDate)
+      return d.getMonth() + 1 + '/' + d.getDate()
+    },
+    timeFormatter(inputDate: string) {
       const d = new Date(inputDate)
       return (
-        /*
-        d.getMonth() +
-        1 +
-        '月' +
-        d.getDate() +
-        '日 ' +
-        */
         d.getHours().toString().padStart(2, '0') +
         ':' +
         d.getMinutes().toString().padStart(2, '0')
