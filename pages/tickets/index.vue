@@ -14,7 +14,8 @@
           >
             <v-card-title>まずは日比谷高校に入場しよう！</v-card-title>
             <v-card-text>
-              【保護者】校門にいる係生徒に以下のQRコードを提示してください。保護者のみなさんが整理券を取得・使用するには校内への入場が必要です。
+              【保護者】校門にいる係生徒に以下のQRコードまたはUser
+              IDを提示してください。保護者のみなさんが整理券を取得・使用するには校内への入場が必要です。
             </v-card-text>
             <v-card-text>
               【日比谷生】開場時間になると操作できるようになります。校門での入校処理は不要です。
@@ -49,7 +50,7 @@
           <!--現在時刻を表示-->
           <div class="text-center pa-1">
             <v-chip v-if="time" label class="ma-1"
-              >{{ time }} <span class="text-h5">{{ second }} </span></v-chip
+              >{{ time }} <span class="text-h5">{{ seconds }} </span></v-chip
             >
             <v-btn class="mx-1 my-1" color="primary" @click="fetchTicket()"
               ><v-icon>mdi-reload</v-icon>再読み込み</v-btn
@@ -118,9 +119,9 @@
                       >
                         <span class="text-h5"
                           ><v-icon>mdi-clock-time-nine</v-icon
-                          >{{ TimeFormatter(ticketInfo.event.starts_at) }}</span
+                          >{{ timeFormatter(ticketInfo.event.starts_at) }}</span
                         >
-                        -{{ TimeFormatter(ticketInfo.event.ends_at) }}
+                        -{{ timeFormatter(ticketInfo.event.ends_at) }}
                       </v-list-item-subtitle>
                       <v-list-item-subtitle
                         class="mb-2 grey--text text--darken-2"
@@ -139,7 +140,7 @@
                             new Date(ticketInfo.event.ends_at)
                           )
                         "
-                        color="green"
+                        color="primary"
                         outlined
                         label
                         ><v-icon>mdi-theater</v-icon>開場中</v-chip
@@ -151,7 +152,7 @@
                         label
                         ><v-icon>mdi-check</v-icon>公演終了</v-chip
                       >
-                      <v-chip v-else color="primary" outlined label>
+                      <v-chip v-else color="green" outlined label>
                         <v-icon>mdi-account-clock</v-icon>開場前
                       </v-chip>
                     </div>
@@ -248,7 +249,7 @@ type Data = {
   success_message: string
   error_message: string
   time: string
-  second: string
+  seconds: string
 }
 export default Vue.extend({
   name: 'UsersTicketsPage',
@@ -268,7 +269,7 @@ export default Vue.extend({
       success_message: '',
       error_message: '',
       time: '',
-      second: '',
+      seconds: '',
     }
   },
   head: {
@@ -301,7 +302,7 @@ export default Vue.extend({
       const dateTime = date + ' ' + time + ':'
       const seconds = today.getSeconds()
       this.time = dateTime
-      this.second = seconds + ''
+      this.seconds = seconds + ''
     },
 
     // upNext（開演X分前から終演時刻まで）かどうかを判定するmethod
@@ -368,7 +369,7 @@ export default Vue.extend({
       })
       this.tickets = ticketInfos
     },
-    TimeFormatter(inputDate: string) {
+    timeFormatter(inputDate: string) {
       const d = new Date(inputDate)
       return (
         /*
@@ -383,7 +384,7 @@ export default Vue.extend({
         d.getMinutes().toString().padStart(2, '0')
       )
     },
-    DateFormatter(inputDate: string) {
+    dateFormatter(inputDate: string) {
       const d = new Date(inputDate)
       return d.getMonth() + 1 + '/' + d.getDate()
     },
