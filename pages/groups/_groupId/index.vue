@@ -193,7 +193,10 @@
             <div v-for="(event, index) in events" :key="event.id">
               <v-card class="ma-2 d-flex" @click.stop="selectEvent(event)">
                 <div>
-                  <v-card-text color="grey" class="pt-1 pb-0 mb-0">
+                  <v-card-text
+                    class="pt-1 pb-0 mb-0 grey--text text--darken-2 text-caption"
+                  >
+                    {{ dateFormatter(event.starts_at) }}
                     {{ event.eventname }}
                   </v-card-text>
                   <v-spacer></v-spacer>
@@ -209,8 +212,8 @@
                   </p>
                 -->
                     {{ timeFormatter(event.starts_at) }}
-                    <span class="caption">
-                      -{{ timeFormatter(event.ends_at) }}</span
+                    <span class="caption pl-1">
+                      - {{ timeFormatter(event.ends_at) }}</span
                     >
                   </v-card-title>
                 </div>
@@ -254,14 +257,17 @@
                 </div>
               </v-card>
             </div>
-            <v-dialog v-if="selected_event" v-model="dialog" max-width="200">
+            <v-dialog v-if="selected_event" v-model="dialog" max-width="500">
               <v-card class="pa-2">
                 <v-card-title>この公演の整理券をとりますか？</v-card-title>
 
-                <v-card-subtitle class="pt-5 pb-2">{{
-                  selected_event.eventname
-                }}</v-card-subtitle>
-                <v-card-title class="mb-2">{{ group?.title }} </v-card-title>
+                <v-card-subtitle class="pt-5 pb-0">
+                  {{ dateFormatter(selected_event.starts_at) }}
+                  {{ selected_event.eventname }}</v-card-subtitle
+                >
+                <v-card-title class="pt-0 mb-2"
+                  >{{ group?.title }}
+                </v-card-title>
                 <v-card-subtitle>
                   {{ group?.groupname }}
                 </v-card-subtitle>
@@ -499,6 +505,29 @@ export default Vue.extend({
     checkTakenTickets(index: number) {
       return this.listTakenTickets[index]
     },
+
+    // 配布日or公演日が今日かどうか判断するmethod
+    // isTodayで整理券の表示を切り替えると，v-if="events.length === 0"が機能しなくなるので却下
+    // 使い方：v-if="isToday(event.sell_starts, event.sell_ends, event.starts_at)"
+    /*
+    isToday(
+      inputSellStarts: string,
+      inputSellEnds: string,
+      inputStarts: string
+    ) {
+      const today = new Date().toDateString()
+      const sellStartsDate = new Date(inputSellStarts).toDateString()
+      const sellEndsDate = new Date(inputSellEnds).toDateString()
+      const startDate = new Date(inputStarts).toDateString()
+      if (startDate === today) {
+        return true
+      } else if (sellStartsDate < today && today < sellEndsDate) {
+        return true
+      } else {
+        return false
+      }
+    },
+    */
     dateFormatter(inputDate: string) {
       const d = new Date(inputDate)
       return d.getMonth() + 1 + '/' + d.getDate()
