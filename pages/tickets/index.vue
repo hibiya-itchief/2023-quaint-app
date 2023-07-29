@@ -47,11 +47,13 @@
             -->
           </v-card>
 
-          <!--現在時刻を表示-->
-          <div class="text-center pa-1">
+          <!--現在時刻を表示・現在時刻を取得するとv-progress-linearが正常に動作しないため非表示-->
+          <!--
             <v-chip v-if="time" label class="ma-1"
               >{{ time }} <span class="text-h5">{{ seconds }} </span></v-chip
             >
+            -->
+          <div class="text-center pa-1">
             <v-btn class="mx-1 my-1" color="primary" @click="fetchTicket()"
               ><v-icon>mdi-reload</v-icon>再読み込み</v-btn
             >
@@ -86,6 +88,64 @@
             </div>
           </v-card>
 
+          <div
+            v-for="ticketInfo in tickets"
+            :key="ticketInfo.ticket.id"
+            focusable
+          >
+            <v-card
+              v-if="
+                isUpNext(
+                  new Date(ticketInfo.event.starts_at),
+                  new Date(ticketInfo.event.ends_at)
+                )
+              "
+              class="pa-3 ma-3"
+            >
+              <v-card-title class="mb-2"
+                ><v-icon>mdi-ticket</v-icon>整理券
+                <v-spacer></v-spacer>
+                <v-chip color="primary" outlined label
+                  ><v-icon>mdi-theater</v-icon>開場中</v-chip
+                ></v-card-title
+              >
+              <v-card-subtitle
+                >この画面を各クラスの受付に提示してください。</v-card-subtitle
+              >
+              <v-divider></v-divider>
+
+              <v-card-title class="text-h7">
+                {{ ticketInfo.group.title }}
+              </v-card-title>
+              <v-card-subtitle class="pb-0">
+                {{ ticketInfo.group.groupname }}</v-card-subtitle
+              >
+
+              <v-card-subtitle class="grey--text text--darken-2">
+                <span class="text-h3"
+                  ><v-icon>mdi-clock-time-nine</v-icon
+                  >{{ timeFormatter(ticketInfo.event.starts_at) }}</span
+                >
+                -{{ timeFormatter(ticketInfo.event.ends_at) }}
+                <v-spacer> </v-spacer>
+                <span class="text-h3"
+                  ><v-icon>mdi-account-supervisor</v-icon
+                  >{{ ticketInfo.ticket.person }}</span
+                >人
+              </v-card-subtitle>
+              <v-progress-linear
+                indeterminate
+                height="10px"
+                color="teal"
+              ></v-progress-linear>
+              <v-img
+                v-if="ticketInfo.group.public_thumbnail_image_url != null"
+                :src="ticketInfo.group.public_thumbnail_image_url"
+                max-width="100%"
+                height="130px"
+              ></v-img>
+            </v-card>
+          </div>
           <!--取得した整理券一覧-->
           <v-card flat class="ma-1">
             <v-expansion-panels>
@@ -94,7 +154,7 @@
                 :key="ticketInfo.ticket.id"
                 focusable
               >
-                <v-expansion-panel-header class="pa-1">
+                <v-expansion-panel-header class="pa-3">
                   <v-list-item>
                     <v-img
                       v-if="ticketInfo.group.public_thumbnail_image_url != null"
@@ -105,9 +165,10 @@
                     ></v-img>
                     <div class="ma-2">
                       <!--取得した整理券の情報を表示-->
-                      <v-list-item-subtitle>{{
-                        ticketInfo.event.eventname
-                      }}</v-list-item-subtitle>
+                      <v-list-item-subtitle
+                        >{{ dateFormatter(ticketInfo.event.starts_at) }}
+                        {{ ticketInfo.event.eventname }}</v-list-item-subtitle
+                      >
                       <v-list-item-title class="text-h7">
                         {{ ticketInfo.group.title }}
                       </v-list-item-title>
@@ -196,10 +257,12 @@
               <v-card-title class="text-h5">
                 本当にキャンセルしますか？
               </v-card-title>
-              <v-card-title>
-                【{{ selectedTicket.event.eventname }}】{{
-                  selectedTicket.group.title
-                }}
+              <v-card-subtitle class="pt-5 pb-0"
+                >{{ dateFormatter(selectedTicket.event.starts_at) }}
+                {{ selectedTicket.event.eventname }}</v-card-subtitle
+              >
+              <v-card-title class="pt-0">
+                {{ selectedTicket.group.title }}
               </v-card-title>
               <v-card-subtitle>{{
                 selectedTicket.group.groupname
@@ -285,11 +348,13 @@ export default Vue.extend({
       }
     } catch {}
     // 500msごとに現在時刻を取得
-    setInterval(this.getNow, 500)
+    // setInterval(this.getNow, 500)
   },
 
   methods: {
     // 現在時刻を取得
+    // 現在時刻を取得するとv-progress-linearが正常に動作しないため非表示
+    /*
     getNow: function () {
       const today = new Date()
       const date =
@@ -304,6 +369,7 @@ export default Vue.extend({
       this.time = dateTime
       this.seconds = seconds + ''
     },
+    */
 
     // upNext（開演X分前から終演時刻まで）かどうかを判定するmethod
     // 引数には（開演時刻，終演時刻）を代入
