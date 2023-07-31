@@ -155,6 +155,7 @@
                       max-width="100px"
                       height="165px"
                       class="mr-2"
+                      contain
                     ></v-img>
                     <div class="ma-2">
                       <!--取得した整理券の情報を表示-->
