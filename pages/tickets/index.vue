@@ -44,32 +44,7 @@
             <v-card-text
               >User ID:{{ $auth.user?.oid ?? $auth.user?.sub }}</v-card-text
             >
-
-            <!--
-              ユーザIDの表示/非表示切り替えは不要と判断し以下の実装を削除
-            <v-card-text class="mx-3 my-1">
-              <a
-                class="text-subtitle-2"
-                @click="display_userid = !display_userid"
-                >ユーザーIDを表示: </a
-              ><span v-show="display_userid"
-                >{{ $auth.user?.oid ?? $auth.user?.sub }}
-                </span
-              >
-            
-            </v-card-text>
-            -->
           </v-card>
-
-          <!--
-            不要だと判断し，業務連絡を非表示
-            <p class="mx-1 my-0 py-0 text-caption grey--text">
-              この画面を観劇したいクラスの受付担当に見せてください
-            </p>
-            <p class="mx-1 my-0 py-0 text-caption grey--text">
-              受付担当者は公演時間と入場人数を確認してください
-            </p>
-          -->
 
           <!--整理券未取得の場合に，「探す」タブへ誘導-->
           <v-card
@@ -147,7 +122,7 @@
               </v-card-subtitle>
               <v-progress-linear
                 indeterminate
-                height="10px"
+                height="15px"
                 color="teal"
               ></v-progress-linear>
               <v-img
