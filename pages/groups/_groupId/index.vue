@@ -165,33 +165,37 @@
             >
             <v-divider class="mb-3"></v-divider>
             <!--
-            <div class="ma-0 pb-4">
-              
-              <div class="px-3 pt-2">
-                <span class="d-inline-flex text-caption">
-                  <v-badge color="grey" inline></v-badge>
-                  ：配布時間外
-                </span>
-                <span class="d-inline-flex text-caption">
-                  <v-badge color="green" inline></v-badge>
-                  ：席数に余裕あり
-                </span>
-                <span class="d-inline-flex text-caption">
-                  <v-badge color="amber" inline></v-badge>
-                  ：残りわずか
-                </span>
-                <span class="d-inline-flex text-caption">
-                  <v-badge color="red" inline></v-badge>
-                  ：在庫切れ
-                </span>
-              </div>
-              -->
+        <div class="ma-0 pb-4">
+          
+          <div class="px-3 pt-2">
+            <span class="d-inline-flex text-caption">
+              <v-badge color="grey" inline></v-badge>
+              ：配布時間外
+            </span>
+            <span class="d-inline-flex text-caption">
+              <v-badge color="green" inline></v-badge>
+              ：席数に余裕あり
+            </span>
+            <span class="d-inline-flex text-caption">
+              <v-badge color="amber" inline></v-badge>
+              ：残りわずか
+            </span>
+            <span class="d-inline-flex text-caption">
+              <v-badge color="red" inline></v-badge>
+              ：在庫切れ
+            </span>
+          </div>
+          -->
 
             <v-btn class="ma-2" color="primary" @click="$nuxt.refresh()"
               ><v-icon>mdi-reload</v-icon>再読み込み</v-btn
             >
             <div v-for="(event, index) in events" :key="event.id">
-              <v-card class="ma-2 d-flex" @click.stop="selectEvent(event)">
+              <v-card
+                class="ma-2 d-flex"
+                :disabled="!isAvailable"
+                @click.stop="selectEvent(event)"
+              >
                 <div>
                   <v-card-text
                     class="pt-1 pb-0 mb-0 grey--text text--darken-2 text-caption"
@@ -202,15 +206,15 @@
                   <v-spacer></v-spacer>
                   <v-card-title class="pt-0 pb-1 text-h5">
                     <!--必要性が低いため配布時間を非表示
-                  <p class="ma-0 pa-0">
-                    <v-icon>mdi-ticket-account</v-icon>配布
-                    <span class="text-h5">{{
-                      timeFormatter(event.sell_starts)
-                    }}</span>
-                    -
-                    {{ timeFormatter(event.sell_ends) }}
-                  </p>
-                -->
+              <p class="ma-0 pa-0">
+                <v-icon>mdi-ticket-account</v-icon>配布
+                <span class="text-h5">{{
+                  timeFormatter(event.sell_starts)
+                }}</span>
+                -
+                {{ timeFormatter(event.sell_ends) }}
+              </p>
+            -->
                     {{ timeFormatter(event.starts_at) }}
                     <span class="caption pl-1">
                       - {{ timeFormatter(event.ends_at) }}</span
@@ -220,13 +224,7 @@
                 <v-spacer></v-spacer>
                 <div class="my-auto mx-2">
                   <!--ここから配布ステータスの条件分岐-->
-                  <v-btn
-                    v-if="
-                      new Date() < new Date(event.sell_starts) ||
-                      new Date(event.sell_ends) < new Date()
-                    "
-                    color="grey"
-                    outlined
+                  <v-btn v-if="!isAvailable(event)" color="grey" outlined
                     >時間外<v-icon>mdi-cancel</v-icon></v-btn
                   >
                   <v-btn
@@ -510,24 +508,35 @@ export default Vue.extend({
     // isTodayで整理券の表示を切り替えると，v-if="events.length === 0"が機能しなくなるので却下
     // 使い方：v-if="isToday(event.sell_starts, event.sell_ends, event.starts_at)"
     /*
-    isToday(
-      inputSellStarts: string,
-      inputSellEnds: string,
-      inputStarts: string
-    ) {
-      const today = new Date().toDateString()
-      const sellStartsDate = new Date(inputSellStarts).toDateString()
-      const sellEndsDate = new Date(inputSellEnds).toDateString()
-      const startDate = new Date(inputStarts).toDateString()
-      if (startDate === today) {
-        return true
-      } else if (sellStartsDate < today && today < sellEndsDate) {
+isToday(
+  inputSellStarts: string,
+  inputSellEnds: string,
+  inputStarts: string
+) {
+  const today = new Date().toDateString()
+  const sellStartsDate = new Date(inputSellStarts).toDateString()
+  const sellEndsDate = new Date(inputSellEnds).toDateString()
+  const startDate = new Date(inputStarts).toDateString()
+  if (startDate === today) {
+    return true
+  } else if (sellStartsDate < today && today < sellEndsDate) {
+    return true
+  } else {
+    return false
+  }
+},
+*/
+
+    isAvailable(event: Event) {
+      if (
+        new Date() > new Date(event.sell_starts) &&
+        new Date(event.sell_ends) > new Date()
+      ) {
         return true
       } else {
         return false
       }
     },
-    */
     dateFormatter(inputDate: string) {
       const d = new Date(inputDate)
       return d.getMonth() + 1 + '/' + d.getDate()
