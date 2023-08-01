@@ -172,6 +172,17 @@ export default Vue.extend({
       api_url: process.env.BASEURL,
     }
   },
+  head() {
+    return {
+      meta: [
+        {
+          hid: 'og:url',
+          property: 'og:url',
+          content: 'https://2023.seiryofes.com' + this.$route.fullPath,
+        },
+      ],
+    }
+  },
   async fetch() {},
   mounted() {
     if (this.$auth.loggedIn && this.$auth.user?.sub === undefined) {
