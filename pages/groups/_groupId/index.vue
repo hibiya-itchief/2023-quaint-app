@@ -2,7 +2,7 @@
   <v-app>
     <v-container class="px-1 py-0">
       <v-row justify="center" class="ma-0 pa-0">
-        <v-col cols="12" sm="6" lg="6" class="mx-0 my-2 px-0 py-0 px-sm-3">
+        <v-col cols="12" sm="6" lg="6">
           <!--作品情報-->
           <!--タイトル，団体，お気に入り，映像で鑑賞ボタン-->
           <v-btn icon fab small to="/groups/">
@@ -19,16 +19,11 @@
               :class="HashColor(group.id ?? 'hashcolor')"
               height="180px"
             ></v-img>
-            <v-card-title clsss="pb-0">{{ group.title }}</v-card-title>
-            <v-card-subtitle class="pb-0">{{
-              group.groupname
-            }}</v-card-subtitle>
-            <!--
-                        お気に入り機能は未実装
-                        <v-btn icon>
-                            <v-icon>mdi-heart</v-icon>
-                        </v-btn> -->
-
+            <v-card-title>{{ group.title }}</v-card-title>
+            <v-card-subtitle>{{ group.groupname }}</v-card-subtitle>
+            <v-card-text>
+              {{ group?.description }}
+            </v-card-text>
             <v-card-actions v-if="group.tags.length != 0" class="py-1">
               <v-chip-group column>
                 <v-chip v-for="tag in group.tags" :key="tag.id" disabled>
@@ -49,8 +44,14 @@
                 団体情報を編集
               </v-btn>
             </v-card-actions>
-            <v-card-actions class="py-1">
-              <v-btn color="primary" dark rounded @click="videoViewer = true">
+            <v-card-actions class="mx-auto">
+              <v-btn
+                color="primary"
+                block
+                dark
+                rounded
+                @click="videoViewer = true"
+              >
                 <v-icon>mdi-play</v-icon>
                 映像で鑑賞
               </v-btn>
@@ -96,15 +97,16 @@
               >
             </v-card-actions>
 
+            <!--映像配信画面-->
             <v-dialog v-model="videoViewer" fullscreen>
               <v-card dark>
                 <v-toolbar dark color="primary">
+                  <v-toolbar-title class="mx-auto"
+                    >{{ group.title }} - {{ group.groupname }}</v-toolbar-title
+                  >
                   <v-btn icon dark @click="videoViewer = false">
                     <v-icon>mdi-close</v-icon>
                   </v-btn>
-                  <v-toolbar-title
-                    >{{ group.title }} - {{ group.groupname }}</v-toolbar-title
-                  >
                 </v-toolbar>
                 <v-row
                   justify="center"
@@ -129,7 +131,7 @@
                     >
                   </v-col>
                   <v-card-text
-                    >※映像鑑賞には，学校で配布されたMicrosoftアカウントへのログインが必要です。</v-card-text
+                    >※映像鑑賞には、学校で配布されたMicrosoftアカウントへのログインが必要です。</v-card-text
                   >
                   <v-col v-if="group.stream_url != null" cols="12">
                     <v-row justify="center">
@@ -145,177 +147,153 @@
               </v-card>
             </v-dialog>
           </v-card>
-
-          <v-card class="mb-4">
-            <v-card-text>
-              {{ group?.description }}
-            </v-card-text>
-          </v-card>
         </v-col>
-        <v-col cols="12" sm="6" lg="4" class="mx-0 my-2 px-0 py-0 px-sm-3">
+        <v-col cols="12" sm="6" lg="4">
           <!--公演時間の選択-->
-
-          <v-card class="mb-4">
-            <v-card-title
-              class="ma-0 px-3 pb-2 pt-4"
-              @click="events_show = !events_show"
-            >
+          <v-card class="pa-2">
+            <v-card-title>
               <v-icon>mdi-ticket</v-icon>
               観劇予約
               <v-spacer></v-spacer>
-              <v-btn icon>
-                <v-icon>{{
-                  events_show ? 'mdi-chevron-up' : 'mdi-chevron-down'
-                }}</v-icon>
-              </v-btn>
             </v-card-title>
-            <v-card-text class="ma-0 px-3 py-1"
-              >現地で見たい公演の整理券を取得できます。</v-card-text
+            <v-card-subtitle
+              >現地で見たい公演の整理券を取得できます。開演20分前から配布されます。</v-card-subtitle
             >
-            <v-card-text
-              v-show="!$auth.loggedIn"
-              class="red--text ma-0 px-3 py-1"
+            <v-card-text v-show="!$auth.loggedIn" class="red--text"
               >整理券の取得には<NuxtLink to="/login">ログイン</NuxtLink
               >が必要です。</v-card-text
             >
+            <v-divider class="mb-3"></v-divider>
 
-            <v-expand-transition>
-              <div v-show="events_show" class="ma-0 pb-4">
-                <v-divider class="mb-3"></v-divider>
-                <div class="px-3 pt-2">
-                  <span class="d-inline-flex text-caption">
-                    <v-badge color="grey" inline></v-badge>
-                    ：配布時間外
-                  </span>
-                  <span class="d-inline-flex text-caption">
-                    <v-badge color="green" inline></v-badge>
-                    ：席数に余裕あり
-                  </span>
-                  <span class="d-inline-flex text-caption">
-                    <v-badge color="amber" inline></v-badge>
-                    ：残りわずか
-                  </span>
-                  <span class="d-inline-flex text-caption">
-                    <v-badge color="red" inline></v-badge>
-                    ：在庫切れ
-                  </span>
+            <v-btn class="ma-2" color="primary" @click="$nuxt.refresh()"
+              ><v-icon>mdi-reload</v-icon>再読み込み</v-btn
+            >
+            <div v-for="(event, index) in events" :key="event.id">
+              <v-card
+                class="ma-2 d-flex"
+                :disabled="
+                  !isAvailable(event) ||
+                  checkTakenTickets(index) >= checkStock(index)
+                "
+                @click.stop="selectEvent(event)"
+              >
+                <div>
+                  <v-card-text
+                    class="pt-1 pb-0 mb-0 grey--text text--darken-2 text-caption"
+                  >
+                    {{ dateFormatter(event.starts_at) }}
+                    {{ event.eventname }}
+                  </v-card-text>
+                  <v-spacer></v-spacer>
+                  <v-card-title class="pt-0 pb-1 text-h5">
+                    {{ timeFormatter(event.starts_at) }}
+                    <span class="caption pl-1">
+                      - {{ timeFormatter(event.ends_at) }}</span
+                    >
+                  </v-card-title>
                 </div>
-                <a class="px-3 pb-1" @click="$nuxt.refresh()"
-                  >最新の状態に更新</a
+                <v-spacer></v-spacer>
+                <div class="my-auto mx-2">
+                  <!--ここから配布ステータスの条件分岐-->
+                  <v-btn v-if="!isAvailable(event)" color="grey" outlined
+                    >時間外<v-icon>mdi-cancel</v-icon></v-btn
+                  >
+                  <v-btn
+                    v-else-if="
+                      checkTakenTickets(index) / checkStock(index) < 0.8
+                    "
+                    color="green"
+                    outlined
+                    >配布中<v-icon>mdi-circle-double</v-icon></v-btn
+                  >
+                  <!--8割以上で黄色になる-->
+                  <v-btn
+                    v-else-if="
+                      checkTakenTickets(index) / checkStock(index) >= 0.8 &&
+                      checkTakenTickets(index) < checkStock(index)
+                    "
+                    color="orange"
+                    outlined
+                    >僅少<v-icon>mdi-triangle-outline</v-icon></v-btn
+                  >
+                  <v-btn
+                    v-else-if="checkTakenTickets(index) >= checkStock(index)"
+                    color="red"
+                    outlined
+                    >完売<v-icon>mdi-close</v-icon></v-btn
+                  >
+                  <!--ここまで配布ステータスの条件分岐-->
+                </div>
+              </v-card>
+            </div>
+            <v-dialog v-if="selected_event" v-model="dialog" max-width="500">
+              <v-card class="pa-2">
+                <v-card-title>この公演の整理券をとりますか？</v-card-title>
+
+                <v-card-subtitle class="pt-5 pb-0">
+                  {{ dateFormatter(selected_event.starts_at) }}
+                  {{ selected_event.eventname }}</v-card-subtitle
                 >
-                <div v-for="(event, index) in events" :key="event.id">
-                  <v-card class="mx-2 my-1" @click.stop="selectEvent(event)">
-                    <v-card-title class="py-2">
-                      {{ event.eventname }}
-                      <v-spacer></v-spacer>
-                      <v-badge
-                        v-if="
-                          new Date() < new Date(event.sell_starts) ||
-                          new Date(event.sell_ends) < new Date()
-                        "
-                        color="grey"
-                        inline
-                      ></v-badge>
-                      <v-badge
-                        v-else-if="
-                          checkTakenTickets(index) / checkStock(index) < 0.8
-                        "
-                        color="green"
-                        inline
-                      ></v-badge>
-                      <!--8割以上で黄色になる-->
-                      <v-badge
-                        v-else-if="
-                          checkTakenTickets(index) / checkStock(index) >= 0.8 &&
-                          checkTakenTickets(index) < checkStock(index)
-                        "
-                        color="amber"
-                        inline
-                      ></v-badge>
-                      <v-badge
-                        v-else-if="
-                          checkTakenTickets(index) >= checkStock(index)
-                        "
-                        color="red"
-                        inline
-                      ></v-badge>
-                    </v-card-title>
-                    <v-card-subtitle class="pb-2">
-                      <p class="ma-0 pa-0">
-                        配布時間：{{ DateFormatter(event.sell_starts) }}
-                        ~
-                        {{ DateFormatter(event.sell_ends) }}
-                      </p>
-                      <p class="ma-0 pa-0">
-                        公演時間：{{ DateFormatter(event.starts_at) }} ~
-                        {{ DateFormatter(event.ends_at) }}
-                      </p>
-                    </v-card-subtitle>
-                  </v-card>
-                </div>
-                <v-dialog v-if="selected_event" v-model="dialog" width="100%">
-                  <v-card class="pa-2">
-                    <v-card-title class="px-1"
-                      >{{ group?.title }} / {{ group?.groupname }} -
-                      {{ selected_event.eventname }}</v-card-title
-                    >
-                    <v-card-subtitle class="px-1">
-                      <p class="ma-0 pa-0">この公演の整理券をとりますか？</p>
-                      <p class="ma-0 pa-0">
-                        公演時間：{{ DateFormatter(selected_event.starts_at) }}
-                        ~
-                        {{ DateFormatter(selected_event.ends_at) }}
-                      </p>
-                    </v-card-subtitle>
-                    <div class="px-1">
-                      <p
-                        v-if="$auth.$state.strategy == 'ad'"
-                        class="ma-0 pa-0 text-subtitle-2"
-                      >
-                        席数：1席
-                      </p>
-                      <p v-else class="ma-0 pa-0 text-subtitle-2">
-                        <v-icon>mdi-account-plus</v-icon
-                        >同時に入場する人数(ご家族など)
-                      </p>
-                      <v-slider
-                        v-if="$auth.$state.strategy != 'ad'"
-                        v-model="ticket_person"
-                        :tick-labels="person_labels"
-                        min="1"
-                        max="3"
-                      >
-                        <template #thumb-label="props">
-                          <v-icon dark>
-                            {{ person_icons[props.value - 1] }}
-                          </v-icon>
-                        </template>
-                      </v-slider>
-                    </div>
-                    <v-card-actions class="px-1">
-                      <v-spacer></v-spacer>
+                <v-card-title class="pt-0 mb-2"
+                  >{{ group?.title }}
+                </v-card-title>
+                <v-card-subtitle>
+                  {{ group?.groupname }}
+                </v-card-subtitle>
+                <v-card-subtitle class="py-2">
+                  <span class="text-h5"
+                    ><v-icon>mdi-clock-time-nine</v-icon>
+                    {{ timeFormatter(selected_event.starts_at) }}
+                  </span>
+                  -
+                  {{ timeFormatter(selected_event.ends_at) }}
+                </v-card-subtitle>
 
-                      <v-btn color="red" text @click.stop="dialog = false">
-                        いいえ
-                      </v-btn>
-                      <v-btn
-                        color="primary"
-                        @click="CreateTicket(selected_event, ticket_person)"
-                      >
-                        はい
-                      </v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </v-dialog>
-                <v-col v-if="events.length === 0" cols="12">
-                  <v-card disabled>
-                    <v-card-title
-                      >現在選択できる公演はありません。</v-card-title
+                <v-card-subtitle v-if="$auth.$state.strategy == 'ad'"
+                  ><span class="text-h5"
+                    ><v-icon>mdi-account-supervisor</v-icon>1</span
+                  >人</v-card-subtitle
+                >
+                <div v-else>
+                  <v-card-subtitle>
+                    <v-icon>mdi-account-plus</v-icon
+                    >同時に入場する人数(ご家族など)
+                  </v-card-subtitle>
+                  <v-card-actions>
+                    <v-slider
+                      v-model="ticket_person"
+                      :tick-labels="person_labels"
+                      min="1"
+                      max="3"
                     >
-                  </v-card>
-                </v-col>
-              </div>
-            </v-expand-transition>
+                      <template #thumb-label="props">
+                        <v-icon dark>
+                          {{ person_icons[props.value - 1] }}
+                        </v-icon>
+                      </template>
+                    </v-slider>
+                  </v-card-actions>
+                </div>
+                <v-card-actions class="px-1">
+                  <v-spacer></v-spacer>
+
+                  <v-btn color="red" text @click.stop="dialog = false">
+                    いいえ
+                  </v-btn>
+                  <v-btn
+                    color="primary"
+                    @click="CreateTicket(selected_event, ticket_person)"
+                  >
+                    はい
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+            <v-col v-if="events.length === 0" cols="12">
+              <v-card disabled>
+                <v-card-title>現在選択できる公演はありません。</v-card-title>
+              </v-card>
+            </v-col>
           </v-card>
         </v-col>
       </v-row>
@@ -360,7 +338,7 @@ type Data = {
   success_message: string
   error_message: string
   dialog: boolean
-  events_show: boolean
+
   ticket_person: number
   person_labels: any[]
   person_icons: any[]
@@ -392,7 +370,7 @@ export default Vue.extend({
       selected_event: null,
       streamVideoId: '',
       editable: false, // 権限を持つユーザーがアクセスするとtrueになりページを編集できる
-      events_show: true,
+
       ticket_person: 1,
       person_labels: ['1人', '2人', '3人'],
       person_icons: [
@@ -496,14 +474,48 @@ export default Vue.extend({
     checkTakenTickets(index: number) {
       return this.listTakenTickets[index]
     },
-    DateFormatter(inputDate: string) {
+
+    // 配布日or公演日が今日かどうか判断するmethod
+    // isTodayで整理券の表示を切り替えると，v-if="events.length === 0"が機能しなくなるので却下
+    // 使い方：v-if="isToday(event.sell_starts, event.sell_ends, event.starts_at)"
+    /*
+isToday(
+  inputSellStarts: string,
+  inputSellEnds: string,
+  inputStarts: string
+) {
+  const today = new Date().toDateString()
+  const sellStartsDate = new Date(inputSellStarts).toDateString()
+  const sellEndsDate = new Date(inputSellEnds).toDateString()
+  const startDate = new Date(inputStarts).toDateString()
+  if (startDate === today) {
+    return true
+  } else if (sellStartsDate < today && today < sellEndsDate) {
+    return true
+  } else {
+    return false
+  }
+},
+*/
+
+    // isAvailable: 整理券が配布時間内であればtrue，それ以外はfalseを返すmethod
+    isAvailable(event: Event) {
+      if (
+        new Date() > new Date(event.sell_starts) &&
+        new Date(event.sell_ends) > new Date()
+      ) {
+        return true
+      } else {
+        return false
+      }
+    },
+    dateFormatter(inputDate: string) {
+      const d = new Date(inputDate)
+      return d.getMonth() + 1 + '/' + d.getDate()
+    },
+    timeFormatter(inputDate: string) {
       const d = new Date(inputDate)
       return (
-        d.getMonth() +
-        1 +
-        '月' +
-        d.getDate() +
-        '日 ' +
         d.getHours().toString().padStart(2, '0') +
         ':' +
         d.getMinutes().toString().padStart(2, '0')
