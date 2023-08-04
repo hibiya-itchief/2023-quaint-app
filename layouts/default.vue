@@ -61,7 +61,10 @@
                 ユーザーID：{{ $auth.user?.oid ?? $auth.user?.sub }}
                 <!--ADの場合ユーザーオブジェクトIDはoidに入ってる-->
               </p>
-              <p class="ma-0 pa-0 text-caption grey--text">
+              <p
+                v-show="$auth.user?.groups?.includes(userGroups.admin)"
+                class="ma-0 pa-0 text-caption grey--text"
+              >
                 <a @click="revealToken()">APIトークンを表示</a>
               </p>
             </v-card-text>
@@ -149,6 +152,14 @@
         <span>整理券</span>
         <v-icon>mdi-ticket</v-icon>
       </v-btn>
+
+      <v-btn
+        v-show="$auth.user?.groups?.includes(userGroups.admin)"
+        to="/admin"
+      >
+        <span>👑Admin</span>
+        <v-icon>mdi-crown</v-icon>
+      </v-btn>
     </v-bottom-navigation>
   </v-app>
 </template>
@@ -169,7 +180,17 @@ export default Vue.extend({
       api_url: process.env.BASEURL,
     }
   },
-  async fetch() {},
+  head() {
+    return {
+      meta: [
+        {
+          hid: 'og:url',
+          property: 'og:url',
+          content: 'https://2023.seiryofes.com' + this.$route.fullPath,
+        },
+      ],
+    }
+  },
   mounted() {
     if (this.$auth.loggedIn && this.$auth.user?.sub === undefined) {
       const base64Url = (this.$auth.strategy as any).token.get().split('.')[1] // https://auth.nuxtjs.org/api/auth/#:~:text=Token%20and%20Refresh%20Token%20are%20available%20on%20%24auth.strategy.token
