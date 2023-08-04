@@ -152,6 +152,14 @@
         <span>整理券</span>
         <v-icon>mdi-ticket</v-icon>
       </v-btn>
+
+      <v-btn
+        v-show="$auth.user?.groups?.includes(userGroups.admin)"
+        to="/admin"
+      >
+        <span>👑Admin</span>
+        <v-icon>mdi-crown</v-icon>
+      </v-btn>
     </v-bottom-navigation>
   </v-app>
 </template>
