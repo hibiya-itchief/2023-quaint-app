@@ -119,8 +119,24 @@ export default Vue.extend({
       search_query: '',
     }
   },
-  head: {
-    title: '探す (団体一覧)',
+  head() {
+    return {
+      title: '探す (団体一覧)',
+      meta: [
+        {
+          hid: 'og:title',
+          property: 'og:title',
+          content: '参加団体一覧 - 日比谷高校星陵祭公式サイト',
+        },
+        {
+          hid: 'og:description',
+          property: 'og:description',
+          content:
+            '参加団体一覧 - 日比谷高校星陵祭公式サイト 各クラスが長い時間をかけて準備した演劇や個性豊かな有志団体の発表など、次に見たい公演を探すことが出来ます。',
+        },
+        { hid: 'og:image', property: 'og:image', content: '/ogpimage.png' },
+      ],
+    }
   },
   created() {
     // 毎回同じ順番で表示されないようにgroupsの配列をランダムな順番にする

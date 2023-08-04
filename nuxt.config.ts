@@ -14,6 +14,10 @@ const nuxtConfig: NuxtConfig = {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
+    htmlAttrs: {
+      lang: 'ja',
+      prefix: 'og: http://ogp.me/ns#', // OGPを使う宣言
+    },
     titleTemplate: '%s - 日比谷高校星陵祭公式サイト',
     title: '星陵祭',
     meta: [
@@ -26,6 +30,32 @@ const nuxtConfig: NuxtConfig = {
           '令和５年度　第48回星陵祭　9月16日(土)、17日(日)開催　今年度の星陵祭は、4年ぶりの通常開催です！テーマは祭徠。日比谷のお祭りをみんなで盛り上げましょう！皆様のご来場を心よりお待ち申し上げております。',
       },
       { name: 'format-detection', content: 'telephone=no' },
+      // OGP
+      {
+        hid: 'og:title',
+        property: 'og:title',
+        content: '日比谷高校星陵祭2023公式サイト',
+      },
+      {
+        hid: 'og:url',
+        property: 'og:url',
+        content: 'https://2023.seiryofes.com/',
+      },
+      {
+        hid: 'og:description',
+        property: 'og:description',
+        content:
+          '令和５年度　第48回星陵祭　9月16日(土)、17日(日)開催　今年度の星陵祭は、4年ぶりの通常開催です！テーマは祭徠。日比谷のお祭りをみんなで盛り上げましょう！皆様のご来場を心よりお待ち申し上げております。',
+      },
+      { hid: 'og:image', property: 'og:image', content: '/ogpimage.png' },
+      {
+        hid: 'og:site_name',
+        property: 'og:site_name',
+        content: '日比谷高校星陵祭2023公式サイト',
+      },
+      { hid: 'og:type', property: 'og:type', content: 'website' },
+      { name: 'twitter:card', content: 'summary_large_image' },
+      { name: 'twitter:site', content: '@hibiya_IT' },
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },

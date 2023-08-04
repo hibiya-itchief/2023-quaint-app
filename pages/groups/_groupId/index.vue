@@ -391,7 +391,29 @@ export default Vue.extend({
   },
   head() {
     return {
-      title: this.group?.groupname,
+      title: this.group?.groupname + ' 「' + this.group?.title + '」',
+      meta: [
+        {
+          hid: 'og:title',
+          property: 'og:title',
+          content:
+            this.group?.groupname +
+            ' 「' +
+            this.group?.title +
+            '」' +
+            ' - 日比谷高校星陵祭公式サイト',
+        },
+        {
+          hid: 'og:description',
+          property: 'og:description',
+          content: this.group?.description,
+        },
+        {
+          hid: 'og:image',
+          property: 'og:image',
+          content: this.group?.public_thumbnail_image_url,
+        },
+      ],
     }
   },
   created() {
