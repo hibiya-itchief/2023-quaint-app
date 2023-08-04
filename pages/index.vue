@@ -1,22 +1,36 @@
 <template>
   <v-app>
     <div id="main">
-      <h1 class="js-resize-text top-title">
-        seiryofes<span class="dot">.</span>com
-      </h1>
-      <p class="coming-soon">coming soon...</p>
-      <a href="https://github.com/hibiya-itchief"
-        ><ion-icon name="logo-github"></ion-icon
-      ></a>
-      <a href="https://forms.gle/aRv81UtSCSgS2gHq8" class="feedback"
-        >フィードバック(Googleフォーム)</a
-      >
+      <v-img
+        v-if="$vuetify.breakpoint.xs"
+        src="/images/mainvisual.png"
+        style="width: 100%"
+        contain
+      ></v-img>
+      <v-img
+        v-else
+        src="/images/mainvisual.png"
+        style="width: 80%"
+        contain
+      ></v-img>
+
+      <!--ここに案内の文章-->
+
+      <CountDown
+        class="ma-1"
+        v-if="$vuetify.breakpoint.xs"
+        style="width: 100vw"
+      />
+      <CountDown class="ma-1" v-else style="height: 50vh" />
+      <!--チーフ会のTwitter-->
+      <!--コピーライトとか-->
     </div>
   </v-app>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
+import CountDown from '~/components/CountDown.vue'
 export default Vue.extend({
   name: 'IndexPage',
   auth: false,
@@ -69,6 +83,7 @@ export default Vue.extend({
       },
     ],
   },
+  components: { CountDown },
 })
 </script>
 
@@ -86,17 +101,6 @@ body {
   margin: auto;
   padding: auto;
   width: 100%;
-  height: 100vh;
-}
-
-.top-title {
-  font-family: 'Bebas Neue', cursive;
-  font-size: 15vw;
-  color: #0b3142;
-  display: block;
-  text-align: center;
-  margin: 0;
-  padding: 0;
 }
 
 .dot {
