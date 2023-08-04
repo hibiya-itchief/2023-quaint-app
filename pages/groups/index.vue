@@ -83,6 +83,7 @@
                   v-if="group.public_thumbnail_image_url != null"
                   height="120px"
                   width="90px"
+                  contain
                   :src="group.public_thumbnail_image_url"
                 ></v-img>
                 <v-img
