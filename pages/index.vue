@@ -1,6 +1,17 @@
 <template>
   <v-app>
     <div id="main">
+      <v-row>
+        <v-col cols="12">
+          <v-card flat>
+            <v-img src="/images/sairai.jpeg"></v-img>
+            <v-card-title class="justify-center"
+              >忘るまじ日比谷の夏</v-card-title
+            >
+          </v-card>
+        </v-col>
+      </v-row>
+
       <v-img
         v-if="$vuetify.breakpoint.xs"
         src="/images/mainvisual.png"
