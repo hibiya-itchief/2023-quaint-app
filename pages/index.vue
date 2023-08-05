@@ -1,31 +1,47 @@
 <template>
   <v-app>
-    <div id="main">
-      <v-row>
-        <v-col cols="12">
-          <v-card flat>
-            <v-img src="/images/sairai.jpeg"></v-img>
-            <v-card-title class="justify-center"
-              >忘るまじ日比谷の夏</v-card-title
+    <v-row justify="center">
+      <v-col cols="9">
+        <v-card flat>
+          <v-row justify="center">
+            <v-col cols="3">
+              <v-img src="/images/hibiyaLogo.jpg"></v-img>
+            </v-col>
+            <v-col cols="6">
+              <v-card-subtitle>東京都立日比谷高等学校</v-card-subtitle>
+              <v-card-title>第48回 星陵祭</v-card-title>
+            </v-col>
+          </v-row>
+        </v-card>
+        <v-card flat>
+          <v-img src="/images/sairai.jpeg"></v-img>
+          <v-card-title class="justify-center">忘るまじ日比谷の夏</v-card-title>
+        </v-card>
+      </v-col>
+      <v-col cols="10">
+        <v-card>
+          <!--ここに案内の文章-->
+          <v-card-title>9/16,17</v-card-title>
+          <v-card-subtitle>みんな入れるよ</v-card-subtitle>
+        </v-card>
+      </v-col>
+
+      <v-col cols="5"
+        ><v-card class="my-auto">
+          <div>
+            <v-card-title><v-icon>mdi-magnify</v-icon>公演を探す</v-card-title>
+          </div>
+        </v-card></v-col
+      >
+      <v-col cols="5"
+        ><v-card class="my-auto">
+          <div>
+            <v-card-title
+              ><v-icon>mdi-ticket</v-icon>取得した整理券</v-card-title
             >
-          </v-card>
-        </v-col>
-      </v-row>
-
-      <v-img
-        v-if="$vuetify.breakpoint.xs"
-        src="/images/mainvisual.png"
-        style="width: 100%"
-        contain
-      ></v-img>
-      <v-img
-        v-else
-        src="/images/mainvisual.png"
-        style="width: 80%"
-        contain
-      ></v-img>
-
-      <!--ここに案内の文章-->
+          </div>
+        </v-card></v-col
+      >
 
       <CountDown
         class="ma-1"
@@ -33,9 +49,23 @@
         style="width: 100vw"
       />
       <CountDown class="ma-1" v-else style="height: 50vh" />
+      <v-col cols="10">
+        <v-card max-height="200px">
+          <a
+            class="twitter-timeline height:200px"
+            href="https://twitter.com/HibiyaSeiryoFes?ref_src=twsrc%5Etfw"
+            >Tweets by HibiyaSeiryoFes</a
+          >
+          <script
+            async
+            src="https://platform.twitter.com/widgets.js"
+            charset="utf-8"
+          ></script>
+        </v-card>
+      </v-col>
       <!--チーフ会のTwitter-->
       <!--コピーライトとか-->
-    </div>
+    </v-row>
   </v-app>
 </template>
 
@@ -102,16 +132,6 @@ export default Vue.extend({
 body {
   margin: 0;
   padding: 0;
-}
-
-#main {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  margin: auto;
-  padding: auto;
-  width: 100%;
 }
 
 .dot {
