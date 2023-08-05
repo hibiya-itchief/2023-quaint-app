@@ -51,7 +51,7 @@
           cols="12"
           sm="6"
           md="4"
-          lg="4"
+          lg="3"
           class="my-0 py-2"
         >
           <!-- <class="d-flex flex-column">で，「もっと見る」が常に最下部に -->
@@ -94,15 +94,17 @@
                 ></v-img>
                 <!--</v-avatar>-->
               </div>
-              <div class="px-1">
-                <v-card-title class="pb-2">
+              <div class="px-1 text-truncate">
+                <v-card-title class="pb-2 text-truncate">
                   {{ group.title }}
                 </v-card-title>
-                <v-card-subtitle class="pb-0">
+                <v-card-subtitle class="pb-0 text-truncate">
                   {{ group.groupname }}
                 </v-card-subtitle>
-                <v-card-text class="my-0 py-0 text-caption grey--text">
-                  {{ group.description?.substring(0, 18) + '...' }}
+                <v-card-text
+                  class="my-0 py-0 text-caption grey--text text-truncate"
+                >
+                  {{ group.description }}
                 </v-card-text>
                 <v-card-actions class="py-0">
                   <v-chip-group column>
@@ -124,7 +126,6 @@
     </v-container>
   </v-app>
 </template>
-
 <script lang="ts">
 import { Group, Tag } from 'types/quaint'
 import Vue from 'vue'
@@ -256,3 +257,11 @@ export default Vue.extend({
   },
 })
 </script>
+<style>
+.text-truncate {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+</style>
