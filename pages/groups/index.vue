@@ -126,14 +126,6 @@
     </v-container>
   </v-app>
 </template>
-<style>
-.text-truncate {
-  display: block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-</style>
 <script lang="ts">
 import { Group, Tag } from 'types/quaint'
 import Vue from 'vue'
@@ -265,3 +257,11 @@ export default Vue.extend({
   },
 })
 </script>
+<style>
+.text-truncate {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+</style>
