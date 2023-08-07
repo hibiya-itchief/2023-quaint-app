@@ -197,10 +197,16 @@ export default Vue.extend({
         this.search_result_number = 0
         for (let i = 0; i < this.groups.length; i++) {
           if (
-            this.groups[i].id.includes(this.search_query) ||
-            this.groups[i].groupname.includes(this.search_query) ||
-            this.groups[i].title?.includes(this.search_query) ||
-            this.groups[i].description?.includes(this.search_query)
+            this.groups[i].id.includes(this.search_query.toLowerCase()) ||
+            this.groups[i].groupname
+              .toLowerCase()
+              .includes(this.search_query.toLowerCase()) ||
+            this.groups[i].title
+              ?.toLowerCase()
+              .includes(this.search_query.toLowerCase()) ||
+            this.groups[i].description
+              ?.toLowerCase()
+              .includes(this.search_query.toLowerCase())
           ) {
             this.search_result_number += 1
           }
@@ -212,10 +218,16 @@ export default Vue.extend({
       if (this.selectedTag === undefined) {
         if (
           !this.searchB ||
-          group.id.includes(this.search_query) ||
-          group.groupname.includes(this.search_query) ||
-          group.title?.includes(this.search_query) ||
-          group.description?.includes(this.search_query)
+          group.id.toLowerCase().includes(this.search_query.toLowerCase()) ||
+          group.groupname
+            .toLowerCase()
+            .includes(this.search_query.toLowerCase()) ||
+          group.title
+            ?.toLowerCase()
+            .includes(this.search_query.toLowerCase()) ||
+          group.description
+            ?.toLowerCase()
+            .includes(this.search_query.toLowerCase())
         ) {
           return true
         }
