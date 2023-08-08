@@ -148,25 +148,6 @@ export default Vue.extend({
   },
 
   methods: {
-    // 現在時刻を取得
-    // 現在時刻を取得するとv-progress-linearが正常に動作しないため非表示
-    /*
-    getNow: function () {
-      const today = new Date()
-      const date =
-        today.getFullYear() +
-        '-' +
-        (today.getMonth() + 1) +
-        '-' +
-        today.getDate()
-      const time = today.getHours() + ':' + today.getMinutes()
-      const dateTime = date + ' ' + time + ':'
-      const seconds = today.getSeconds()
-      this.time = dateTime
-      this.seconds = seconds + ''
-    },
-    */
-
     // upNext（開演X分前から終演時刻まで）かどうかを判定するmethod
     // 引数には（開演時刻，終演時刻）を代入
     isUpNext: function (start: Date, end: Date) {
