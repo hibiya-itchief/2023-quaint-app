@@ -62,7 +62,7 @@
           <!--投票確定ダイアログ-->
           <v-dialog
             v-if="selectedVoteClass"
-            v-model="cancelDialog"
+            v-model="voteDialog"
             max-width="500"
           >
             <v-card>
@@ -72,7 +72,7 @@
               <v-card-text>この操作は取り消せません</v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn text @click="cancelDialog = false">いいえ</v-btn>
+                <v-btn text @click="voteDialog = false">いいえ</v-btn>
                 <v-btn @click="TrueVote(selectedVoteClass)"
                   >はい</v-btn
                 >
@@ -104,11 +104,8 @@ type Data = {
   groups: Group[]
   events: Event[]
   tickets: TicketInfo[]
-  cancelDialog: boolean
-  selectedTicket: TicketInfo | null
-  // template内の実装で該当部分を削除したため不要
-  // display_userid: boolean
-  qrcodeUrl: string
+  voteDialog: boolean
+  selectedVoteClass: TicketInfo | null
   success_alert: boolean
   error_alert: boolean
   success_message: string
@@ -117,18 +114,15 @@ type Data = {
   seconds: string
 }
 export default Vue.extend({
-  name: 'UsersTicketsPage',
+  name: 'UsersVotePage',
   async asyncData() {},
   data(): Data {
     return {
       groups: [],
       events: [],
       tickets: [],
-      cancelDialog: false,
-      selectedTicket: null,
-      // template内の実装で該当部分を削除したため不要
-      // display_userid: false,
-      qrcodeUrl: '',
+      voteDialog: false,
+      selectedVoteClass: null,
       success_alert: false,
       error_alert: false,
       success_message: '',
