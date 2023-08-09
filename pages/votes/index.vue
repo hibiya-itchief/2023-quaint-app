@@ -135,6 +135,7 @@ export default Vue.extend({
     title: '投票',
   },
   async created() {
+    # initだと思う
     this.fetchTicket()
     try {
       if (this.$auth.$state.strategy === 'ad') {
