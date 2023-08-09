@@ -9,7 +9,7 @@
                 <v-card-title class="justify-center"
                   >日比谷高校文化祭</v-card-title
                 >
-                <v-img src="/images/sairai.jpeg"></v-img>
+                <v-img src="/images/Sairai.jpeg"></v-img>
                 <v-card-title class="justify-center">星陵祭2023</v-card-title>
               </v-card>
             </v-col>
