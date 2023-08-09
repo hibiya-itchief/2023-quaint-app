@@ -52,13 +52,12 @@
           </div>
         </v-card></v-col
       >
-
       <CountDown
-        class="ma-1"
+        class="ma-1 justify-center"
         v-if="$vuetify.breakpoint.xs"
         style="width: 100vw"
       />
-      <CountDown class="ma-1" v-else style="height: 50vh" />
+      <CountDown class="ma-1 justify-center" v-else style="height: 50vh" />
 
       <!--チーフ会のTwitter-->
       <!--
@@ -80,6 +79,14 @@
       -->
 
       <!--コピーライトとか-->
+      <v-col cols="10">
+        <v-btn href="https://forms.gle/aRv81UtSCSgS2gHq8" class="ma-2"
+          ><v-icon>mdi-list-box</v-icon>フィードバック(Googleフォーム)</v-btn
+        >
+        <v-btn href="https://github.com/hibiya-itchief" class="ma-2"
+          ><v-icon>mdi-github</v-icon>GitHub</v-btn
+        >
+      </v-col>
     </v-row>
   </v-app>
 </template>
