@@ -4,7 +4,7 @@
       <v-col cols="12">
         <v-parallax src="/images/topBackground.png" height="600">
           <v-row align="center" justify="center">
-            <v-col cols="7">
+            <v-col cols="10" md="5" sm="10">
               <v-card class="text-center">
                 <v-card-title class="justify-center"
                   >日比谷高校文化祭</v-card-title
@@ -36,14 +36,14 @@
         </v-card>
       </v-col>
 
-      <v-col cols="5"
+      <v-col cols="10" md="5" sm="10"
         ><v-card class="my-auto" to="/groups/">
           <div>
-            <v-card-title><v-icon>mdi-magnify</v-icon>公演を探す</v-card-title>
+            <v-card-title><v-icon>mdi-magnify</v-icon>公演一覧</v-card-title>
           </div>
         </v-card></v-col
       >
-      <v-col cols="5"
+      <v-col cols="10" md="5" sm="10"
         ><v-card class="my-auto" to="/tickets/">
           <div>
             <v-card-title
