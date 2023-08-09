@@ -53,11 +53,11 @@
         </v-card></v-col
       >
       <CountDown
-        class="ma-1 justify-center"
         v-if="$vuetify.breakpoint.xs"
+        class="ma-1 justify-center"
         style="width: 100vw"
       />
-      <CountDown class="ma-1 justify-center" v-else style="height: 50vh" />
+      <CountDown v-else class="ma-1 justify-center" style="height: 50vh" />
 
       <!--チーフ会のTwitter-->
       <!--
@@ -97,6 +97,7 @@ import CountDown from '~/components/CountDown.vue'
 export default Vue.extend({
   name: 'IndexPage',
   auth: false,
+  components: { CountDown },
   head: {
     meta: [
       { charset: 'utf-8' },
@@ -146,7 +147,6 @@ export default Vue.extend({
       },
     ],
   },
-  components: { CountDown },
 })
 </script>
 
