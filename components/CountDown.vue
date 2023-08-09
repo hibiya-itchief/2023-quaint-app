@@ -9,12 +9,19 @@ export default Vue.extend({
     const ctx = canvas.getContext('2d')
     const img = new Image()
     img.src = '/images/countdown.jpg'
+    const yay = new Date('2023-09-16T00:00:00+09:00')
+    const diff = Math.ceil(
+      (yay.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
+    ) // ミリ秒を日に変換
     img.onload = () => {
       ctx.drawImage(img, 0, 0)
       ctx.font = 'bold 160px serif'
       ctx.fillStyle = 'white'
       ctx.textAlign = 'center'
-      ctx.fillText('45', 220, 340)
+      ctx.fillText(diff, 225, 345)
+      ctx.lineWidth = 2
+      ctx.strokeStyle = '#666'
+      ctx.strokeText(diff, 225, 345)
     }
   },
 })
