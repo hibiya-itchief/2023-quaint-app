@@ -1,43 +1,53 @@
 <template>
   <v-app>
     <v-row justify="center">
-      <v-col cols="9">
-        <v-card flat>
-          <v-row justify="center">
-            <v-col cols="3">
-              <v-img src="/images/hibiyaLogo.jpg"></v-img>
-            </v-col>
-            <v-col cols="6">
-              <v-card-subtitle>東京都立日比谷高等学校</v-card-subtitle>
-              <v-card-title>第48回 星陵祭</v-card-title>
+      <v-col cols="12">
+        <v-parallax src="/images/topBackground.png" height="600">
+          <v-row align="center" justify="center">
+            <v-col cols="7">
+              <v-card class="text-center">
+                <v-card-title class="justify-center"
+                  >日比谷高校文化祭</v-card-title
+                >
+                <v-img src="/images/sairai.jpeg"></v-img>
+                <v-card-title class="justify-center">星陵祭2023</v-card-title>
+              </v-card>
             </v-col>
           </v-row>
-        </v-card>
-        <v-card flat>
-          <v-img src="/images/sairai.jpeg"></v-img>
-          <v-card-title class="justify-center">忘るまじ日比谷の夏</v-card-title>
-        </v-card>
+        </v-parallax>
       </v-col>
       <v-col cols="10">
-        <v-card>
-          <!--ここに案内の文章-->
-          <v-card-title>9/16,17</v-card-title>
-          <v-card-subtitle>みんな入れるよ</v-card-subtitle>
+        <v-card class="pa-3">
+          <v-card-title class="justify-center"
+            ><v-icon>mdi-information</v-icon>開催概要</v-card-title
+          >
+          <v-card-title><v-icon>mdi-calendar</v-icon>2023/9/16-17</v-card-title>
+          <v-card-title
+            ><v-icon>mdi-map-marker</v-icon>東京都立日比谷高校</v-card-title
+          >
+          <v-card-text>〒100-0014 東京都千代田区永田町2-16-1</v-card-text>
+          <v-card-title
+            ><v-icon>mdi-account-group</v-icon
+            >すべての方に御入場いただけます</v-card-title
+          >
+          <v-card-text
+            >一般の方（中学生含む）、保護者、本校卒業生など。感染症流行状況により変更の可能性あり。</v-card-text
+          >
         </v-card>
       </v-col>
 
       <v-col cols="5"
-        ><v-card class="my-auto">
+        ><v-card class="my-auto" to="/groups/">
           <div>
             <v-card-title><v-icon>mdi-magnify</v-icon>公演を探す</v-card-title>
           </div>
         </v-card></v-col
       >
       <v-col cols="5"
-        ><v-card class="my-auto">
+        ><v-card class="my-auto" to="/tickets/">
           <div>
             <v-card-title
-              ><v-icon>mdi-ticket</v-icon>取得した整理券</v-card-title
+              ><v-icon>mdi-ticket</v-icon>あなたの整理券</v-card-title
             >
           </div>
         </v-card></v-col
@@ -49,10 +59,14 @@
         style="width: 100vw"
       />
       <CountDown class="ma-1" v-else style="height: 50vh" />
+
+      <!--チーフ会のTwitter-->
+      <!--
       <v-col cols="10">
-        <v-card max-height="200px">
+        <v-card>
           <a
             class="twitter-timeline height:200px"
+            data-tweet-limit="2"
             href="https://twitter.com/HibiyaSeiryoFes?ref_src=twsrc%5Etfw"
             >Tweets by HibiyaSeiryoFes</a
           >
@@ -63,7 +77,8 @@
           ></script>
         </v-card>
       </v-col>
-      <!--チーフ会のTwitter-->
+      -->
+
       <!--コピーライトとか-->
     </v-row>
   </v-app>
