@@ -5,7 +5,7 @@
         <v-col cols="12" sm="6" lg="6">
           <!--再読み込みボタン-->
           <div class="text-center pa-1">
-            <v-btn class="mx-1 my-1" color="primary" @click="fetchTicket()"
+            <v-btn class="mx-1 my-1" color="primary" @click="getOption()"
               ><v-icon>mdi-reload</v-icon>再読み込み</v-btn
             >
           </div>
@@ -135,15 +135,8 @@ export default Vue.extend({
     title: '投票',
   },
   async created() {
-    # initだと思う
-    this.fetchTicket()
-    try {
-      if (this.$auth.$state.strategy === 'ad') {
-        this.qrcodeUrl = await getQRCodeDataUrl(this.$auth.user?.oid as string)
-      } else {
-        this.qrcodeUrl = await getQRCodeDataUrl(this.$auth.user?.sub as string)
-      }
-    } catch {}
+    // initだと思う
+    this.getOption()
     // 500msごとに現在時刻を取得
     // setInterval(this.getNow, 500)
   },
@@ -179,7 +172,7 @@ export default Vue.extend({
         return false
       }
     },
-    async fetchTicket() {
+    async getOption() {
       const tickets: Ticket[] = await this.$axios.$get('/users/me/tickets')
 
       const ticketInfos: TicketInfo[] = []
@@ -255,7 +248,7 @@ export default Vue.extend({
           this.error_message = e.message
         })
       this.cancelDialog = false
-      this.fetchTicket()
+      this.getOption()
     },
   },
 })
