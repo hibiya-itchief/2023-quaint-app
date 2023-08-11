@@ -182,11 +182,26 @@ export default Vue.extend({
     }
   },
   created() {
-    // 毎回同じ順番で表示されないようにgroupsの配列をランダムな順番にする
-    // 各groupが有しているtagをAPIから取得し，groups配列の中のオブジェクトに"tags"というキーを設けてgroupsとtagsの情報を結びつけている。
+    this.SortGroups('id', false)
   },
 
   methods: {
+    SortGroups(sort: 'id' | 'groupname' | 'title', reverse: boolean) {
+      for (let i = 0; i < this.groups.length; i++) {
+        if (this.groups[i].title === null) {
+          this.groups[i].title = ''
+        }
+      }
+      this.groups.sort((x, y) => {
+        if (x[sort] > y[sort]) return 1
+        if (x[sort] < y[sort]) return -1
+        return 0
+      })
+      if (reverse === true) {
+        this.groups.reverse()
+      }
+    },
+
     SearchGroups(input: string) {
       if (input === '') {
         this.searchB = false
