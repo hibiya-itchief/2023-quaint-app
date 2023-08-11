@@ -9,6 +9,36 @@
             prepend-inner-icon="mdi-magnify"
             @input="SearchGroups($event)"
           ></v-text-field>
+          <v-menu offset-y>
+            <template #activator="{ on, attrs }">
+              <v-btn
+                outlined
+                color="black"
+                class="justify-end"
+                v-bind="attrs"
+                v-on="on"
+                ><v-icon>mdi-sort</v-icon></v-btn
+              >
+            </template>
+            <v-list>
+              <v-list-item @click="SortGroups('id', false)">
+                <v-list-item-title>団体ID(昇順)</v-list-item-title></v-list-item
+              ><v-list-item @click="SortGroups('id', true)">
+                <v-list-item-title
+                  >団体ID(降順)</v-list-item-title
+                > </v-list-item
+              ><v-list-item @click="SortGroups('groupname', false)">
+                <v-list-item-title>団体名(昇順)</v-list-item-title></v-list-item
+              ><v-list-item @click="SortGroups('groupname', true)">
+                <v-list-item-title>団体名(降順)</v-list-item-title></v-list-item
+              ><v-list-item @click="SortGroups('title', false)">
+                <v-list-item-title>演目名(昇順)</v-list-item-title></v-list-item
+              ><v-list-item @click="SortGroups('title', true)">
+                <v-list-item-title>演目名(降順)</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+
           <p v-show="searchB" class="ma-0 pa-0 text-caption">
             "{{ search_query }}"の検索結果({{ search_result_number }}件)
           </p>
@@ -182,7 +212,7 @@ export default Vue.extend({
     }
   },
   created() {
-    this.SortGroups('id', false)
+    this.SortGroups('groupname', false)
   },
 
   methods: {
