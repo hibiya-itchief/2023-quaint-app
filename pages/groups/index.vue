@@ -4,6 +4,7 @@
       <v-row justify="center">
         <v-col class="mt-2 mb-0 py-0" cols="12">
           <v-text-field
+            v-model="search_query"
             solo
             label="検索"
             prepend-inner-icon="mdi-magnify"
@@ -159,6 +160,7 @@ type Data = {
   searchB: boolean
   search_query: string
   tag_query: string
+  query_cache: any
   search_result_number: number
   selectedTag: Tag | undefined | null
 }
@@ -184,6 +186,7 @@ export default Vue.extend({
       searchB: false,
       search_query: '',
       tag_query: '',
+      query_cache: undefined,
     }
   },
   head() {
@@ -213,18 +216,42 @@ export default Vue.extend({
     const query = this.$route.query.tag
     if (typeof query === 'undefined') {
       this.tag_query = 'all'
-    } else if (typeof query !== 'string') {
-      console.error('Error found')
-    } else {
+      this.selectedTag = undefined
+    } else if (query === 'favorite') {
+      this.tag_query = 'favorite'
+      this.selectedTag = null
+    } else if (typeof query === 'string') {
       this.tag_query = query
+      for (let i = 0; i < this.tags.length; i++) {
+        if (query === this.tags[i].tagname) {
+          this.selectedTag = this.tags[i]
+          break
+        }
+      }
+    }
+    if (typeof this.$route.query.search === 'string') {
+      this.SearchGroups(this.$route.query.search)
     }
   },
 
   methods: {
     SearchGroups(input: string) {
+      this.$router.push({ query: { search: input } })
       if (input === '') {
         this.searchB = false
+        if (this.query_cache === undefined) {
+          this.$router.push({ query: {} })
+        } else if (this.query_cache === null) {
+          this.$router.push({ query: { tag: 'favorite' } })
+          this.query_cache = undefined
+        } else {
+          this.$router.push({ query: { tag: this.query_cache } })
+          this.query_cache = undefined
+        }
       } else {
+        if (this.$route.query.tag !== undefined) {
+          this.query_cache = this.$route.query.tag
+        }
         this.selectedTag = undefined
         this.search_query = input
         this.searchB = true
