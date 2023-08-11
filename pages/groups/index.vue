@@ -177,7 +177,6 @@ export default Vue.extend({
           content:
             '参加団体一覧 - 日比谷高校星陵祭公式サイト 各クラスが長い時間をかけて準備した演劇や個性豊かな有志団体の発表など、次に見たい公演を探すことが出来ます。',
         },
-        { hid: 'og:image', property: 'og:image', content: '/ogpimage.png' },
       ],
     }
   },

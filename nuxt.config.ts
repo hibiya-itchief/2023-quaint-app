@@ -47,7 +47,11 @@ const nuxtConfig: NuxtConfig = {
         content:
           '令和５年度　第48回星陵祭　9月16日(土)、17日(日)開催　今年度の星陵祭は、4年ぶりの通常開催です！テーマは祭徠。日比谷のお祭りをみんなで盛り上げましょう！皆様のご来場を心よりお待ち申し上げております。',
       },
-      { hid: 'og:image', property: 'og:image', content: '/ogpimage.png' },
+      {
+        hid: 'og:image',
+        property: 'og:image',
+        content: 'https://2023.seiryofes.com/ogpimage.png',
+      },
       {
         hid: 'og:site_name',
         property: 'og:site_name',
@@ -56,6 +60,11 @@ const nuxtConfig: NuxtConfig = {
       { hid: 'og:type', property: 'og:type', content: 'website' },
       { name: 'twitter:card', content: 'summary_large_image' },
       { name: 'twitter:site', content: '@hibiya_IT' },
+      {
+        hid: 'twitter:image',
+        name: 'twitter:image',
+        content: 'https://2023.seiryofes.com/ogpimage.png',
+      },
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },

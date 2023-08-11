@@ -413,6 +413,11 @@ export default Vue.extend({
           property: 'og:image',
           content: this.group?.public_thumbnail_image_url,
         },
+        {
+          hid: 'twitter:image',
+          property: 'twitter:image',
+          content: this.group?.public_thumbnail_image_url,
+        },
       ],
     }
   },
