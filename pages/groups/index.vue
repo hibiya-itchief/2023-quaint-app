@@ -15,20 +15,42 @@
 
           <v-chip-group
             v-show="!searchB"
+            v-model="tag_query"
             active-class="primary--text"
             column
             mandatory
           >
-            <v-chip filter @click="selectedTag = undefined"> すべて </v-chip>
+            <v-chip
+              :value="'all'"
+              filter
+              @click="
+                $router.push({ query: {} })
+                selectedTag = undefined
+              "
+            >
+              すべて
+            </v-chip>
             <v-chip
               v-for="tag in tags"
               :key="tag.id"
+              :value="tag.tagname"
               filter
-              @click="selectedTag = tag"
+              @click="
+                $router.push({ query: { tag: tag.tagname } })
+                selectedTag = tag
+              "
               >{{ tag.tagname }}</v-chip
             >
             <v-divider vertical :thickness="10" class="mx-2 px-0"></v-divider>
-            <v-chip filter class="ml-1" @click="selectedTag = null">
+            <v-chip
+              :value="'favorite'"
+              filter
+              class="ml-1"
+              @click="
+                $router.push({ query: { tag: 'favorite' } })
+                selectedTag = null
+              "
+            >
               お気に入り
             </v-chip>
           </v-chip-group>
@@ -136,6 +158,7 @@ type Data = {
   groups: Group[]
   searchB: boolean
   search_query: string
+  tag_query: string
   search_result_number: number
   selectedTag: Tag | undefined | null
 }
@@ -160,6 +183,7 @@ export default Vue.extend({
       search_result_number: 0,
       searchB: false,
       search_query: '',
+      tag_query: '',
     }
   },
   head() {
@@ -181,9 +205,19 @@ export default Vue.extend({
       ],
     }
   },
-  created() {
+  mounted() {
     // 毎回同じ順番で表示されないようにgroupsの配列をランダムな順番にする
     // 各groupが有しているtagをAPIから取得し，groups配列の中のオブジェクトに"tags"というキーを設けてgroupsとtagsの情報を結びつけている。
+  },
+  created() {
+    const query = this.$route.query.tag
+    if (typeof query === 'undefined') {
+      this.tag_query = 'all'
+    } else if (typeof query !== 'string') {
+      console.error('Error found')
+    } else {
+      this.tag_query = query
+    }
   },
 
   methods: {
