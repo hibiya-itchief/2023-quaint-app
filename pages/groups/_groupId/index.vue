@@ -585,7 +585,9 @@ isToday(
         )
         .then(() => {
           this.success_message =
-            '整理券を取得できました！「整理券」タブから確認してください'
+            '整理券を取得できました！<a :href="' +
+            '/tickets' +
+            '">「整理券」タブ</a>から確認してください'
           this.success_alert = true
         })
         .catch((e) => {
