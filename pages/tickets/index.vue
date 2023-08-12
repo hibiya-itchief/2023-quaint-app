@@ -275,9 +275,24 @@
       </v-row>
       <v-snackbar v-model="success_alert" color="success" elevation="2">
         {{ success_message }}
+        <template #action="{ attrs }">
+          <v-btn
+            color="white"
+            icon
+            v-bind="attrs"
+            @click="success_alert = false"
+          >
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </template>
       </v-snackbar>
       <v-snackbar v-model="error_alert" color="red" elevation="2">
         {{ error_message }}
+        <template #action="{ attrs }">
+          <v-btn color="white" icon v-bind="attrs" @click="error_alert = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </template>
       </v-snackbar>
     </v-container>
   </v-app>
