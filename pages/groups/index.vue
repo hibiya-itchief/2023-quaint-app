@@ -233,11 +233,6 @@ export default Vue.extend({
 
   methods: {
     SortGroups(sort: 'id' | 'groupname' | 'title', reverse: boolean) {
-      for (let i = 0; i < this.groups.length; i++) {
-        if (this.groups[i].title === null) {
-          this.groups[i].title = ''
-        }
-      }
       this.groups.sort((x, y) => {
         return (x[sort] ?? '') > (y[sort] ?? '') ? 1 : -1
       })
