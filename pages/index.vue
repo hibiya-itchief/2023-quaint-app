@@ -37,14 +37,14 @@
       </v-col>
 
       <v-col cols="10" md="5" sm="10"
-        ><v-card class="my-auto" to="/groups/">
+        ><v-card class="my-auto" to="/groups">
           <div>
             <v-card-title><v-icon>mdi-magnify</v-icon>公演一覧</v-card-title>
           </div>
         </v-card></v-col
       >
       <v-col cols="10" md="5" sm="10"
-        ><v-card class="my-auto" to="/tickets/">
+        ><v-card class="my-auto" to="/tickets">
           <div>
             <v-card-title
               ><v-icon>mdi-ticket</v-icon>あなたの整理券</v-card-title
