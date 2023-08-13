@@ -4,6 +4,7 @@
       <v-row justify="center">
         <v-col class="mt-2 mb-0 py-0" cols="12">
           <v-text-field
+            v-model="search_query"
             solo
             label="検索"
             prepend-inner-icon="mdi-magnify"
@@ -15,20 +16,42 @@
 
           <v-chip-group
             v-show="!searchB"
+            v-model="tag_query"
             active-class="primary--text"
             column
             mandatory
           >
-            <v-chip filter @click="selectedTag = undefined"> すべて </v-chip>
+            <v-chip
+              :value="'all'"
+              filter
+              @click="
+                $router.push({ query: {} })
+                selectedTag = undefined
+              "
+            >
+              すべて
+            </v-chip>
             <v-chip
               v-for="tag in tags"
               :key="tag.id"
+              :value="tag.tagname"
               filter
-              @click="selectedTag = tag"
+              @click="
+                $router.push({ query: { tag: tag.tagname } })
+                selectedTag = tag
+              "
               >{{ tag.tagname }}</v-chip
             >
             <v-divider vertical :thickness="10" class="mx-2 px-0"></v-divider>
-            <v-chip filter class="ml-1" @click="selectedTag = null">
+            <v-chip
+              :value="'favorite'"
+              filter
+              class="ml-1"
+              @click="
+                $router.push({ query: { tag: 'favorite' } })
+                selectedTag = null
+              "
+            >
               お気に入り
             </v-chip>
           </v-chip-group>
@@ -136,6 +159,8 @@ type Data = {
   groups: Group[]
   searchB: boolean
   search_query: string
+  tag_query: string
+  query_cache: any
   search_result_number: number
   selectedTag: Tag | undefined | null
 }
@@ -160,6 +185,8 @@ export default Vue.extend({
       search_result_number: 0,
       searchB: false,
       search_query: '',
+      tag_query: '',
+      query_cache: undefined,
     }
   },
   head() {
@@ -180,16 +207,50 @@ export default Vue.extend({
       ],
     }
   },
-  created() {
+  mounted() {
     // 毎回同じ順番で表示されないようにgroupsの配列をランダムな順番にする
     // 各groupが有しているtagをAPIから取得し，groups配列の中のオブジェクトに"tags"というキーを設けてgroupsとtagsの情報を結びつけている。
+  },
+  created() {
+    const query = this.$route.query.tag
+    if (typeof query === 'undefined') {
+      this.tag_query = 'all'
+      this.selectedTag = undefined
+    } else if (query === 'favorite') {
+      this.tag_query = 'favorite'
+      this.selectedTag = null
+    } else if (typeof query === 'string') {
+      this.tag_query = query
+      for (let i = 0; i < this.tags.length; i++) {
+        if (query === this.tags[i].tagname) {
+          this.selectedTag = this.tags[i]
+          break
+        }
+      }
+    }
+    if (typeof this.$route.query.search === 'string') {
+      this.SearchGroups(this.$route.query.search)
+    }
   },
 
   methods: {
     SearchGroups(input: string) {
+      this.$router.push({ query: { search: input } })
       if (input === '') {
         this.searchB = false
+        if (this.query_cache === undefined) {
+          this.$router.push({ query: {} })
+        } else if (this.query_cache === null) {
+          this.$router.push({ query: { tag: 'favorite' } })
+          this.query_cache = undefined
+        } else {
+          this.$router.push({ query: { tag: this.query_cache } })
+          this.query_cache = undefined
+        }
       } else {
+        if (this.$route.query.tag !== undefined) {
+          this.query_cache = this.$route.query.tag
+        }
         this.selectedTag = undefined
         this.search_query = input
         this.searchB = true
