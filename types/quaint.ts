@@ -42,6 +42,8 @@ export type Event = {
   lottery: boolean
 }
 export type Ticket = {
+  [x: string]: string
+  [x: string]: string
   group_id: string
   event_id: string
   owner_id: string
@@ -49,5 +51,5 @@ export type Ticket = {
   person: number
   id: string
   created_at: string
-  is_used: boolean
+  status: string
 }
