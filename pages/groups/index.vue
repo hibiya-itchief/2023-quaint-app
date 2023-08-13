@@ -207,11 +207,9 @@ export default Vue.extend({
       ],
     }
   },
-  mounted() {
-    // 毎回同じ順番で表示されないようにgroupsの配列をランダムな順番にする
-    // 各groupが有しているtagをAPIから取得し，groups配列の中のオブジェクトに"tags"というキーを設けてgroupsとtagsの情報を結びつけている。
-  },
   created() {
+    this.SortGroups('id', false)
+
     const query = this.$route.query.tag
     if (typeof query === 'undefined') {
       this.tag_query = 'all'
@@ -234,6 +232,15 @@ export default Vue.extend({
   },
 
   methods: {
+    SortGroups(sort: 'id' | 'groupname' | 'title', reverse: boolean) {
+      this.groups.sort((x, y) => {
+        return (x[sort] ?? '') > (y[sort] ?? '') ? 1 : -1
+      })
+      if (reverse === true) {
+        this.groups.reverse()
+      }
+    },
+
     SearchGroups(input: string) {
       this.$router.push({ query: { search: input } })
       if (input === '') {
