@@ -297,27 +297,36 @@
           </v-card>
         </v-col>
       </v-row>
-      <v-snackbar v-model="success_alert" color="success" elevation="2">
-        {{ success_message }}
-        <template #action="{ attrs }">
-          <v-btn
-            color="white"
-            icon
-            v-bind="attrs"
-            @click="success_alert = false"
-          >
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </template>
-      </v-snackbar>
-      <v-snackbar v-model="error_alert" color="red" elevation="2">
-        {{ error_message }}
-        <template #action="{ attrs }">
-          <v-btn color="white" icon v-bind="attrs" @click="error_alert = false">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </template>
-      </v-snackbar>
+      <a :href="snackbar_link">
+        <v-snackbar v-model="success_alert" color="success" elevation="2">
+          {{ success_message }}
+          <template #action="{ attrs }">
+            <v-btn
+              color="white"
+              icon
+              v-bind="attrs"
+              @click="success_alert = false"
+            >
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </template>
+        </v-snackbar>
+      </a>
+      <a :href="snackbar_link">
+        <v-snackbar v-model="error_alert" color="red" elevation="2">
+          {{ error_message }}
+          <template #action="{ attrs }">
+            <v-btn
+              color="white"
+              icon
+              v-bind="attrs"
+              @click="error_alert = false"
+            >
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </template>
+        </v-snackbar>
+      </a>
     </v-container>
   </v-app>
 </template>
@@ -338,6 +347,7 @@ type Data = {
   success_message: string
   error_message: string
   dialog: boolean
+  snackbar_link: string | undefined
 
   ticket_person: number
   person_labels: any[]
@@ -383,6 +393,7 @@ export default Vue.extend({
       success_message: '',
       error_message: '',
       dialog: false,
+      snackbar_link: undefined,
       displayFavorite: 0,
       listStock: [],
       listTakenTickets: [],
@@ -569,6 +580,7 @@ isToday(
     async CreateTicket(event: Event, person: number) {
       if (!this.$auth.loggedIn) {
         this.error_message = '整理券の取得にはログインが必要です'
+        this.snackbar_link = '/login'
         this.error_alert = true
         return 1
       }
@@ -585,9 +597,8 @@ isToday(
         )
         .then(() => {
           this.success_message =
-            '整理券を取得できました！<a :href="' +
-            '/tickets' +
-            '">「整理券」タブ</a>から確認してください'
+            '整理券を取得できました！「整理券」タブから確認してください'
+          this.snackbar_link = '/tickets'
           this.success_alert = true
         })
         .catch((e) => {
@@ -597,6 +608,7 @@ isToday(
             this.error_message =
               '予期せぬエラーが発生しました。IT部隊にお声がけください🙇‍♂️'
           }
+          this.snackbar_link = undefined
           this.error_alert = true
         })
     },
@@ -606,9 +618,11 @@ isToday(
         new Date(event.sell_ends) < new Date()
       ) {
         this.error_message = '配布時間外です'
+        this.snackbar_link = undefined
         this.error_alert = true
       } else if (!this.$auth.loggedIn) {
         this.error_message = '整理券の取得にはログインが必要です'
+        this.snackbar_link = '/login'
         this.error_alert = true
       } else {
         this.selected_event = event
