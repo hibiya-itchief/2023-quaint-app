@@ -329,7 +329,12 @@ type Data = {
   group: Group | undefined
   events: Event[]
   selected_event: Event | null
-  userGroups: { admin: string; owner: string }
+  userGroups: {
+    admin: string
+    owner: string
+    students: string
+    parents: string
+  }
   videoViewer: boolean
   streamVideoId: string
   editable: boolean
@@ -363,6 +368,8 @@ export default Vue.extend({
       userGroups: {
         admin: process.env.AZURE_AD_GROUPS_QUAINT_ADMIN as string,
         owner: process.env.AZURE_AD_GROUPS_QUAINT_OWNER as string,
+        students: process.env.AZURE_AD_GROUPS_QUAINT_STUDENTS as string,
+        parents: process.env.AZURE_AD_GROUPS_QUAINT_PARENTS as string,
       },
       videoViewer: false,
       group: undefined,
