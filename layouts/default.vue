@@ -69,6 +69,14 @@
               </p>
             </v-card-text>
             <v-card-actions>
+              <v-btn
+                v-show="$auth.user?.groups?.includes(userGroups.admin)"
+                outlined
+                color="primary"
+                to="/admin"
+              >
+                管理者用画面
+              </v-btn>
               <v-spacer></v-spacer>
               <v-btn outlined color="primary" @click="logout()">
                 ログアウト
@@ -151,14 +159,6 @@
       <v-btn to="/tickets">
         <span>整理券</span>
         <v-icon>mdi-ticket</v-icon>
-      </v-btn>
-
-      <v-btn
-        v-show="$auth.user?.groups?.includes(userGroups.admin)"
-        to="/admin"
-      >
-        <span>👑Admin</span>
-        <v-icon>mdi-crown</v-icon>
       </v-btn>
     </v-bottom-navigation>
   </v-app>
