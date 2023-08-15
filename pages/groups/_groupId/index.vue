@@ -297,36 +297,41 @@
           </v-card>
         </v-col>
       </v-row>
-      <a :href="success_snackbar_link">
-        <v-snackbar v-model="success_alert" color="success" elevation="2">
-          {{ success_message }}
-          <template #action="{ attrs }">
-            <v-btn
-              color="white"
-              icon
-              v-bind="attrs"
-              @click="success_alert = false"
-            >
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
-          </template>
-        </v-snackbar>
-      </a>
-      <a :href="error_snackbar_link">
-        <v-snackbar v-model="error_alert" color="red" elevation="2">
-          {{ error_message }}
-          <template #action="{ attrs }">
-            <v-btn
-              color="white"
-              icon
-              v-bind="attrs"
-              @click="error_alert = false"
-            >
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
-          </template>
-        </v-snackbar>
-      </a>
+      <v-snackbar v-model="success_alert" color="success" elevation="2">
+        {{ success_message }}
+        <a
+          v-show="success_snackbar_link"
+          :href="success_snackbar_link"
+          class="link-snackbar"
+        >
+          取得した整理券を表示
+        </a>
+        <template #action="{ attrs }">
+          <v-btn
+            color="white"
+            icon
+            v-bind="attrs"
+            @click="success_alert = false"
+          >
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </template>
+      </v-snackbar>
+      <v-snackbar v-model="error_alert" color="red" elevation="2">
+        {{ error_message }}
+        <a
+          v-show="error_snackbar_link"
+          :href="error_snackbar_link"
+          class="link-snackbar"
+        >
+          ログイン
+        </a>
+        <template #action="{ attrs }">
+          <v-btn color="white" icon v-bind="attrs" @click="error_alert = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </template>
+      </v-snackbar>
     </v-container>
   </v-app>
 </template>
@@ -581,7 +586,7 @@ isToday(
     },
     async CreateTicket(event: Event, person: number) {
       if (!this.$auth.loggedIn) {
-        this.error_message = '整理券の取得にはログインが必要です'
+        this.error_message = '整理券の取得には'
         this.error_snackbar_link = '/login'
         this.error_alert = true
         return 1
@@ -598,8 +603,7 @@ isToday(
             person
         )
         .then(() => {
-          this.success_message =
-            '整理券を取得できました！「整理券」タブから確認してください'
+          this.success_message = '整理券を取得できました！'
           this.success_snackbar_link = '/tickets'
           this.success_alert = true
         })
@@ -623,7 +627,7 @@ isToday(
         this.error_snackbar_link = undefined
         this.error_alert = true
       } else if (!this.$auth.loggedIn) {
-        this.error_message = '整理券の取得にはログインが必要です'
+        this.error_message = '整理券の取得には'
         this.error_snackbar_link = '/login'
         this.error_alert = true
       } else {
@@ -635,3 +639,11 @@ isToday(
   },
 })
 </script>
+<style>
+a.link-snackbar {
+  color: white;
+  font-weight: bold;
+  text-decoration: underline;
+  text-decoration-color: white;
+}
+</style>
