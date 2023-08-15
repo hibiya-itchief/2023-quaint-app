@@ -58,9 +58,7 @@
             <div>
               <v-card-title>まだ整理券を取得していません</v-card-title>
               <v-card-actions>
-                <v-btn :href="'/groups'" block
-                  >次に見たい公演を探しに行きましょう✨</v-btn
-                >
+                <v-btn :href="'/groups'" block>公演を探す</v-btn>
               </v-card-actions>
             </div>
           </v-card>
