@@ -2,14 +2,45 @@
   <v-app>
     <v-container>
       <v-row justify="center">
-        <v-col class="mt-2 mb-0 py-0" cols="12">
+        <v-col class="mt-2 mb-0 py-0" cols="12" sm="8" md="8">
           <v-text-field
             v-model="search_query"
             solo
             label="検索"
             prepend-inner-icon="mdi-magnify"
             @input="SearchGroups($event)"
-          ></v-text-field>
+            ><template #append-outer>
+              <v-icon
+                v-if="$vuetify.breakpoint.xs"
+                class="mx-2"
+                @click="dialog = true"
+              >
+                mdi-tune</v-icon
+              >
+              <v-icon v-else class="mx-5" @click="dialog = true">
+                mdi-tune</v-icon
+              >
+            </template></v-text-field
+          >
+        </v-col>
+
+        <v-dialog v-model="dialog" transition="fade-transition"
+          ><v-card class="pa-2">
+            <v-card-title
+              >表示設定
+              <v-spacer />
+              <v-icon @click.stop="dialog = false">mdi-close</v-icon>
+              <!--v-card-actionsが必要かも--></v-card-title
+            >
+
+            <v-card-subtitle class="pt-5 pb-0"> クラス劇 </v-card-subtitle>
+            <v-card-subtitle class="pt-5 pb-0"> 有志団体 </v-card-subtitle>
+            <v-card-subtitle class="pt-5 pb-0"> 展示 </v-card-subtitle>
+            <v-card-subtitle class="pt-5 pb-0"> 階別 </v-card-subtitle>
+            <v-card-subtitle class="pt-5 pb-0"> 表示順 </v-card-subtitle>
+          </v-card></v-dialog
+        >
+        <v-col class="mt-2 mb-0 py-0" cols="12" sm="8" md="8">
           <p v-show="searchB" class="ma-0 pa-0 text-caption">
             "{{ search_query }}"の検索結果({{ search_result_number }}件)
           </p>
@@ -157,6 +188,7 @@ type Data = {
   nowloading: boolean
   tags: Tag[]
   groups: Group[]
+  dialog: boolean
   searchB: boolean
   search_query: string
   tag_query: string
@@ -181,6 +213,7 @@ export default Vue.extend({
       nowloading: true,
       tags: [],
       groups: [],
+      dialog: false,
       selectedTag: undefined,
       search_result_number: 0,
       searchB: false,
