@@ -169,6 +169,7 @@
               ><v-icon>mdi-reload</v-icon>再読み込み</v-btn
             >
             <div v-for="(event, index) in events" :key="event.id">
+              <!--下v-cardにv-if="（ログイン中のユーザ）＝event.target"みたいにしたい．-->
               <v-card
                 class="ma-2 d-flex"
                 :disabled="
