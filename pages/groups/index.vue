@@ -9,6 +9,11 @@
             label="検索"
             prepend-inner-icon="mdi-magnify"
             @input="SearchGroups($event)"
+            @blur="
+              const search_query_q =
+                search_query === '' ? undefined : search_query
+              PushQuery(search_query_q, null, null, null)
+            "
             ><template #append-outer>
               <v-icon
                 v-if="$vuetify.breakpoint.xs"
@@ -131,51 +136,6 @@
           <p v-show="searchB" class="ma-0 pa-0 text-caption">
             "{{ search_query }}"の検索結果({{ search_result_number }}件)
           </p>
-
-          <!--
-
-          <v-chip-group
-            v-show="!searchB"
-            v-model="tag_query"
-            active-class="primary--text"
-            column
-            mandatory
-          >
-            <v-chip
-              :value="'all'"
-              filter
-              @click="
-                $router.push({ query: {} })
-                selectedTag = undefined
-              "
-            >
-              すべて
-            </v-chip>
-            <v-chip
-              v-for="tag in tags"
-              :key="tag.id"
-              :value="tag.tagname"
-              filter
-              @click="
-                $router.push({ query: { tag: tag.tagname } })
-                selectedTag = tag
-              "
-              >{{ tag.tagname }}</v-chip
-            >
-            <v-divider vertical :thickness="10" class="mx-2 px-0"></v-divider>
-            <v-chip
-              :value="'favorite'"
-              filter
-              class="ml-1"
-              @click="
-                $router.push({ query: { tag: 'favorite' } })
-                selectedTag = null
-              "
-            >
-              お気に入り
-            </v-chip>
-          </v-chip-group>
-        -->
         </v-col>
 
         <v-col class="my-0 py-0" cols="12">
@@ -281,7 +241,6 @@ type Data = {
   dialog: boolean
   searchB: boolean
   search_query: string
-  tag_query: string
   sort_displayname: string
   query_cache: any
   search_result_number: number
@@ -309,7 +268,6 @@ export default Vue.extend({
       search_result_number: 0,
       searchB: false,
       search_query: '',
-      tag_query: '',
       sort_displayname: '',
       query_cache: undefined,
     }
@@ -338,26 +296,24 @@ export default Vue.extend({
         ? this.$route.query.s
         : 'id'
     const query_r = this.$route.query.r === 'true'
-    this.SortGroups(query_s, query_r)
+    this.SortGroups(query_s, query_r) // クエリパラメータを見てSortGroupsを実行
 
-    const query = this.$route.query.t // クエリパラメータを見てtag_queryとselectedTagを再現
-    if (query === undefined) {
-      this.tag_query = 'all'
+    const query_t = this.$route.query.t // query_tは見やすくするためだけに定義
+    // クエリパラメータを見てselectedTagを再現
+    if (query_t === undefined) {
       this.selectedTag = undefined
-    } else if (query === 'favorite') {
-      this.tag_query = 'favorite'
+    } else if (query_t === 'favorite') {
       this.selectedTag = null
-    } else if (typeof query === 'string') {
-      this.tag_query = query
+    } else if (typeof query_t === 'string') {
       for (let i = 0; i < this.tags.length; i++) {
-        if (query === this.tags[i].tagname) {
+        if (query_t === this.tags[i].tagname) {
           this.selectedTag = this.tags[i]
           break
         }
       }
     }
 
-    // クエリパラメータを見て検索バー内を再現
+    // クエリパラメータを見て検索バー内の文字列を再現
     if (typeof this.$route.query.q === 'string') {
       this.SearchGroups(this.$route.query.q)
     }
@@ -369,7 +325,7 @@ export default Vue.extend({
       T = T === null ? this.$route.query.t : T
       S = S === null ? this.$route.query.s : S
       R = R === null ? this.$route.query.r : R
-      this.$router.push({ query: { q: Q, t: T, s: S, r: R } })
+      this.$router.push({ query: { q: Q, t: T, s: S, r: R } }) // nullは「現在のクエリを維持」と同義
     },
     SortGroups(sort: 'id' | 'groupname' | 'title', reverse: boolean) {
       if (sort === 'id') {
@@ -394,7 +350,6 @@ export default Vue.extend({
     },
 
     SearchGroups(input: string) {
-      this.PushQuery(input, null, null, null)
       if (input === '') {
         this.searchB = false
         if (this.query_cache === undefined) {
