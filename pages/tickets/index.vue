@@ -147,6 +147,7 @@
                 :key="ticketInfo.ticket.id"
                 focusable
               >
+                <!--activeな整理券のみ表示．キャンセル済み整理券は表示されない-->
                 <div v-if="ticketInfo.ticket.status == 'active'">
                   <v-expansion-panel-header class="pa-3">
                     <v-list-item>
