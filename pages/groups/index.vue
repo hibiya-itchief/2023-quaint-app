@@ -8,7 +8,7 @@
             solo
             label="検索"
             prepend-inner-icon="mdi-magnify"
-            @input="SearchGroups($event)"
+            @input="SearchGroups()"
             @blur="
               const search_query_q =
                 search_query === '' ? undefined : search_query
@@ -31,19 +31,23 @@
 
         <v-dialog v-model="dialog" transition="fade-transition" max-width="500"
           ><v-card class="pa-2">
-            <v-card-title>表示設定 </v-card-title>
+            <v-card-title>表示設定</v-card-title>
+            <v-card-subtitle class="pt-2"
+              >注：検索中はすべての団体が対象となります。</v-card-subtitle
+            >
 
             <div>
               <span
-                class="pl-6 pr-8 pt-5 pb-0 grey--text text--darken-3 text-subtitle-1"
+                class="pl-6 pr-2 pt-5 pb-0 grey--text text--darken-3 text-subtitle-1"
                 >団体の種類</span
               >
               <v-menu offset-y>
                 <template #activator="{ on, attrs }">
                   <v-btn
+                    :disabled="search_query !== ''"
                     text
                     width="200"
-                    class="text-subtitle-1 text-capitalize"
+                    class="ml-6 text-subtitle-1 text-capitalize"
                     v-bind="attrs"
                     v-on="on"
                     ><span v-if="selectedTag !== null">{{
@@ -85,7 +89,7 @@
 
             <div>
               <span
-                class="pl-6 pr-16 pt-5 pb-0 grey--text text--darken-3 text-subtitle-1"
+                class="pl-6 pr-10 pt-5 pb-0 grey--text text--darken-3 text-subtitle-1"
                 >表示順</span
               >
               <v-menu offset-y>
@@ -93,7 +97,7 @@
                   <v-btn
                     text
                     width="200"
-                    class="text-subtitle-1 text-capitalize"
+                    class="ml-6 text-subtitle-1 text-capitalize"
                     v-bind="attrs"
                     v-on="on"
                     >{{ sort_displayname }} <v-spacer /><v-icon
@@ -133,7 +137,7 @@
           ></v-dialog
         >
         <v-col class="mt-2 mb-0 py-0" cols="12" sm="8" md="8">
-          <p v-show="searchB" class="ma-0 pa-0 text-caption">
+          <p v-show="search_query !== ''" class="ma-0 pa-0 text-caption">
             "{{ search_query }}"の検索結果({{ search_result_number }}件)
           </p>
         </v-col>
@@ -239,7 +243,6 @@ type Data = {
   tags: Tag[]
   groups: Group[]
   dialog: boolean
-  searchB: boolean
   search_query: string
   sort_displayname: string
   query_cache: any
@@ -266,7 +269,6 @@ export default Vue.extend({
       dialog: false,
       selectedTag: undefined,
       search_result_number: 0,
-      searchB: false,
       search_query: '',
       sort_displayname: '',
       query_cache: undefined,
@@ -291,6 +293,13 @@ export default Vue.extend({
     }
   },
   created() {
+    // クエリパラメータを見て検索バー内の文字列を再現など
+    if (typeof this.$route.query.q === 'string') {
+      this.search_query = this.$route.query.q
+      this.PushQuery(null, undefined, null, null)
+      this.SearchGroups()
+    }
+
     const query_s =
       this.$route.query.s === 'groupname' || this.$route.query.s === 'title'
         ? this.$route.query.s
@@ -311,11 +320,6 @@ export default Vue.extend({
           break
         }
       }
-    }
-
-    // クエリパラメータを見て検索バー内の文字列を再現
-    if (typeof this.$route.query.q === 'string') {
-      this.SearchGroups(this.$route.query.q)
     }
   },
 
@@ -349,25 +353,23 @@ export default Vue.extend({
       }
     },
 
-    SearchGroups(input: string) {
-      if (input === '') {
-        this.searchB = false
-        if (this.query_cache === undefined) {
-          this.PushQuery(null, undefined, null, null)
-        } else if (this.query_cache === null) {
-          this.PushQuery(null, 'favorite', null, null)
-          this.query_cache = undefined
+    SearchGroups() {
+      if (this.search_query === '') {
+        this.selectedTag = this.query_cache
+        this.query_cache = undefined
+        if (this.selectedTag === undefined) {
+          this.PushQuery(undefined, undefined, null, null)
+        } else if (this.selectedTag === null) {
+          this.PushQuery(undefined, 'favorite', null, null)
         } else {
-          this.PushQuery(null, this.query_cache, null, null)
-          this.query_cache = undefined
+          this.PushQuery(undefined, this.selectedTag.tagname, null, null)
         }
       } else {
-        if (this.$route.query.t !== undefined) {
-          this.query_cache = this.$route.query.t
+        if (this.selectedTag !== undefined) {
+          this.query_cache = this.selectedTag
+          this.selectedTag = undefined
+          this.PushQuery(null, undefined, null, null)
         }
-        this.selectedTag = undefined
-        this.search_query = input
-        this.searchB = true
         this.search_result_number = 0
         for (let i = 0; i < this.groups.length; i++) {
           if (
@@ -391,7 +393,7 @@ export default Vue.extend({
     FilterGroups(group: Group) {
       if (this.selectedTag === undefined) {
         if (
-          !this.searchB ||
+          this.search_query === '' ||
           group.id.toLowerCase().includes(this.search_query.toLowerCase()) ||
           group.groupname
             .toLowerCase()
