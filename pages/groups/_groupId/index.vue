@@ -289,6 +289,8 @@
                 </v-card-actions>
               </v-card>
             </v-dialog>
+
+            <!--filteredEventsの長さが0の（表示する公演が無い）時，以下のメッセージを表示-->
             <v-col v-if="filteredEvents.length === 0" cols="12">
               <v-card disabled>
                 <v-card-title>現在選択できる公演はありません。</v-card-title>
