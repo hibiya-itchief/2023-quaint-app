@@ -24,26 +24,139 @@
           >
         </v-col>
 
-        <v-dialog v-model="dialog" transition="fade-transition"
+        <v-dialog v-model="dialog" transition="fade-transition" max-width="500"
           ><v-card class="pa-2">
-            <v-card-title
-              >表示設定
-              <v-spacer />
-              <v-icon @click.stop="dialog = false">mdi-close</v-icon>
-              <!--v-card-actionsが必要かも--></v-card-title
-            >
+            <v-card-title>表示設定 </v-card-title>
 
-            <v-card-subtitle class="pt-5 pb-0"> クラス劇 </v-card-subtitle>
-            <v-card-subtitle class="pt-5 pb-0"> 有志団体 </v-card-subtitle>
-            <v-card-subtitle class="pt-5 pb-0"> 展示 </v-card-subtitle>
-            <v-card-subtitle class="pt-5 pb-0"> 階別 </v-card-subtitle>
-            <v-card-subtitle class="pt-5 pb-0"> 表示順 </v-card-subtitle>
-          </v-card></v-dialog
+            <div>
+              <span
+                class="pl-6 pr-8 pt-5 pb-0 grey--text text--darken-3 text-subtitle-1"
+                >団体の種類</span
+              >
+              <v-menu offset-y>
+                <template #activator="{ on, attrs }">
+                  <v-btn
+                    text
+                    width="200"
+                    class="text-subtitle-1 text-capitalize"
+                    v-bind="attrs"
+                    v-on="on"
+                    ><span v-if="selectedTag !== null">{{
+                      selectedTag?.tagname ?? 'すべて'
+                    }}</span
+                    ><span v-else>お気に入り</span><v-spacer /><v-icon
+                      >mdi-chevron-down</v-icon
+                    ></v-btn
+                  >
+                </template>
+                <v-list>
+                  <v-list-item
+                    @click="
+                      $router.push({ query: {} })
+                      selectedTag = undefined
+                    "
+                    >すべて</v-list-item
+                  >
+                  <v-list-item
+                    v-for="tag in tags"
+                    :key="tag.id"
+                    :value="tag.tagname"
+                    @click="
+                      $router.push({ query: { tag: tag.tagname } })
+                      selectedTag = tag
+                    "
+                    >{{ tag.tagname }}</v-list-item
+                  >
+                  <v-list-item
+                    @click="
+                      $router.push({ query: { tag: 'favorite' } })
+                      selectedTag = null
+                    "
+                    >お気に入り</v-list-item
+                  >
+                </v-list>
+              </v-menu>
+            </div>
+
+            <div>
+              <span
+                class="pl-6 pr-16 pt-5 pb-0 grey--text text--darken-3 text-subtitle-1"
+                >表示順</span
+              >
+              <v-menu offset-y>
+                <template #activator="{ on, attrs }">
+                  <v-btn
+                    text
+                    width="200"
+                    class="text-subtitle-1 text-capitalize"
+                    v-bind="attrs"
+                    v-on="on"
+                    >{{ sort_displayname }} <v-spacer /><v-icon
+                      >mdi-chevron-down</v-icon
+                    ></v-btn
+                  >
+                </template>
+                <v-list>
+                  <v-list-item
+                    @click="
+                      sort_displayname = '団体ID(昇順)'
+                      SortGroups('id', false)
+                    "
+                    >団体ID(昇順)</v-list-item
+                  >
+                  <v-list-item
+                    @click="
+                      sort_displayname = '団体ID(降順)'
+                      SortGroups('id', true)
+                    "
+                    >団体ID(降順)</v-list-item
+                  >
+                  <v-list-item
+                    @click="
+                      sort_displayname = '団体名(昇順)'
+                      SortGroups('groupname', false)
+                    "
+                    >団体名(昇順)</v-list-item
+                  >
+                  <v-list-item
+                    @click="
+                      sort_displayname = '団体名(降順)'
+                      SortGroups('groupname', true)
+                    "
+                    >団体名(降順)</v-list-item
+                  >
+                  <v-list-item
+                    @click="
+                      sort_displayname = '演目名(昇順)'
+                      SortGroups('title', false)
+                    "
+                    >演目名(昇順)</v-list-item
+                  >
+                  <v-list-item
+                    @click="
+                      sort_displayname = '演目名(降順)'
+                      SortGroups('title', true)
+                    "
+                    >演目名(降順)</v-list-item
+                  >
+                </v-list>
+              </v-menu>
+            </div>
+
+            <v-card-actions>
+              <v-spacer />
+              <v-btn text @click.stop="dialog = false"
+                >閉じる</v-btn
+              ></v-card-actions
+            ></v-card
+          ></v-dialog
         >
         <v-col class="mt-2 mb-0 py-0" cols="12" sm="8" md="8">
           <p v-show="searchB" class="ma-0 pa-0 text-caption">
             "{{ search_query }}"の検索結果({{ search_result_number }}件)
           </p>
+
+          <!--
 
           <v-chip-group
             v-show="!searchB"
@@ -86,6 +199,7 @@
               お気に入り
             </v-chip>
           </v-chip-group>
+        -->
         </v-col>
 
         <v-col class="my-0 py-0" cols="12">
@@ -192,6 +306,7 @@ type Data = {
   searchB: boolean
   search_query: string
   tag_query: string
+  sort_displayname: string
   query_cache: any
   search_result_number: number
   selectedTag: Tag | undefined | null
@@ -219,6 +334,7 @@ export default Vue.extend({
       searchB: false,
       search_query: '',
       tag_query: '',
+      sort_displayname: '',
       query_cache: undefined,
     }
   },
@@ -241,6 +357,7 @@ export default Vue.extend({
     }
   },
   created() {
+    this.sort_displayname = '団体ID(昇順)'
     this.SortGroups('id', false)
 
     const query = this.$route.query.tag
