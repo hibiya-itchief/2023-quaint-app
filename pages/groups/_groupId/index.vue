@@ -168,7 +168,8 @@
             <v-btn class="ma-2" color="primary" @click="$nuxt.refresh()"
               ><v-icon>mdi-reload</v-icon>再読み込み</v-btn
             >
-            <div v-for="(event, index) in events" :key="event.id">
+            <div v-for="(event, index) in filteredEvents" :key="event.id">
+              <!--下のv-card内にv-if="$quaintUserRole(event.target, $auth.user)"を書けばユーザ属性に応じたeventのみが表示される-->
               <v-card
                 class="ma-2 d-flex"
                 :disabled="
@@ -292,7 +293,7 @@
                 </v-card-actions>
               </v-card>
             </v-dialog>
-            <v-col v-if="events.length === 0" cols="12">
+            <v-col v-if="filteredEvents.length === 0" cols="12">
               <v-card disabled>
                 <v-card-title>現在選択できる公演はありません。</v-card-title>
               </v-card>
@@ -340,6 +341,7 @@ type Data = {
   }
   group: Group | undefined
   events: Event[]
+  filteredEvents: Event[] //  ユーザ属性（e,g.students, parents）に合致し，当日公演がある整理券のみが格納される配列
   selected_event: Event | null
   videoViewer: boolean
   streamVideoId: string
@@ -363,10 +365,12 @@ export default Vue.extend({
   auth: false,
   async asyncData({ params, $axios, payload }): Promise<Partial<Data>> {
     const events = await $axios.$get('/groups/' + params.groupId + '/events')
+
     if (payload !== undefined) {
       return { group: payload, events }
     }
     const group = await $axios.$get('/groups/' + params.groupId)
+
     return { group, events }
   },
   data(): Data {
@@ -383,6 +387,7 @@ export default Vue.extend({
       videoViewer: false,
       group: undefined,
       events: [],
+      filteredEvents: [],
       selected_event: null,
       streamVideoId: '',
       editable: false, // 権限を持つユーザーがアクセスするとtrueになりページを編集できる
@@ -451,6 +456,7 @@ export default Vue.extend({
           )
         )
       }
+
       Promise.all(getTicketsInfo).then((ticketsInfo) => {
         for (let i = 0; i < ticketsInfo.length; i++) {
           this.listStock.push(ticketsInfo[i].stock)
@@ -458,6 +464,7 @@ export default Vue.extend({
         }
       })
     }
+
     // admin権限を持つ もしくは この団体にowner権限を持つユーザーがアクセスするとtrueになりページを編集できる
     // 実際に編集できるかどうかはAPIがJWTで認証するのでここはあくまでフロント側の制御
     if (this.$auth.user?.groups && Array.isArray(this.$auth.user?.groups)) {
@@ -482,8 +489,15 @@ export default Vue.extend({
       .catch(() => {
         this.view_count = 'エラー'
       })
-  },
 
+    //  全ての公演（events）から，ログイン中のユーザ属性（e.g.students,parents）に合致し，かつ当日の公演のみがfilteredEventsに格納される
+    this.filteredEvents = this.events.filter((val: Event[]) => {
+      return (
+        this.$quaintUserRole(val.target, this.$auth.user) &&
+        this.isToday(val.sell_starts, val.sell_ends, val.starts_at)
+      )
+    })
+  },
   methods: {
     IsFavorite(group: Group) {
       if (this.displayFavorite === 0) {
@@ -521,7 +535,6 @@ export default Vue.extend({
     // 配布日or公演日が今日かどうか判断するmethod
     // isTodayで整理券の表示を切り替えると，v-if="events.length === 0"が機能しなくなるので却下
     // 使い方：v-if="isToday(event.sell_starts, event.sell_ends, event.starts_at)"
-    /*
     isToday(
       inputSellStarts: string,
       inputSellEnds: string,
@@ -539,7 +552,6 @@ export default Vue.extend({
         return false
       }
     },
-    */
 
     // isAvailable: 整理券が配布時間内であればtrue，それ以外はfalseを返すmethod
     isAvailable(event: Event) {
