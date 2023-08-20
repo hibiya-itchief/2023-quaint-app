@@ -52,7 +52,7 @@
                 <v-list>
                   <v-list-item
                     @click="
-                      $router.push({ query: {} })
+                      PushQuery(null, undefined, null, null)
                       selectedTag = undefined
                     "
                     >すべて</v-list-item
@@ -62,14 +62,14 @@
                     :key="tag.id"
                     :value="tag.tagname"
                     @click="
-                      $router.push({ query: { tag: tag.tagname } })
+                      PushQuery(null, tag.tagname, null, null)
                       selectedTag = tag
                     "
                     >{{ tag.tagname }}</v-list-item
                   >
                   <v-list-item
                     @click="
-                      $router.push({ query: { tag: 'favorite' } })
+                      PushQuery(null, 'favorite', null, null)
                       selectedTag = null
                     "
                     >お気に入り</v-list-item
@@ -97,46 +97,22 @@
                   >
                 </template>
                 <v-list>
-                  <v-list-item
-                    @click="
-                      sort_displayname = '団体ID(昇順)'
-                      SortGroups('id', false)
-                    "
+                  <v-list-item @click="SortGroups('id', false)"
                     >団体ID(昇順)</v-list-item
                   >
-                  <v-list-item
-                    @click="
-                      sort_displayname = '団体ID(降順)'
-                      SortGroups('id', true)
-                    "
+                  <v-list-item @click="SortGroups('id', true)"
                     >団体ID(降順)</v-list-item
                   >
-                  <v-list-item
-                    @click="
-                      sort_displayname = '団体名(昇順)'
-                      SortGroups('groupname', false)
-                    "
+                  <v-list-item @click="SortGroups('groupname', false)"
                     >団体名(昇順)</v-list-item
                   >
-                  <v-list-item
-                    @click="
-                      sort_displayname = '団体名(降順)'
-                      SortGroups('groupname', true)
-                    "
+                  <v-list-item @click="SortGroups('groupname', true)"
                     >団体名(降順)</v-list-item
                   >
-                  <v-list-item
-                    @click="
-                      sort_displayname = '演目名(昇順)'
-                      SortGroups('title', false)
-                    "
+                  <v-list-item @click="SortGroups('title', false)"
                     >演目名(昇順)</v-list-item
                   >
-                  <v-list-item
-                    @click="
-                      sort_displayname = '演目名(降順)'
-                      SortGroups('title', true)
-                    "
+                  <v-list-item @click="SortGroups('title', true)"
                     >演目名(降順)</v-list-item
                   >
                 </v-list>
@@ -214,7 +190,7 @@
 
         <v-col
           v-for="group in groups"
-          v-show="filterGroups(group)"
+          v-show="FilterGroups(group)"
           :key="group.id"
           cols="12"
           sm="6"
@@ -357,11 +333,15 @@ export default Vue.extend({
     }
   },
   created() {
-    this.sort_displayname = '団体ID(昇順)'
-    this.SortGroups('id', false)
+    const query_s =
+      this.$route.query.s === 'groupname' || this.$route.query.s === 'title'
+        ? this.$route.query.s
+        : 'id'
+    const query_r = this.$route.query.r === 'true'
+    this.SortGroups(query_s, query_r)
 
-    const query = this.$route.query.tag
-    if (typeof query === 'undefined') {
+    const query = this.$route.query.t // クエリパラメータを見てtag_queryとselectedTagを再現
+    if (query === undefined) {
       this.tag_query = 'all'
       this.selectedTag = undefined
     } else if (query === 'favorite') {
@@ -376,37 +356,59 @@ export default Vue.extend({
         }
       }
     }
-    if (typeof this.$route.query.search === 'string') {
-      this.SearchGroups(this.$route.query.search)
+
+    // クエリパラメータを見て検索バー内を再現
+    if (typeof this.$route.query.q === 'string') {
+      this.SearchGroups(this.$route.query.q)
     }
   },
 
   methods: {
+    PushQuery(Q: any, T: any, S: any, R: any) {
+      Q = Q === null ? this.$route.query.q : Q
+      T = T === null ? this.$route.query.t : T
+      S = S === null ? this.$route.query.s : S
+      R = R === null ? this.$route.query.r : R
+      this.$router.push({ query: { q: Q, t: T, s: S, r: R } })
+    },
     SortGroups(sort: 'id' | 'groupname' | 'title', reverse: boolean) {
+      if (sort === 'id') {
+        this.sort_displayname = '団体ID'
+      } else if (sort === 'groupname') {
+        this.sort_displayname = '団体名'
+      } else {
+        this.sort_displayname = '演目名'
+      }
+      const sort_query = sort === 'id' ? undefined : sort
       this.groups.sort((x, y) => {
         return (x[sort] ?? '') > (y[sort] ?? '') ? 1 : -1
       })
       if (reverse === true) {
+        this.PushQuery(null, null, sort_query, reverse.toString())
+        this.sort_displayname = this.sort_displayname + '(降順)'
         this.groups.reverse()
+      } else {
+        this.PushQuery(null, null, sort_query, undefined)
+        this.sort_displayname = this.sort_displayname + '(昇順)'
       }
     },
 
     SearchGroups(input: string) {
-      this.$router.push({ query: { search: input } })
+      this.PushQuery(input, null, null, null)
       if (input === '') {
         this.searchB = false
         if (this.query_cache === undefined) {
-          this.$router.push({ query: {} })
+          this.PushQuery(null, undefined, null, null)
         } else if (this.query_cache === null) {
-          this.$router.push({ query: { tag: 'favorite' } })
+          this.PushQuery(null, 'favorite', null, null)
           this.query_cache = undefined
         } else {
-          this.$router.push({ query: { tag: this.query_cache } })
+          this.PushQuery(null, this.query_cache, null, null)
           this.query_cache = undefined
         }
       } else {
-        if (this.$route.query.tag !== undefined) {
-          this.query_cache = this.$route.query.tag
+        if (this.$route.query.t !== undefined) {
+          this.query_cache = this.$route.query.t
         }
         this.selectedTag = undefined
         this.search_query = input
@@ -431,7 +433,7 @@ export default Vue.extend({
       }
     },
 
-    filterGroups(group: Group) {
+    FilterGroups(group: Group) {
       if (this.selectedTag === undefined) {
         if (
           !this.searchB ||
