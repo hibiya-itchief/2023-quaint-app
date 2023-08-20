@@ -178,9 +178,6 @@
                 "
                 @click.stop="selectEvent(event)"
               >
-                <!--ここから開発用のメモ-->
-                <p>event.target={{ event.target }}</p>
-                <!--ここまで開発用のメモ-->
                 <div>
                   <v-card-text
                     class="pt-1 pb-0 mb-0 grey--text text--darken-2 text-caption"
