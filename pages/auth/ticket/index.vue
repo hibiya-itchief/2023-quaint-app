@@ -2,105 +2,70 @@
   <v-app>
     <v-container>
       <div justify="center">
-        <div>
-          <v-btn
-            v-if="!readCode"
-            elevation="0"
-            class="mb-6 mt-3"
-            @click="openCodeReader"
-            >QR コードを読み取る</v-btn
-          >
-        </div>
-        <div v-if="readCode">
+        <div class="qrcode-container" :class="status">
           <v-alert v-if="error != ''" dense type="error">
             {{ error }}
           </v-alert>
           <qrcode-stream @decode="onDecode" @init="onInit" />
         </div>
 
-        <div v-if="!readCode">
+        <div>
           <v-divider></v-divider>
-          <v-subheader>操作可能なチケットリスト</v-subheader>
-          <v-list-item v-for="(event, i) in events" :key="event.id">
-            <v-list-item-content
-              >{{ event.group_name }} -
-              {{ event.event_name }}</v-list-item-content
-            >
-            <v-list-item-action>
-              <v-btn
-                :disabled="event.is_used"
-                elevation="0"
-                color="primary"
-                small
-                @click="selected_item = i"
-                @click.stop="dialog = true"
-                >使用済みにする</v-btn
-              >
-            </v-list-item-action>
-          </v-list-item>
-          <v-dialog v-model="dialog" max-width="290">
-            <v-card>
-              <v-card-title class="text-h5"
-                >{{
-                  selected_item
-                }}を使用済みにしてもよろしいですか？</v-card-title
-              >
-              <v-card-text>このアクションは取り消せません</v-card-text>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn text @click="dialog = false">キャンセル</v-btn>
-                <v-btn
-                  color="primary"
-                  :loading="use_ticket_loading"
-                  text
-                  @click="useTicket(selected_item)"
-                  >使用済みにする</v-btn
-                >
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
+          <v-switch
+            v-model="without_confirm"
+            inset
+            label="読み込まれたら自動で使用済みにする(毎回手動で「使用済みにする」ボタンを押す必要が無くなります)"
+          ></v-switch>
+          <div class="status">
+            <div>
+              <v-icon>mdi-qrcode-scan</v-icon>
+            </div>
+            <div>
+              <v-icon>mdi-loading</v-icon>
+            </div>
+            <div>
+              <v-icon>mdi-ticket-confirmation</v-icon>
+            </div>
+          </div>
+
+          <v-btn
+            :disabled="without_confirm"
+            elevation="0"
+            color="primary"
+            small
+            @click.stop=""
+            >使用済みにする</v-btn
+          >
         </div>
       </div>
     </v-container>
   </v-app>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue'
+type Data = {
+  jwt: string
+  error: string
+  without_confirm: boolean
+  status: 'ready' | 'scanned' | 'confirmed' | 'used'
+}
+export default Vue.extend({
   name: 'QRCodeReader',
   auth: false,
-  data() {
+  data(): Data {
     return {
-      readCode: false,
       jwt: '',
       error: '',
-      events: [],
-      dialog: false,
-      selected_item: 0,
-      use_ticket_loading: false,
+      without_confirm: false,
+      status: 'ready',
     }
   },
   methods: {
-    openCodeReader() {
-      this.readCode = true
-    },
-    onDecode(decodeResult) {
-      this.jwt = decodeResult
-      this.readCode = false
-      this.events = []
-      for (let i = 0; i < 4 + Math.floor(Math.random() * 3); i++) {
-        this.events.push({
-          event_id: 'event_id' + String(i),
-          event_name: '第 ' + String(Math.floor(Math.random() * 4)) + ' 公演',
-          owner_id: 'owner_id',
-          is_family_ticket: false,
-          person: 1,
-          id: 'id' + String(i),
-          group_id: 'group_id' + String(i),
-          group_name: String(11 + Math.floor(Math.random() * 27)) + 'R',
-          created_at: '2022-08-11T08:20:58.1167',
-          is_used: Math.random() > 0.5,
-        })
+    onDecode(decodeResult: string) {
+      const ticket_id = decodeResult.split('/')[-1] // https://2023.seiryofes.com/tickets/{ticket_id}の形式
+      if (this.without_confirm) {
+        console.log(ticket_id)
       }
       /* $axios.post("/auth/ticket", {jwt: decodeResult})
         .then((result) => {
@@ -110,15 +75,7 @@ export default {
           error({ message: e.message })
         })) */
     },
-    useTicket(index) {
-      this.events[index].is_used = true
-      this.use_ticket_loading = true
-
-      // axios demo
-      setTimeout(() => {
-        this.dialog = false
-        this.use_ticket_loading = false
-      }, '1000')
+    useTicket() {
       /* var event = this.events[index]
       var endPoint = "/groups/" + event.group_id + "/events/" + event.event_id + "/tickets/" + event.id + "is_used"
       $axios.put(endPoint, {})
@@ -164,17 +121,16 @@ export default {
         error({ message: e.message })
       }))
   } */
-}
+})
 </script>
 
 <style>
-.group-title {
-  height: 1.3em;
-  padding: auto 0;
+.status {
+  margin-top: 20px;
 }
 
-.group-description {
-  clear: both;
-  height: 100px;
+.qrcode-container {
+  width: 90vw;
+  height: 60vh;
 }
 </style>
