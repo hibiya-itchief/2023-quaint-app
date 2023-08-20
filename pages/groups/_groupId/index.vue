@@ -169,7 +169,6 @@
               ><v-icon>mdi-reload</v-icon>再読み込み</v-btn
             >
             <div v-for="(event, index) in filteredEvents" :key="event.id">
-              <!--下のv-card内にv-if="$quaintUserRole(event.target, $auth.user)"を書けばユーザ属性に応じたeventのみが表示される-->
               <v-card
                 class="ma-2 d-flex"
                 :disabled="
