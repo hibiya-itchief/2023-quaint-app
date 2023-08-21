@@ -190,57 +190,58 @@
                             >{{ ticketInfo.ticket.person }}</span
                           >人
                         </v-list-item-subtitle>
-                        
-                      <!--整理券の状況を「開場前」（開演20分前まで），「開場中」（開演20分前から終演），「公演終了」（終演以降）に分けて表示-->
-                      <v-chip
-                        v-if="
-                          isUpNext(
-                            new Date(ticketInfo.event.starts_at),
-                            new Date(ticketInfo.event.ends_at)
-                          )
-                        "
-                        color="primary"
-                        outlined
-                        label
-                        ><v-icon>mdi-theater</v-icon>開場中</v-chip
-                      >
-                      <v-chip
-                        v-else-if="isUsed(new Date(ticketInfo.event.ends_at))"
-                        color="error"
-                        outlined
-                        label
-                        ><v-icon>mdi-check</v-icon>公演終了</v-chip
-                      >
-                      <v-chip v-else color="green" outlined label>
-                        <v-icon>mdi-account-clock</v-icon>開場前
-                      </v-chip>
-                    </div>
-                  </v-list-item>
-                </v-expansion-panel-header>
-                <v-expansion-panel-content class="pa-1">
-                  <v-divider></v-divider>
-                  <v-card-text>
-                    <p class="text-body-2 grey--text">
-                      ID: {{ ticketInfo.ticket.id }}
-                    </p>
-                  </v-card-text>
-                  <v-card-actions>
-                    <v-btn :href="'/groups/' + ticketInfo.group.id"
-                      >公演詳細
-                    </v-btn>
-                    <v-spacer></v-spacer>
 
-                    <!--終演時刻前の時だけ「整理券をキャンセル」ボタンを表示-->
-                    <v-btn
-                      v-if="!isUsed(new Date(ticketInfo.event.ends_at))"
-                      color="error"
-                      @click="selectCancelTicket(ticketInfo)"
-                    >
-                      <v-icon>mdi-close</v-icon>
-                      整理券をキャンセル
-                    </v-btn>
-                  </v-card-actions>
-                </v-expansion-panel-content>
+                        <!--整理券の状況を「開場前」（開演20分前まで），「開場中」（開演20分前から終演），「公演終了」（終演以降）に分けて表示-->
+                        <v-chip
+                          v-if="
+                            isUpNext(
+                              new Date(ticketInfo.event.starts_at),
+                              new Date(ticketInfo.event.ends_at)
+                            )
+                          "
+                          color="primary"
+                          outlined
+                          label
+                          ><v-icon>mdi-theater</v-icon>開場中</v-chip
+                        >
+                        <v-chip
+                          v-else-if="isUsed(new Date(ticketInfo.event.ends_at))"
+                          color="error"
+                          outlined
+                          label
+                          ><v-icon>mdi-check</v-icon>公演終了</v-chip
+                        >
+                        <v-chip v-else color="green" outlined label>
+                          <v-icon>mdi-account-clock</v-icon>開場前
+                        </v-chip>
+                      </div>
+                    </v-list-item>
+                  </v-expansion-panel-header>
+                  <v-expansion-panel-content class="pa-1">
+                    <v-divider></v-divider>
+                    <v-card-text>
+                      <p class="text-body-2 grey--text">
+                        ID: {{ ticketInfo.ticket.id }}
+                      </p>
+                    </v-card-text>
+                    <v-card-actions>
+                      <v-btn :href="'/groups/' + ticketInfo.group.id"
+                        >公演詳細
+                      </v-btn>
+                      <v-spacer></v-spacer>
+
+                      <!--終演時刻前の時だけ「整理券をキャンセル」ボタンを表示-->
+                      <v-btn
+                        v-if="!isUsed(new Date(ticketInfo.event.ends_at))"
+                        color="error"
+                        @click="selectCancelTicket(ticketInfo)"
+                      >
+                        <v-icon>mdi-close</v-icon>
+                        整理券をキャンセル
+                      </v-btn>
+                    </v-card-actions>
+                  </v-expansion-panel-content>
+                </div>
               </v-expansion-panel>
             </v-expansion-panels>
           </v-card>
