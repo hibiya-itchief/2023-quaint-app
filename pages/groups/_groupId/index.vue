@@ -489,7 +489,7 @@ export default Vue.extend({
       })
 
     //  全ての公演（events）から，ログイン中のユーザ属性（e.g.students,parents）に合致し，かつ当日の公演のみがfilteredEventsに格納される
-    this.filteredEvents = this.events.filter((val: Event[]) => {
+    this.filteredEvents = this.events.filter((val: Event) => {
       return (
         this.$quaintUserRole(val.target, this.$auth.user) &&
         this.isToday(val.sell_starts, val.sell_ends, val.starts_at)
