@@ -157,18 +157,18 @@
               <v-spacer></v-spacer>
             </v-card-title>
             <v-card-subtitle
-              >現地で見たい公演の整理券を取得できます。開演20分前から配布されます。</v-card-subtitle
+              >現地で見たい公演の整理券を取得できます。配布スケジュールはパンフレットをご覧ください。.</v-card-subtitle
             >
-            <v-card-text v-show="!$auth.loggedIn" class="red--text"
-              >整理券の取得には<NuxtLink to="/login">ログイン</NuxtLink
-              >が必要です。</v-card-text
+            <v-card-subtitle v-if="!$auth.loggedIn"
+              ><v-btn color="primary" :href="'/login'">ログイン</v-btn
+              >すると整理券を取得できます。</v-card-subtitle
             >
             <v-divider class="mb-3"></v-divider>
 
             <v-btn class="ma-2" color="primary" @click="$nuxt.refresh()"
               ><v-icon>mdi-reload</v-icon>再読み込み</v-btn
             >
-            <div v-for="(event, index) in filteredEvents" :key="event.id">
+            <div v-for="(event, index) in suitableEvents()" :key="event.id">
               <v-card
                 class="ma-2 d-flex"
                 :disabled="
@@ -290,9 +290,9 @@
               </v-card>
             </v-dialog>
 
-            <!--filteredEventsの長さが0の（表示する公演が無い）時，以下のメッセージを表示-->
-            <v-col v-if="filteredEvents.length === 0" cols="12">
-              <v-card disabled>
+            <!--suitableEventsの長さが0の（表示する公演が無い）時，以下のメッセージを表示-->
+            <v-col v-if="suitableEvents().length === 0" cols="12">
+              <v-card>
                 <v-card-title>現在選択できる公演はありません。</v-card-title>
               </v-card>
             </v-col>
@@ -488,12 +488,10 @@ export default Vue.extend({
         this.view_count = 'エラー'
       })
 
-    //  全ての公演（events）から，ログイン中のユーザ属性（e.g.students,parents）に合致し，かつ当日の公演のみがfilteredEventsに格納される
+    //  全ての公演（events）から，ログイン中のユーザ属性（e.g.students,parents）に合致する公演のみがfilteredEventsに格納される
+    //  '&& this.isToday(val.sell_starts, val.sell_ends, val.starts_at)'を付け加えれば，当日の整理券のみが表示されるようになる
     this.filteredEvents = this.events.filter((val: Event) => {
-      return (
-        this.$quaintUserRole(val.target, this.$auth.user) &&
-        this.isToday(val.sell_starts, val.sell_ends, val.starts_at)
-      )
+      return this.$quaintUserRole(val.target, this.$auth.user)
     })
   },
   methods: {
@@ -530,9 +528,16 @@ export default Vue.extend({
       return this.listTakenTickets[index]
     },
 
+    suitableEvents() {
+      if (!this.$auth.loggedIn) {
+        return this.events
+      } else {
+        return this.filteredEvents
+      }
+    },
+
     // 配布日or公演日が今日かどうか判断するmethod
-    // isTodayで整理券の表示を切り替えると，v-if="events.length === 0"が機能しなくなるので却下
-    // 使い方：v-if="isToday(event.sell_starts, event.sell_ends, event.starts_at)"
+    // 使い方：isToday(event.sell_starts, event.sell_ends, event.starts_at)"
     isToday(
       inputSellStarts: string,
       inputSellEnds: string,
