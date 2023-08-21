@@ -528,6 +528,7 @@ export default Vue.extend({
       return this.listTakenTickets[index]
     },
 
+    //  未ログイン状態では全ての公演，ログインしている状態ではユーザ属性に合った公演のみが表示されるようにするmethod
     suitableEvents() {
       if (!this.$auth.loggedIn) {
         return this.events
