@@ -184,20 +184,18 @@ export default Vue.extend({
 </script>
 <style>
 table {
-  margin-bottom: 10px;
-}
-
-tbody {
+  margin-bottom: 20px;
   border: solid 1px #000;
 }
 
 td {
   border: solid 1px #000;
   text-align: center;
+  padding: 2px;
 }
 
 .tdx {
-  background-color: #222;
+  background-color: #eee;
   font-weight: bold;
 }
 </style>
