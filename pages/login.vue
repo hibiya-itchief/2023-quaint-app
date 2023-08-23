@@ -8,12 +8,7 @@
             整理券の取得にはログインが必要となります。
           </p>
           <v-divider class="my-3"></v-divider>
-          <v-btn
-            class="light-blue darken-4 my-3"
-            block
-            dark
-            @click="loginB2c()"
-          >
+          <v-btn class="light-blue darken-4 my-3" block disabled>
             一般の方はこちらから
           </v-btn>
           <p align="center" class="text-caption">
