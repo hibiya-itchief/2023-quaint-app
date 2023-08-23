@@ -12,7 +12,7 @@
             class="light-blue darken-4 my-3"
             block
             dark
-            @click="loginB2c()"
+            disabled
           >
             一般の方はこちらから
           </v-btn>
