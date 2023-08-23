@@ -58,7 +58,9 @@
             <div>
               <v-card-title>まだ整理券を取得していません</v-card-title>
               <v-card-actions>
-                <v-btn :href="'/groups'" block>公演を探す</v-btn>
+                <v-btn :href="'/groups'" block
+                  ><v-icon>mdi-magnify</v-icon>公演を探す</v-btn
+                >
               </v-card-actions>
             </div>
           </v-card>
@@ -76,6 +78,7 @@
                   new Date(ticketInfo.event.ends_at)
                 )
               "
+              class="text-truncate"
             >
               <v-card-title class="mb-2"
                 ><v-icon>mdi-ticket</v-icon>整理券
@@ -89,10 +92,10 @@
               >
               <v-divider></v-divider>
 
-              <v-card-title class="text-h7">
+              <v-card-title class="text-h7 text-truncate">
                 {{ ticketInfo.group.title }}
               </v-card-title>
-              <v-card-subtitle class="pb-0">
+              <v-card-subtitle class="pb-0 text-truncate">
                 {{ ticketInfo.group.groupname }}</v-card-subtitle
               >
 
@@ -146,70 +149,76 @@
                 focusable
               >
                 <v-expansion-panel-header class="pa-3">
-                  <v-list-item>
-                    <v-img
-                      v-if="ticketInfo.group.public_thumbnail_image_url != null"
-                      :src="ticketInfo.group.public_thumbnail_image_url"
-                      max-width="100px"
-                      height="165px"
-                      class="mr-2"
-                      contain
-                    ></v-img>
-                    <div class="ma-2">
-                      <!--取得した整理券の情報を表示-->
-                      <v-list-item-subtitle
-                        >{{ dateFormatter(ticketInfo.event.starts_at) }}
-                        {{ ticketInfo.event.eventname }}</v-list-item-subtitle
-                      >
-                      <v-list-item-title class="text-h7">
-                        {{ ticketInfo.group.title }}
-                      </v-list-item-title>
-                      <v-list-item-subtitle>
-                        {{ ticketInfo.group.groupname }}</v-list-item-subtitle
-                      >
-                      <v-list-item-subtitle
-                        class="mt-2 grey--text text--darken-2"
-                      >
-                        <span class="text-h5"
-                          ><v-icon>mdi-clock-time-nine</v-icon
-                          >{{ timeFormatter(ticketInfo.event.starts_at) }}</span
-                        >
-                        -{{ timeFormatter(ticketInfo.event.ends_at) }}
-                      </v-list-item-subtitle>
-                      <v-list-item-subtitle
-                        class="mb-2 grey--text text--darken-2"
-                      >
-                        <span class="text-h5"
-                          ><v-icon>mdi-account-supervisor</v-icon
-                          >{{ ticketInfo.ticket.person }}</span
-                        >人
-                      </v-list-item-subtitle>
-
-                      <!--整理券の状況を「開場前」（開演20分前まで），「開場中」（開演20分前から終演），「公演終了」（終演以降）に分けて表示-->
-                      <v-chip
+                  <div class="text-truncate">
+                    <v-list-item>
+                      <v-img
                         v-if="
-                          isUpNext(
-                            new Date(ticketInfo.event.starts_at),
-                            new Date(ticketInfo.event.ends_at)
-                          )
+                          ticketInfo.group.public_thumbnail_image_url != null
                         "
-                        color="primary"
-                        outlined
-                        label
-                        ><v-icon>mdi-theater</v-icon>開場中</v-chip
-                      >
-                      <v-chip
-                        v-else-if="isUsed(new Date(ticketInfo.event.ends_at))"
-                        color="error"
-                        outlined
-                        label
-                        ><v-icon>mdi-check</v-icon>公演終了</v-chip
-                      >
-                      <v-chip v-else color="green" outlined label>
-                        <v-icon>mdi-account-clock</v-icon>開場前
-                      </v-chip>
-                    </div>
-                  </v-list-item>
+                        :src="ticketInfo.group.public_thumbnail_image_url"
+                        max-width="90px"
+                        height="165px"
+                        class="mr-2"
+                        contain
+                      ></v-img>
+                      <div class="ma-2 text-truncate">
+                        <!--取得した整理券の情報を表示-->
+                        <v-list-item-subtitle class="text-truncate"
+                          >{{ dateFormatter(ticketInfo.event.starts_at) }}
+                          {{ ticketInfo.event.eventname }}</v-list-item-subtitle
+                        >
+                        <v-list-item-title class="text-h7 text-truncate">
+                          {{ ticketInfo.group.title }}
+                        </v-list-item-title>
+                        <v-list-item-subtitle class="text-truncate">
+                          {{ ticketInfo.group.groupname }}</v-list-item-subtitle
+                        >
+                        <v-list-item-subtitle
+                          class="mt-2 grey--text text--darken-2 text-truncate"
+                        >
+                          <span class="text-h5"
+                            ><v-icon>mdi-clock-time-nine</v-icon
+                            >{{
+                              timeFormatter(ticketInfo.event.starts_at)
+                            }}</span
+                          >
+                          -{{ timeFormatter(ticketInfo.event.ends_at) }}
+                        </v-list-item-subtitle>
+                        <v-list-item-subtitle
+                          class="mb-2 grey--text text--darken-2 text-truncate"
+                        >
+                          <span class="text-h5"
+                            ><v-icon>mdi-account-supervisor</v-icon
+                            >{{ ticketInfo.ticket.person }}</span
+                          >人
+                        </v-list-item-subtitle>
+
+                        <!--整理券の状況を「開場前」（開演20分前まで），「開場中」（開演20分前から終演），「公演終了」（終演以降）に分けて表示-->
+                        <v-chip
+                          v-if="
+                            isUpNext(
+                              new Date(ticketInfo.event.starts_at),
+                              new Date(ticketInfo.event.ends_at)
+                            )
+                          "
+                          color="primary"
+                          outlined
+                          label
+                          ><v-icon>mdi-theater</v-icon>開場中</v-chip
+                        >
+                        <v-chip
+                          v-else-if="isUsed(new Date(ticketInfo.event.ends_at))"
+                          color="error"
+                          outlined
+                          label
+                          ><v-icon>mdi-check</v-icon>公演終了</v-chip
+                        >
+                        <v-chip v-else color="green" outlined label>
+                          <v-icon>mdi-account-clock</v-icon>開場前
+                        </v-chip>
+                      </div>
+                    </v-list-item>
+                  </div>
                 </v-expansion-panel-header>
                 <v-expansion-panel-content class="pa-1">
                   <v-divider></v-divider>
@@ -474,3 +483,11 @@ export default Vue.extend({
   },
 })
 </script>
+<style>
+.text-truncate {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+</style>
