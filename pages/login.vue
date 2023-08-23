@@ -43,7 +43,7 @@
           <table align="center">
             <tbody>
               <tr>
-                <td>公演</td>
+                <td class="tdx">公演</td>
                 <td>第1公演</td>
                 <td>第2公演</td>
                 <td>第3公演</td>
@@ -51,7 +51,7 @@
                 <td>第5公演</td>
               </tr>
               <tr>
-                <td>待機開始</td>
+                <td class="tdx">待機開始</td>
                 <td>--</td>
                 <td>8:50</td>
                 <td>9:30</td>
@@ -59,7 +59,7 @@
                 <td>12:00</td>
               </tr>
               <tr>
-                <td>配布開始</td>
+                <td class="tdx">配布開始</td>
                 <td>8:50</td>
                 <td>9:30</td>
                 <td>10:40</td>
@@ -72,7 +72,7 @@
           <table align="center">
             <tbody>
               <tr>
-                <td>公演</td>
+                <td class="tdx">公演</td>
                 <td>第1公演</td>
                 <td>第2公演</td>
                 <td>第3公演</td>
@@ -80,7 +80,7 @@
                 <td>第5公演</td>
               </tr>
               <tr>
-                <td>待機開始</td>
+                <td class="tdx">待機開始</td>
                 <td>--</td>
                 <td>8:30</td>
                 <td>9:10</td>
@@ -88,7 +88,7 @@
                 <td>11:30</td>
               </tr>
               <tr>
-                <td>配布開始</td>
+                <td class="tdx">配布開始</td>
                 <td>8:30</td>
                 <td>9:10</td>
                 <td>10:20</td>
@@ -109,7 +109,7 @@
           <table align="center">
             <tbody>
               <tr>
-                <td>公演</td>
+                <td class="tdx">公演</td>
                 <td>第1公演</td>
                 <td>第2公演</td>
                 <td>第3公演</td>
@@ -117,7 +117,7 @@
                 <td>第5公演</td>
               </tr>
               <tr>
-                <td>配布開始</td>
+                <td class="tdx">配布開始</td>
                 <td colspan="2">8:50</td>
                 <td>9:30</td>
                 <td colspan="2">12:00</td>
@@ -128,7 +128,7 @@
           <table align="center">
             <tbody>
               <tr>
-                <td>公演</td>
+                <td class="tdx">公演</td>
                 <td>第1公演</td>
                 <td>第2公演</td>
                 <td>第3公演</td>
@@ -136,7 +136,7 @@
                 <td>第5公演</td>
               </tr>
               <tr>
-                <td>配布開始</td>
+                <td class="tdx">配布開始</td>
                 <td colspan="2">8:30</td>
                 <td>9:10</td>
                 <td>10:20</td>
@@ -182,3 +182,22 @@ export default Vue.extend({
   },
 })
 </script>
+<style>
+table {
+  margin-bottom: 10px;
+}
+
+tbody {
+  border: solid 1px #000;
+}
+
+td {
+  border: solid 1px #000;
+  text-align: center;
+}
+
+.tdx {
+  background-color: #222;
+  font-weight: bold;
+}
+</style>
