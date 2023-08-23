@@ -21,7 +21,7 @@
           </p>
           <v-divider class="my-3"></v-divider>
           <v-btn class="light-blue darken-4 my-3" block dark @click="loginAd()">
-            本校生徒・先生方はこちらから
+            本校生徒・先生方・保護者の方はこちらから
           </v-btn>
           <p align="center" class="text-caption">
             学校から配布されているMicrosoftアカウント(「@metro.ed.jp」で終わるもの)でログインしてください
