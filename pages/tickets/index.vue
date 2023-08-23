@@ -148,8 +148,10 @@
                 :key="ticketInfo.ticket.id"
                 focusable
               >
-                <v-expansion-panel-header class="pa-3">
-                  <div class="text-truncate">
+                <!--activeな整理券のみ表示．キャンセル済み整理券は表示されない-->
+                <div v-if="ticketInfo.ticket.status == 'active'">
+                  <v-expansion-panel-header class="pa-3">
+                    <div class="text-truncate">
                     <v-list-item>
                       <v-img
                         v-if="
@@ -244,6 +246,7 @@
                     </v-btn>
                   </v-card-actions>
                 </v-expansion-panel-content>
+                </div>
               </v-expansion-panel>
             </v-expansion-panels>
           </v-card>
@@ -282,9 +285,24 @@
       </v-row>
       <v-snackbar v-model="success_alert" color="success" elevation="2">
         {{ success_message }}
+        <template #action="{ attrs }">
+          <v-btn
+            color="white"
+            icon
+            v-bind="attrs"
+            @click="success_alert = false"
+          >
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </template>
       </v-snackbar>
       <v-snackbar v-model="error_alert" color="red" elevation="2">
         {{ error_message }}
+        <template #action="{ attrs }">
+          <v-btn color="white" icon v-bind="attrs" @click="error_alert = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </template>
       </v-snackbar>
     </v-container>
   </v-app>
