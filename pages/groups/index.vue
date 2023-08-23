@@ -14,132 +14,85 @@
                 search_query === '' ? undefined : search_query
               PushQuery(search_query_q, null, null, null)
             "
-            ><template #append-outer>
-              <v-icon
-                v-if="$vuetify.breakpoint.xs"
-                class="mx-2"
-                @click="dialog = true"
-              >
-                mdi-tune</v-icon
-              >
-              <v-icon v-else class="mx-5" @click="dialog = true">
-                mdi-tune</v-icon
-              >
-            </template></v-text-field
           >
+          </v-text-field>
         </v-col>
-
-        <v-dialog v-model="dialog" transition="fade-transition" max-width="500"
-          ><v-card class="pa-2">
-            <v-card-title>表示設定</v-card-title>
-            <v-card-subtitle class="pt-2"
-              >注：検索中はすべての団体が対象となります。</v-card-subtitle
-            >
-
-            <div>
-              <span
-                class="pl-6 pr-2 pt-5 pb-0 grey--text text--darken-3 text-subtitle-1"
-                >団体の種類</span
-              >
-              <v-menu offset-y>
-                <template #activator="{ on, attrs }">
-                  <v-btn
-                    :disabled="search_query !== ''"
-                    text
-                    width="200"
-                    class="ml-6 text-subtitle-1 text-capitalize"
-                    v-bind="attrs"
-                    v-on="on"
-                    ><span v-if="selectedTag !== null">{{
-                      selectedTag?.tagname ?? 'すべて'
-                    }}</span
-                    ><span v-else>お気に入り</span><v-spacer /><v-icon
-                      >mdi-chevron-down</v-icon
-                    ></v-btn
-                  >
-                </template>
-                <v-list>
-                  <v-list-item
-                    @click="
-                      PushQuery(null, undefined, null, null)
-                      selectedTag = undefined
-                    "
-                    >すべて</v-list-item
-                  >
-                  <v-list-item
-                    v-for="tag in tags"
-                    :key="tag.id"
-                    :value="tag.tagname"
-                    @click="
-                      PushQuery(null, tag.tagname, null, null)
-                      selectedTag = tag
-                    "
-                    >{{ tag.tagname }}</v-list-item
-                  >
-                  <v-list-item
-                    @click="
-                      PushQuery(null, 'favorite', null, null)
-                      selectedTag = null
-                    "
-                    >お気に入り</v-list-item
-                  >
-                </v-list>
-              </v-menu>
-            </div>
-
-            <div>
-              <span
-                class="pl-6 pr-10 pt-5 pb-0 grey--text text--darken-3 text-subtitle-1"
-                >表示順</span
-              >
-              <v-menu offset-y>
-                <template #activator="{ on, attrs }">
-                  <v-btn
-                    text
-                    width="200"
-                    class="ml-6 text-subtitle-1 text-capitalize"
-                    v-bind="attrs"
-                    v-on="on"
-                    >{{ sort_displayname }} <v-spacer /><v-icon
-                      >mdi-chevron-down</v-icon
-                    ></v-btn
-                  >
-                </template>
-                <v-list>
-                  <v-list-item @click="SortGroups('id', false)"
-                    >団体ID(昇順)</v-list-item
-                  >
-                  <v-list-item @click="SortGroups('id', true)"
-                    >団体ID(降順)</v-list-item
-                  >
-                  <v-list-item @click="SortGroups('groupname', false)"
-                    >団体名(昇順)</v-list-item
-                  >
-                  <v-list-item @click="SortGroups('groupname', true)"
-                    >団体名(降順)</v-list-item
-                  >
-                  <v-list-item @click="SortGroups('title', false)"
-                    >演目名(昇順)</v-list-item
-                  >
-                  <v-list-item @click="SortGroups('title', true)"
-                    >演目名(降順)</v-list-item
-                  >
-                </v-list>
-              </v-menu>
-            </div>
-
-            <v-card-actions>
-              <v-spacer />
-              <v-btn text @click.stop="dialog = false"
-                >閉じる</v-btn
-              ></v-card-actions
-            ></v-card
-          ></v-dialog
-        >
-        <v-col class="mt-2 mb-0 py-0" cols="12" sm="8" md="8">
+        <v-col class="mt-2 mb-5 py-0" cols="12" sm="8" md="8">
           <p v-show="search_query !== ''" class="ma-0 pa-0 text-caption">
             "{{ search_query }}"の検索結果({{ search_result_number }}件)
           </p>
+
+          <v-menu offset-y>
+            <template #activator="{ on, attrs }">
+              <v-btn
+                :disabled="search_query !== ''"
+                depressed
+                width="135"
+                class="text-subtitle-2 text-capitalize"
+                v-bind="attrs"
+                v-on="on"
+                ><span v-if="selectedTag !== null">{{
+                  selectedTag?.tagname ?? 'すべて'
+                }}</span
+                ><span v-else>お気に入り</span><v-spacer /><v-icon
+                  >mdi-chevron-down</v-icon
+                ></v-btn
+              >
+            </template>
+            <v-list>
+              <v-list-item
+                @click="
+                  PushQuery(null, undefined, null, null)
+                  selectedTag = undefined
+                "
+                >すべて</v-list-item
+              >
+              <v-list-item
+                @click="
+                  PushQuery(null, 'favorite', null, null)
+                  selectedTag = null
+                "
+                >お気に入り</v-list-item
+              >
+              <v-list-item
+                v-for="tag in tags"
+                :key="tag.id"
+                :value="tag.tagname"
+                @click="
+                  PushQuery(null, tag.tagname, null, null)
+                  selectedTag = tag
+                "
+                >{{ tag.tagname }}</v-list-item
+              >
+            </v-list>
+          </v-menu>
+          <v-menu offset-y>
+            <template #activator="{ on, attrs }">
+              <v-btn
+                depressed
+                width="150"
+                class="text-subtitle-2 text-capitalize"
+                v-bind="attrs"
+                v-on="on"
+                >{{ sort_displayname }} <v-spacer /><v-icon
+                  >mdi-chevron-down</v-icon
+                ></v-btn
+              >
+            </template>
+            <v-list>
+              <v-list-item @click="SortGroups('id')">デフォルト順</v-list-item>
+              <v-list-item @click="SortGroups('groupname')"
+                >団体名順</v-list-item
+              >
+              <v-list-item @click="SortGroups('title')">演目名順</v-list-item>
+            </v-list>
+          </v-menu>
+          <v-icon v-show="$route.query.r == 'true'" @click="ReverseGroups()"
+            >mdi-arrow-up</v-icon
+          >
+          <v-icon v-show="$route.query.r != 'true'" @click="ReverseGroups()"
+            >mdi-arrow-down</v-icon
+          >
         </v-col>
 
         <v-col class="my-0 py-0" cols="12">
@@ -242,7 +195,6 @@ type Data = {
   nowloading: boolean
   tags: Tag[]
   groups: Group[]
-  dialog: boolean
   search_query: string
   sort_displayname: string
   query_cache: any
@@ -266,7 +218,6 @@ export default Vue.extend({
       nowloading: true,
       tags: [],
       groups: [],
-      dialog: false,
       selectedTag: undefined,
       search_result_number: 0,
       search_query: '',
@@ -304,8 +255,7 @@ export default Vue.extend({
       this.$route.query.s === 'groupname' || this.$route.query.s === 'title'
         ? this.$route.query.s
         : 'id'
-    const query_r = this.$route.query.r === 'true'
-    this.SortGroups(query_s, query_r) // クエリパラメータを見てSortGroupsを実行
+    this.SortGroups(query_s) // クエリパラメータを見てSortGroupsを実行
 
     const query_t = this.$route.query.t // query_tは見やすくするためだけに定義
     // クエリパラメータを見てselectedTagを再現
@@ -331,25 +281,34 @@ export default Vue.extend({
       R = R === null ? this.$route.query.r : R
       this.$router.push({ query: { q: Q, t: T, s: S, r: R } }) // nullは「現在のクエリを維持」と同義
     },
-    SortGroups(sort: 'id' | 'groupname' | 'title', reverse: boolean) {
-      if (sort === 'id') {
-        this.sort_displayname = '団体ID'
-      } else if (sort === 'groupname') {
-        this.sort_displayname = '団体名'
+    SortGroups(sort: 'id' | 'groupname' | 'title') {
+      if (sort === 'groupname') {
+        this.sort_displayname = '団体名順'
+      } else if (sort === 'title') {
+        this.sort_displayname = '演目名順'
       } else {
-        this.sort_displayname = '演目名'
+        this.sort_displayname = 'デフォルト順'
       }
-      const sort_query = sort === 'id' ? undefined : sort
       this.groups.sort((x, y) => {
         return (x[sort] ?? '') > (y[sort] ?? '') ? 1 : -1
       })
-      if (reverse === true) {
-        this.PushQuery(null, null, sort_query, reverse.toString())
-        this.sort_displayname = this.sort_displayname + '(降順)'
+      if (this.$route.query.r === 'true') {
         this.groups.reverse()
+      }
+      const sort_query = sort === 'id' ? undefined : sort
+      this.PushQuery(null, null, sort_query, null)
+    },
+    ReverseGroups() {
+      this.SortGroups(
+        this.$route.query.s === 'groupname' || this.$route.query.s === 'title'
+          ? this.$route.query.s
+          : 'id'
+      )
+      this.groups.reverse()
+      if (this.$route.query.r === 'true') {
+        this.PushQuery(null, null, null, undefined)
       } else {
-        this.PushQuery(null, null, sort_query, undefined)
-        this.sort_displayname = this.sort_displayname + '(昇順)'
+        this.PushQuery(null, null, null, 'true')
       }
     },
 
