@@ -299,6 +299,13 @@
       </v-row>
       <v-snackbar v-model="success_alert" color="success" elevation="2">
         {{ success_message }}
+        <a
+          v-show="success_snackbar_link"
+          :href="success_snackbar_link"
+          class="link-snackbar"
+        >
+          取得した整理券を表示
+        </a>
         <template #action="{ attrs }">
           <v-btn
             color="white"
@@ -312,6 +319,13 @@
       </v-snackbar>
       <v-snackbar v-model="error_alert" color="red" elevation="2">
         {{ error_message }}
+        <a
+          v-show="error_snackbar_link"
+          :href="error_snackbar_link"
+          class="link-snackbar"
+        >
+          ログイン
+        </a>
         <template #action="{ attrs }">
           <v-btn color="white" icon v-bind="attrs" @click="error_alert = false">
             <v-icon>mdi-close</v-icon>
@@ -338,6 +352,8 @@ type Data = {
   success_message: string
   error_message: string
   dialog: boolean
+  success_snackbar_link: string | undefined
+  error_snackbar_link: string | undefined
 
   ticket_person: number
   person_labels: any[]
@@ -383,6 +399,8 @@ export default Vue.extend({
       success_message: '',
       error_message: '',
       dialog: false,
+      success_snackbar_link: undefined,
+      error_snackbar_link: undefined,
       displayFavorite: 0,
       listStock: [],
       listTakenTickets: [],
@@ -573,7 +591,8 @@ isToday(
     },
     async CreateTicket(event: Event, person: number) {
       if (!this.$auth.loggedIn) {
-        this.error_message = '整理券の取得にはログインが必要です'
+        this.error_message = '整理券の取得には'
+        this.error_snackbar_link = '/login'
         this.error_alert = true
         return 1
       }
@@ -589,8 +608,8 @@ isToday(
             person
         )
         .then(() => {
-          this.success_message =
-            '整理券を取得できました！「整理券」タブから確認してください'
+          this.success_message = '整理券を取得できました！'
+          this.success_snackbar_link = '/tickets'
           this.success_alert = true
         })
         .catch((e) => {
@@ -600,6 +619,7 @@ isToday(
             this.error_message =
               '予期せぬエラーが発生しました。IT部隊にお声がけください🙇‍♂️'
           }
+          this.error_snackbar_link = undefined
           this.error_alert = true
         })
     },
@@ -609,9 +629,11 @@ isToday(
         new Date(event.sell_ends) < new Date()
       ) {
         this.error_message = '配布時間外です'
+        this.error_snackbar_link = undefined
         this.error_alert = true
       } else if (!this.$auth.loggedIn) {
-        this.error_message = '整理券の取得にはログインが必要です'
+        this.error_message = '整理券の取得には'
+        this.error_snackbar_link = '/login'
         this.error_alert = true
       } else {
         this.selected_event = event
@@ -622,3 +644,11 @@ isToday(
   },
 })
 </script>
+<style>
+a.link-snackbar {
+  color: white;
+  font-weight: bold;
+  text-decoration: underline;
+  text-decoration-color: white;
+}
+</style>
