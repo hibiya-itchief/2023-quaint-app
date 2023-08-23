@@ -40,7 +40,7 @@
             時間について、詳しくは下記の表をご覧ください。
           </p>
           <p align="center" class="">1日目（3年生）</p>
-          <table>
+          <table align="center">
             <tbody>
               <tr>
                 <td>公演</td>
@@ -69,7 +69,7 @@
             </tbody>
           </table>
           <p align="center" class="">2日目（3年生）</p>
-          <table>
+          <table align="center">
             <tbody>
               <tr>
                 <td>公演</td>
@@ -101,12 +101,12 @@
           <br />
           <p align="center" class="">1、2年生クラス劇の配布&emsp;＠剣道場</p>
           <p align="center" class="text-caption">
-            1、2年生のクラス劇の整理券配布は、体育館棟3階の剣道場で行います。配布開始は1つ前及び2つ前の公演が始まってからです。<br />
-            3年生と異なり、待機列の設定は行いません。
+            1、2年生のクラス劇の整理券配布は、体育館棟3階の剣道場で行います。ただし、入り口は1階アーケードからです。<br />
+            配布開始は1つ前及び2つ前の公演が始まってからです。また、3年生と異なり、待機列の設定は行いません。
             時間について、詳しくは下記の表をご覧ください。
           </p>
           <p align="center" class="">1日目（1、2年生）</p>
-          <table>
+          <table align="center">
             <tbody>
               <tr>
                 <td>公演</td>
@@ -125,7 +125,7 @@
             </tbody>
           </table>
           <p align="center" class="">2日目（1、2年生）</p>
-          <table>
+          <table align="center">
             <tbody>
               <tr>
                 <td>公演</td>
