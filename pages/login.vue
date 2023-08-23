@@ -173,9 +173,6 @@ export default Vue.extend({
     if (this.$route.query.error !== undefined) this.errorLogin()
   },
   methods: {
-    loginB2c() {
-      this.$auth.loginWith('b2c')
-    },
     loginAd() {
       this.$auth.loginWith('ad')
     },
