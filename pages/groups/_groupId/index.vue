@@ -339,7 +339,7 @@ type Data = {
   }
   group: Group | undefined
   events: Event[]
-  filteredEvents: Event[] //  ユーザ属性（e,g.students, parents）に合致し，当日公演がある整理券のみが格納される配列
+  filteredEvents: Event[] //  ユーザ属性（e,g.students, parents）に合致する整理券のみが格納される配列
   selected_event: Event | null
   videoViewer: boolean
   streamVideoId: string
