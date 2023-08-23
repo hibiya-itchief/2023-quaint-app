@@ -36,8 +36,10 @@
           <p align="center" class="">3年生クラス劇の配布&emsp;＠サブアリーナ</p>
           <p align="center" class="text-caption">
             3年生のクラス劇の整理券配布は、体育館棟1階サブアリーナで行います。配布開始は1つ前の公演が始まってからです。<br />
-            詳しくは下記の表をご覧ください。
+            また、配布開始前の規定時間から、同じくサブアリーナ付近で待機列を設けます。
+            時間について、詳しくは下記の表をご覧ください。
           </p>
+          <p align="center" class="">1日目（3年生）</p>
           <table>
             <tbody>
               <tr>
@@ -63,6 +65,82 @@
                 <td>10:40</td>
                 <td>12:00</td>
                 <td>13:10</td>
+              </tr>
+            </tbody>
+          </table>
+          <p align="center" class="">2日目（3年生）</p>
+          <table>
+            <tbody>
+              <tr>
+                <td>公演</td>
+                <td>第1公演</td>
+                <td>第2公演</td>
+                <td>第3公演</td>
+                <td>第4公演</td>
+                <td>第5公演</td>
+              </tr>
+              <tr>
+                <td>待機開始</td>
+                <td>--</td>
+                <td>8:30</td>
+                <td>9:10</td>
+                <td>10:20</td>
+                <td>11:30</td>
+              </tr>
+              <tr>
+                <td>配布開始</td>
+                <td>8:30</td>
+                <td>9:10</td>
+                <td>10:20</td>
+                <td>11:30</td>
+                <td>12:50</td>
+              </tr>
+            </tbody>
+          </table>
+          <br />
+          <br />
+          <p align="center" class="">1、2年生クラス劇の配布&emsp;＠剣道場</p>
+          <p align="center" class="text-caption">
+            1、2年生のクラス劇の整理券配布は、体育館棟3階の剣道場で行います。配布開始は1つ前及び2つ前の公演が始まってからです。<br />
+            3年生と異なり、待機列の設定は行いません。
+            時間について、詳しくは下記の表をご覧ください。
+          </p>
+          <p align="center" class="">1日目（1、2年生）</p>
+          <table>
+            <tbody>
+              <tr>
+                <td>公演</td>
+                <td>第1公演</td>
+                <td>第2公演</td>
+                <td>第3公演</td>
+                <td>第4公演</td>
+                <td>第5公演</td>
+              </tr>
+              <tr>
+                <td>配布開始</td>
+                <td colspan="2">8:50</td>
+                <td>9:30</td>
+                <td colspan="2">12:00</td>
+              </tr>
+            </tbody>
+          </table>
+          <p align="center" class="">2日目（1、2年生）</p>
+          <table>
+            <tbody>
+              <tr>
+                <td>公演</td>
+                <td>第1公演</td>
+                <td>第2公演</td>
+                <td>第3公演</td>
+                <td>第4公演</td>
+                <td>第5公演</td>
+              </tr>
+              <tr>
+                <td>配布開始</td>
+                <td colspan="2">8:30</td>
+                <td>9:10</td>
+                <td>10:20</td>
+                <td>12:50</td>
               </tr>
             </tbody>
           </table>
