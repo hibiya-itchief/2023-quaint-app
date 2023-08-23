@@ -11,8 +11,13 @@
           <v-btn class="light-blue darken-4 my-3" block disabled>
             一般の方はこちらから
           </v-btn>
-          <p align="center" class="text-caption">
+          <!--p align="center" class="text-caption">
             アカウントをお持ちでない方も上のボタンを押していただき、指示に従って作成してください。当日入場する際に再ログインが求められる可能性があるため、パスワードを必ず記憶してください。
+          </p-->
+          <p align="center" class="text-caption">
+            <span style="color: #f00"
+              >今年度は一般向けのオンライン整理券は実施しません。</span
+            ><br />下記の「一般向け整理券配布方法」をご覧ください。
           </p>
           <v-divider class="my-3"></v-divider>
           <v-btn class="light-blue darken-4 my-3" block dark @click="loginAd()">
@@ -21,6 +26,46 @@
           <p align="center" class="text-caption">
             学校から配布されているMicrosoftアカウント(「@metro.ed.jp」で終わるもの)でログインしてください
           </p>
+        </v-sheet>
+      </v-col>
+    </v-row>
+    <v-row justify="center" class="ma-4">
+      <v-col cols="11" md="6" lg="4" class="ma-0 pa-0">
+        <v-sheet color="white" elevation="4" class="py-4 px-2">
+          <h2 align="center" class="text-h5 ma-3">一般向け整理券配布方法</h2>
+          <p align="center" class="">3年生クラス劇の配布&emsp;＠サブアリーナ</p>
+          <p align="center" class="text-caption">
+            3年生のクラス劇の整理券配布は、体育館棟1階サブアリーナで行います。配布開始は1つ前の公演が始まってからです。<br />
+            詳しくは下記の表をご覧ください。
+          </p>
+          <table>
+            <tbody>
+              <tr>
+                <td>公演</td>
+                <td>第1公演</td>
+                <td>第2公演</td>
+                <td>第3公演</td>
+                <td>第4公演</td>
+                <td>第5公演</td>
+              </tr>
+              <tr>
+                <td>待機開始</td>
+                <td>--</td>
+                <td>8:50</td>
+                <td>9:30</td>
+                <td>10:40</td>
+                <td>12:00</td>
+              </tr>
+              <tr>
+                <td>配布開始</td>
+                <td>8:50</td>
+                <td>9:30</td>
+                <td>10:40</td>
+                <td>12:00</td>
+                <td>13:10</td>
+              </tr>
+            </tbody>
+          </table>
         </v-sheet>
       </v-col>
     </v-row>
