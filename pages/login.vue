@@ -56,15 +56,15 @@
                 <td>8:50</td>
                 <td>9:30</td>
                 <td>10:40</td>
-                <td>12:00</td>
+                <td>12:20</td>
               </tr>
               <tr>
                 <td class="tdx">配布開始</td>
                 <td>8:50</td>
                 <td>9:30</td>
                 <td>10:40</td>
-                <td>12:00</td>
-                <td>13:10</td>
+                <td>12:20</td>
+                <td>13:30</td>
               </tr>
             </tbody>
           </table>
@@ -120,7 +120,7 @@
                 <td class="tdx">配布開始</td>
                 <td colspan="2">8:50</td>
                 <td>9:30</td>
-                <td colspan="2">12:00</td>
+                <td colspan="2">12:20</td>
               </tr>
             </tbody>
           </table>
