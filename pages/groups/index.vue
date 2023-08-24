@@ -2,59 +2,97 @@
   <v-app>
     <v-container>
       <v-row justify="center">
-        <v-col class="mt-2 mb-0 py-0" cols="12">
+        <v-col class="mt-2 mb-0 py-0" cols="12" sm="8" md="8">
           <v-text-field
             v-model="search_query"
             solo
             label="検索"
             prepend-inner-icon="mdi-magnify"
-            @input="SearchGroups($event)"
-          ></v-text-field>
-          <p v-show="searchB" class="ma-0 pa-0 text-caption">
+            @input="SearchGroups()"
+            @blur="
+              const search_query_q =
+                search_query === '' ? undefined : search_query
+              PushQuery(search_query_q, null, null, null)
+            "
+          >
+          </v-text-field>
+        </v-col>
+        <v-col class="mt-2 mb-5 py-0" cols="12" sm="8" md="8">
+          <p v-show="search_query !== ''" class="ma-0 pa-0 text-caption">
             "{{ search_query }}"の検索結果({{ search_result_number }}件)
           </p>
 
-          <v-chip-group
-            v-show="!searchB"
-            v-model="tag_query"
-            active-class="primary--text"
-            column
-            mandatory
+          <v-menu offset-y>
+            <template #activator="{ on, attrs }">
+              <v-btn
+                :disabled="search_query !== ''"
+                depressed
+                width="135"
+                class="text-subtitle-2 text-capitalize"
+                v-bind="attrs"
+                v-on="on"
+                ><span v-if="selectedTag !== null">{{
+                  selectedTag?.tagname ?? 'すべて'
+                }}</span
+                ><span v-else>お気に入り</span><v-spacer /><v-icon
+                  >mdi-chevron-down</v-icon
+                ></v-btn
+              >
+            </template>
+            <v-list>
+              <v-list-item
+                @click="
+                  PushQuery(null, undefined, null, null)
+                  selectedTag = undefined
+                "
+                >すべて</v-list-item
+              >
+              <v-list-item
+                @click="
+                  PushQuery(null, 'favorite', null, null)
+                  selectedTag = null
+                "
+                >お気に入り</v-list-item
+              >
+              <v-list-item
+                v-for="tag in tags"
+                :key="tag.id"
+                :value="tag.tagname"
+                @click="
+                  PushQuery(null, tag.tagname, null, null)
+                  selectedTag = tag
+                "
+                >{{ tag.tagname }}</v-list-item
+              >
+            </v-list>
+          </v-menu>
+          <v-menu offset-y>
+            <template #activator="{ on, attrs }">
+              <v-btn
+                depressed
+                width="150"
+                class="text-subtitle-2 text-capitalize"
+                v-bind="attrs"
+                v-on="on"
+                >{{ sort_displayname }} <v-spacer /><v-icon
+                  >mdi-chevron-down</v-icon
+                ></v-btn
+              >
+            </template>
+            <v-list>
+              <v-list-item @click="SortGroups('id')">デフォルト順</v-list-item>
+              <v-list-item @click="SortGroups('groupname')"
+                >団体名順</v-list-item
+              >
+              <v-list-item @click="SortGroups('title')">演目名順</v-list-item>
+            </v-list>
+          </v-menu>
+          <v-icon v-show="$route.query.r == 'true'" @click="ReverseGroups()"
+            >mdi-arrow-up</v-icon
           >
-            <v-chip
-              :value="'all'"
-              filter
-              @click="
-                $router.push({ query: {} })
-                selectedTag = undefined
-              "
-            >
-              すべて
-            </v-chip>
-            <v-chip
-              v-for="tag in tags"
-              :key="tag.id"
-              :value="tag.tagname"
-              filter
-              @click="
-                $router.push({ query: { tag: tag.tagname } })
-                selectedTag = tag
-              "
-              >{{ tag.tagname }}</v-chip
-            >
-            <v-divider vertical :thickness="10" class="mx-2 px-0"></v-divider>
-            <v-chip
-              :value="'favorite'"
-              filter
-              class="ml-1"
-              @click="
-                $router.push({ query: { tag: 'favorite' } })
-                selectedTag = null
-              "
-            >
-              お気に入り
-            </v-chip>
-          </v-chip-group>
+          <v-icon v-show="$route.query.r != 'true'" @click="ReverseGroups()"
+            >mdi-arrow-down</v-icon
+          >
         </v-col>
 
         <v-col class="my-0 py-0" cols="12">
@@ -69,7 +107,7 @@
 
         <v-col
           v-for="group in groups"
-          v-show="filterGroups(group)"
+          v-show="FilterGroups(group)"
           :key="group.id"
           cols="12"
           sm="6"
@@ -157,9 +195,8 @@ type Data = {
   nowloading: boolean
   tags: Tag[]
   groups: Group[]
-  searchB: boolean
   search_query: string
-  tag_query: string
+  sort_displayname: string
   query_cache: any
   search_result_number: number
   selectedTag: Tag | undefined | null
@@ -183,9 +220,8 @@ export default Vue.extend({
       groups: [],
       selectedTag: undefined,
       search_result_number: 0,
-      searchB: false,
       search_query: '',
-      tag_query: '',
+      sort_displayname: '',
       query_cache: undefined,
     }
   },
@@ -208,59 +244,91 @@ export default Vue.extend({
     }
   },
   created() {
-    this.SortGroups('id', false)
+    // クエリパラメータを見て検索バー内の文字列を再現など
+    if (typeof this.$route.query.q === 'string') {
+      this.search_query = this.$route.query.q
+      this.PushQuery(null, undefined, null, null)
+      this.SearchGroups()
+    }
 
-    const query = this.$route.query.tag
-    if (typeof query === 'undefined') {
-      this.tag_query = 'all'
+    const query_s =
+      this.$route.query.s === 'groupname' || this.$route.query.s === 'title'
+        ? this.$route.query.s
+        : 'id'
+    this.SortGroups(query_s) // クエリパラメータを見てSortGroupsを実行
+
+    const query_t = this.$route.query.t // query_tは見やすくするためだけに定義
+    // クエリパラメータを見てselectedTagを再現
+    if (query_t === undefined) {
       this.selectedTag = undefined
-    } else if (query === 'favorite') {
-      this.tag_query = 'favorite'
+    } else if (query_t === 'favorite') {
       this.selectedTag = null
-    } else if (typeof query === 'string') {
-      this.tag_query = query
+    } else if (typeof query_t === 'string') {
       for (let i = 0; i < this.tags.length; i++) {
-        if (query === this.tags[i].tagname) {
+        if (query_t === this.tags[i].tagname) {
           this.selectedTag = this.tags[i]
           break
         }
       }
     }
-    if (typeof this.$route.query.search === 'string') {
-      this.SearchGroups(this.$route.query.search)
-    }
   },
 
   methods: {
-    SortGroups(sort: 'id' | 'groupname' | 'title', reverse: boolean) {
+    PushQuery(Q: any, T: any, S: any, R: any) {
+      Q = Q === null ? this.$route.query.q : Q
+      T = T === null ? this.$route.query.t : T
+      S = S === null ? this.$route.query.s : S
+      R = R === null ? this.$route.query.r : R
+      this.$router.push({ query: { q: Q, t: T, s: S, r: R } }) // nullは「現在のクエリを維持」と同義
+    },
+    SortGroups(sort: 'id' | 'groupname' | 'title') {
+      if (sort === 'groupname') {
+        this.sort_displayname = '団体名順'
+      } else if (sort === 'title') {
+        this.sort_displayname = '演目名順'
+      } else {
+        this.sort_displayname = 'デフォルト順'
+      }
       this.groups.sort((x, y) => {
         return (x[sort] ?? '') > (y[sort] ?? '') ? 1 : -1
       })
-      if (reverse === true) {
+      if (this.$route.query.r === 'true') {
         this.groups.reverse()
+      }
+      const sort_query = sort === 'id' ? undefined : sort
+      this.PushQuery(null, null, sort_query, null)
+    },
+    ReverseGroups() {
+      this.SortGroups(
+        this.$route.query.s === 'groupname' || this.$route.query.s === 'title'
+          ? this.$route.query.s
+          : 'id'
+      )
+      this.groups.reverse()
+      if (this.$route.query.r === 'true') {
+        this.PushQuery(null, null, null, undefined)
+      } else {
+        this.PushQuery(null, null, null, 'true')
       }
     },
 
-    SearchGroups(input: string) {
-      this.$router.push({ query: { search: input } })
-      if (input === '') {
-        this.searchB = false
-        if (this.query_cache === undefined) {
-          this.$router.push({ query: {} })
-        } else if (this.query_cache === null) {
-          this.$router.push({ query: { tag: 'favorite' } })
-          this.query_cache = undefined
+    SearchGroups() {
+      if (this.search_query === '') {
+        this.selectedTag = this.query_cache
+        this.query_cache = undefined
+        if (this.selectedTag === undefined) {
+          this.PushQuery(undefined, undefined, null, null)
+        } else if (this.selectedTag === null) {
+          this.PushQuery(undefined, 'favorite', null, null)
         } else {
-          this.$router.push({ query: { tag: this.query_cache } })
-          this.query_cache = undefined
+          this.PushQuery(undefined, this.selectedTag.tagname, null, null)
         }
       } else {
-        if (this.$route.query.tag !== undefined) {
-          this.query_cache = this.$route.query.tag
+        if (this.selectedTag !== undefined) {
+          this.query_cache = this.selectedTag
+          this.selectedTag = undefined
+          this.PushQuery(null, undefined, null, null)
         }
-        this.selectedTag = undefined
-        this.search_query = input
-        this.searchB = true
         this.search_result_number = 0
         for (let i = 0; i < this.groups.length; i++) {
           if (
@@ -281,10 +349,10 @@ export default Vue.extend({
       }
     },
 
-    filterGroups(group: Group) {
+    FilterGroups(group: Group) {
       if (this.selectedTag === undefined) {
         if (
-          !this.searchB ||
+          this.search_query === '' ||
           group.id.toLowerCase().includes(this.search_query.toLowerCase()) ||
           group.groupname
             .toLowerCase()
