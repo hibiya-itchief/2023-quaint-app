@@ -31,12 +31,10 @@ export type Event = {
   id: string
   group_id: string
   eventname: string
-
   starts_at: string
   ends_at: string
   sell_starts: string
   sell_ends: string
-
   target: string
   ticket_stock: number
   lottery: boolean

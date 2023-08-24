@@ -174,7 +174,12 @@ export default Vue.extend({
       drawerMenu: false,
       userGroups: {
         admin: process.env.AZURE_AD_GROUPS_QUAINT_ADMIN as string,
+        entry: process.env.AZURE_AD_GROUPS_QUAINT_ENTRY as string,
         owner: process.env.AZURE_AD_GROUPS_QUAINT_OWNER as string,
+        parents: process.env.AZURE_AD_GROUPS_QUAINT_PARENTS as string,
+        students: process.env.AZURE_AD_GROUPS_QUAINT_STUDENTS as string,
+        teachers: process.env.AZURE_AD_GROUPS_QUAINT_TEACHERS as string,
+        chief: process.env.AZURE_AD_GROUPS_QUAINT_CHIEF as string,
       },
       app_env: process.env.QUAINT_ENV,
       api_url: process.env.BASEURL,
