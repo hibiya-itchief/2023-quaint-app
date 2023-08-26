@@ -137,6 +137,7 @@
 import Vue from 'vue'
 import { OwnerOf } from '~/types/quaint'
 type Data = {
+  userGroups: { admin: string }
   ownerOf: OwnerOf[]
   headers: { text: string; value: string }[]
   search: ''
@@ -145,13 +146,11 @@ type Data = {
   dialogDelete: boolean
 }
 export default Vue.extend({
-  async asyncData({ $axios }): Promise<Partial<Data>> {
-    return {
-      ownerOf: (await $axios.$get('/users/owner_of')) as OwnerOf[],
-    }
-  },
   data(): Data {
     return {
+      userGroups: {
+        admin: process.env.AZURE_AD_GROUPS_QUAINT_ADMIN as string,
+      },
       headers: [
         { text: 'group_id', value: 'group_id' },
         { text: 'user_id', value: 'user_id' },
@@ -168,6 +167,14 @@ export default Vue.extend({
       dialog: false,
       dialogDelete: false,
     }
+  },
+  async created() {
+    if (
+      !(this.$auth.user?.groups as string[]).includes(this.userGroups.admin)
+    ) {
+      this.$nuxt.error({ statusCode: 404, message: 'Not Found' })
+    }
+    this.ownerOf = (await this.$axios.$get('/users/owner_of')) as OwnerOf[]
   },
   methods: {
     createOwnerOf() {

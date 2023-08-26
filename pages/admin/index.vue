@@ -50,11 +50,21 @@
     </v-row>
   </v-app>
 </template>
-<script>
+<script lang="ts">
 export default {
   data() {
     return {
       apiUrl: process.env.BASEURL,
+      userGroups: {
+        admin: process.env.AZURE_AD_GROUPS_QUAINT_ADMIN as string,
+      },
+    }
+  },
+  created() {
+    if (
+      !(this.$auth.user?.groups as string[]).includes(this.userGroups.admin)
+    ) {
+      this.$nuxt.error({ statusCode: 404, message: 'Not Found' })
     }
   },
   methods: {
