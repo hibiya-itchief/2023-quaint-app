@@ -252,16 +252,13 @@ export default Vue.extend({
     }
     if (
       this.$route.query.s === 'groupname' ||
-      this.$route.query.s === 'title' ||
-      this.$route.query.s === 'id'
+      this.$route.query.s === 'title'
     ) {
       const query_s = this.$route.query.s
       if (query_s === 'groupname') {
         this.sort_displayname = '団体名順'
       } else if (query_s === 'title') {
         this.sort_displayname = '演目名順'
-      } else {
-        this.sort_displayname = 'デフォルト順'
       }
       this.groups.sort((x, y) => {
         return (x[query_s] ?? '') > (y[query_s] ?? '') ? 1 : -1
