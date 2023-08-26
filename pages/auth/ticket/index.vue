@@ -52,13 +52,23 @@ type Data = {
 }
 export default Vue.extend({
   name: 'QRCodeReader',
-  auth: false,
   data(): Data {
     return {
       jwt: '',
       error: '',
       without_confirm: false,
       status: 'ready',
+    }
+  },
+  created() {
+    if (
+      !(
+        this.$auth.loggedIn &&
+        (this.$quaintUserRole('school', this.$auth.user) ||
+          this.$quaintUserRole('admin', this.$auth.user))
+      )
+    ) {
+      this.$router.push('/login')
     }
   },
   methods: {
