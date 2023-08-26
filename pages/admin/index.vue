@@ -51,7 +51,8 @@
   </v-app>
 </template>
 <script lang="ts">
-export default {
+import Vue from 'vue'
+export default Vue.extend({
   data() {
     return {
       apiUrl: process.env.BASEURL,
@@ -72,5 +73,5 @@ export default {
       await this.$axios.$post('/admin/update_frontend')
     },
   },
-}
+})
 </script>
