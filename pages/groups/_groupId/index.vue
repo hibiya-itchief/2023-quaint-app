@@ -177,6 +177,9 @@
                 "
                 @click.stop="selectEvent(event)"
               >
+                <!--ここから開発用のメモ-->
+                <p>event.target={{ event.target }}</p>
+                <!--ここまで開発用のメモ-->
                 <div>
                   <v-card-text
                     class="pt-1 pb-0 mb-0 grey--text text--darken-2 text-caption"
@@ -326,10 +329,18 @@
 import { Event, Group } from 'types/quaint'
 import Vue from 'vue'
 type Data = {
+  userGroups: {
+    admin: string
+    entry: string
+    owner: string
+    parents: string
+    students: string
+    teachers: string
+    chief: string
+  }
   group: Group | undefined
   events: Event[]
   selected_event: Event | null
-  userGroups: { admin: string; owner: string }
   videoViewer: boolean
   streamVideoId: string
   editable: boolean
@@ -362,7 +373,12 @@ export default Vue.extend({
     return {
       userGroups: {
         admin: process.env.AZURE_AD_GROUPS_QUAINT_ADMIN as string,
+        entry: process.env.AZURE_AD_GROUPS_QUAINT_ENTRY as string,
         owner: process.env.AZURE_AD_GROUPS_QUAINT_OWNER as string,
+        parents: process.env.AZURE_AD_GROUPS_QUAINT_PARENTS as string,
+        students: process.env.AZURE_AD_GROUPS_QUAINT_STUDENTS as string,
+        teachers: process.env.AZURE_AD_GROUPS_QUAINT_TEACHERS as string,
+        chief: process.env.AZURE_AD_GROUPS_QUAINT_CHIEF as string,
       },
       videoViewer: false,
       group: undefined,
@@ -506,24 +522,24 @@ export default Vue.extend({
     // isTodayで整理券の表示を切り替えると，v-if="events.length === 0"が機能しなくなるので却下
     // 使い方：v-if="isToday(event.sell_starts, event.sell_ends, event.starts_at)"
     /*
-isToday(
-  inputSellStarts: string,
-  inputSellEnds: string,
-  inputStarts: string
-) {
-  const today = new Date().toDateString()
-  const sellStartsDate = new Date(inputSellStarts).toDateString()
-  const sellEndsDate = new Date(inputSellEnds).toDateString()
-  const startDate = new Date(inputStarts).toDateString()
-  if (startDate === today) {
-    return true
-  } else if (sellStartsDate < today && today < sellEndsDate) {
-    return true
-  } else {
-    return false
-  }
-},
-*/
+    isToday(
+      inputSellStarts: string,
+      inputSellEnds: string,
+      inputStarts: string
+    ) {
+      const today = new Date().toDateString()
+      const sellStartsDate = new Date(inputSellStarts).toDateString()
+      const sellEndsDate = new Date(inputSellEnds).toDateString()
+      const startDate = new Date(inputStarts).toDateString()
+      if (startDate === today) {
+        return true
+      } else if (sellStartsDate < today && today < sellEndsDate) {
+        return true
+      } else {
+        return false
+      }
+    },
+    */
 
     // isAvailable: 整理券が配布時間内であればtrue，それ以外はfalseを返すmethod
     isAvailable(event: Event) {
