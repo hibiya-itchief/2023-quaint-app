@@ -2,7 +2,18 @@
   <v-app>
     <v-row justify="center">
       <v-col cols="12" md="8" lg="6">
-        <h1>管理者用画面</h1>
+        <h1 class="my-2">👑管理者用画面</h1>
+        <v-btn class="my-2" outlined color="primary" @click="updateFrontend"
+          >フロントエンドをビルドして最新の状態に更新</v-btn
+        >
+        <v-btn
+          class="my-2"
+          outlined
+          color="primary"
+          @click="$router.push('/admin/manage_owner')"
+          >Owner権限の割り当てを管理</v-btn
+        >
+        <h2 class="my-2">使用しているサービスへのリンク</h2>
         <h3>
           <a :href="apiUrl + 'docs'">{{ apiUrl }}docs</a>
         </h3>
@@ -35,10 +46,6 @@
           quaintのユーザーを管理しているAzure
           B2Cのディレクトリ。一般客が自分のメールアドレスでサインアップするアカウントを管理している。
         </p>
-
-        <v-btn color="primary" @click="updateFrontend"
-          >フロントエンドをビルドして最新の状態に更新</v-btn
-        >
       </v-col>
     </v-row>
   </v-app>
