@@ -2,41 +2,67 @@
   <v-app>
     <v-container>
       <div justify="center">
-        <div class="qrcode-container" :class="status">
-          <v-alert v-if="error != ''" dense type="error">
-            {{ error }}
-          </v-alert>
-          <qrcode-stream @decode="onDecode" @init="onInit" />
-        </div>
+        <v-row justify="center">
+          <v-col cols="12" md="8" lg="6">
+            <div class="qrcode-container" :class="status">
+              <v-alert v-if="error != ''" dense type="error">
+                {{ error }}
+              </v-alert>
+              <qrcode-stream @decode="onDecode" @init="onInit" />
+            </div>
 
-        <div>
-          <v-divider></v-divider>
-          <v-switch
-            v-model="without_confirm"
-            inset
-            label="読み込まれたら自動で使用済みにする(毎回手動で「使用済みにする」ボタンを押す必要が無くなります)"
-          ></v-switch>
-          <div class="status">
             <div>
-              <v-icon>mdi-qrcode-scan</v-icon>
+              <v-divider></v-divider>
+              <div class="status">
+                <v-card>
+                  <v-card-title class="blue--text">
+                    <v-icon color="blue">mdi-qrcode-scan</v-icon>
+                    <span>準備完了</span>
+                  </v-card-title>
+                  <v-card-subtitle
+                    >QRコードをかざして読みこんでください。</v-card-subtitle
+                  >
+                  <v-card-text>
+                    <v-switch
+                      v-model="confirm"
+                      inset
+                      class="my-0"
+                      label="確認してから使用済みにする"
+                    ></v-switch>
+                  </v-card-text>
+                </v-card>
+                <v-card>
+                  <v-card-title class="green--text">
+                    <v-icon color="green">mdi-check-circle-outline</v-icon>
+                    <span>有効</span>
+                  </v-card-title>
+                  <v-card-subtitle
+                    >このQRコードは正当な整理券であることが検証出来ました。「使用済みにする」ボタンを押して入場処理を完了してください。</v-card-subtitle
+                  >
+                  <v-card-actions
+                    ><v-btn
+                      :disabled="!confirm"
+                      elevation="0"
+                      color="primary"
+                      small
+                      @click.stop=""
+                      >使用済みにする</v-btn
+                    ></v-card-actions
+                  >
+                </v-card>
+                <v-card>
+                  <v-card-title class="orange--text">
+                    <v-icon color="orange">mdi-ticket-confirmation</v-icon>
+                    <span>使用済み</span>
+                  </v-card-title>
+                  <v-card-subtitle
+                    >この整理券を使用済みにしました。</v-card-subtitle
+                  >
+                </v-card>
+              </div>
             </div>
-            <div>
-              <v-icon>mdi-loading</v-icon>
-            </div>
-            <div>
-              <v-icon>mdi-ticket-confirmation</v-icon>
-            </div>
-          </div>
-
-          <v-btn
-            :disabled="without_confirm"
-            elevation="0"
-            color="primary"
-            small
-            @click.stop=""
-            >使用済みにする</v-btn
-          >
-        </div>
+          </v-col>
+        </v-row>
       </div>
     </v-container>
   </v-app>
@@ -44,11 +70,13 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { Ticket } from '~/types/quaint'
 type Data = {
   jwt: string
   error: string
-  without_confirm: boolean
+  confirm: boolean
   status: 'ready' | 'scanned' | 'confirmed' | 'used'
+  selectedTicket: Ticket | null
 }
 export default Vue.extend({
   name: 'QRCodeReader',
@@ -56,8 +84,9 @@ export default Vue.extend({
     return {
       jwt: '',
       error: '',
-      without_confirm: false,
+      confirm: true,
       status: 'ready',
+      selectedTicket: null,
     }
   },
   created() {
@@ -74,8 +103,11 @@ export default Vue.extend({
   methods: {
     onDecode(decodeResult: string) {
       const ticket_id = decodeResult.split('/')[-1] // https://2023.seiryofes.com/tickets/{ticket_id}の形式
-      if (this.without_confirm) {
-        console.log(ticket_id)
+      if (this.confirm) {
+        this.$axios.$put('/tickets/' + ticket_id)
+        this.status = 'confirmed'
+      } else {
+        this.status = 'used'
       }
       /* $axios.post("/auth/ticket", {jwt: decodeResult})
         .then((result) => {
@@ -96,10 +128,10 @@ export default Vue.extend({
           error({ message: e.message })
         })) */
     },
-    async onInit(promise) {
+    async onInit(promise: any) {
       try {
         await promise
-      } catch (error) {
+      } catch (error: any) {
         if (error.name === 'NotAllowedError') {
           this.error = 'ERROR: you need to grant camera access permission'
         } else if (error.name === 'NotFoundError') {
@@ -135,12 +167,7 @@ export default Vue.extend({
 </script>
 
 <style>
-.status {
-  margin-top: 20px;
-}
-
 .qrcode-container {
-  width: 90vw;
   height: 60vh;
 }
 </style>
