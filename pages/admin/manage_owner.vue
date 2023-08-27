@@ -2,9 +2,9 @@
   <v-app>
     <v-row justify="center">
       <v-col cols="12" md="8" lg="6">
-        <span class="text-caption" @click="$router.push('/admin')">
-          <v-icon>mdi-chevron-left</v-icon>Adminトップへ
-        </span>
+        <v-btn icon fab small @click="$router.go(-1)">
+          <v-icon>mdi-chevron-left</v-icon>
+        </v-btn>
         <v-card>
           <v-card-title>
             <v-text-field
