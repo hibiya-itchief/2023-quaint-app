@@ -76,7 +76,7 @@
                 isUpNext(
                   new Date(ticketInfo.event.starts_at),
                   new Date(ticketInfo.event.ends_at)
-                )
+                ) && ticketInfo.ticket.status == 'active'
               "
             >
               <v-card-title class="mb-2"
