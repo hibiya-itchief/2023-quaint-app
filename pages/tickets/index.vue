@@ -10,13 +10,6 @@
             >
             -->
 
-          <!--再読み込みボタン-->
-          <div class="text-center pa-1">
-            <v-btn class="mx-1 my-1" color="primary" @click="fetchTicket()"
-              ><v-icon>mdi-reload</v-icon>再読み込み</v-btn
-            >
-          </div>
-
           <!--校内への入場処理が行われていない場合に，入場処理を促すメッセージと処理用のQRコードを表示-->
           <!--ここのデザインをもうちょっと可愛く出来ないかな-->
           <v-card
