@@ -47,5 +47,5 @@ export type Ticket = {
   person: number
   id: string
   created_at: string
-  is_used: boolean
+  status: string
 }
