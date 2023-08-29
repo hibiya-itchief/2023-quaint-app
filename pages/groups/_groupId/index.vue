@@ -160,7 +160,8 @@
               >現地で見たい公演の整理券を取得できます。配布スケジュールはパンフレットをご覧ください。.</v-card-subtitle
             >
             <v-card-subtitle v-if="!$auth.loggedIn"
-              ><v-btn color="primary" :href="'/login'">ログイン</v-btn
+              ><v-btn depressed color="primary" class="mr-1" :href="'/login'"
+                >ログイン</v-btn
               >すると整理券を取得できます。</v-card-subtitle
             >
             <v-divider class="mb-3"></v-divider>
@@ -299,8 +300,10 @@
 
             <!--suitableEventsの長さが0の（表示する公演が無い）時，以下のメッセージを表示-->
             <v-col v-if="suitableEvents().length === 0" cols="12">
-              <v-card>
-                <v-card-title>現在選択できる公演はありません。</v-card-title>
+              <v-card class="pa-2">
+                <span class="grey--text text-h5"
+                  >現在選択できる公演はありません。</span
+                >
               </v-card>
             </v-col>
           </v-card>
