@@ -25,7 +25,6 @@
             <template #top>
               <v-toolbar flat>
                 <v-toolbar-title>Owner権限の割り当て一覧</v-toolbar-title>
-                <v-divider class="mx-4" inset vertical></v-divider>
                 <v-spacer></v-spacer>
                 <v-dialog v-model="dialog" max-width="500px">
                   <template #activator="{ on, attrs }">
@@ -54,19 +53,19 @@
                     <v-card-text>
                       <v-container>
                         <v-row>
-                          <v-col cols="12" sm="6" md="4">
+                          <v-col cols="12" sm="6" md="6">
                             <v-text-field
                               v-model="editedItem.group_id"
                               label="group_id"
                             ></v-text-field>
                           </v-col>
-                          <v-col cols="12" sm="6" md="4">
+                          <v-col cols="12" sm="6" md="6">
                             <v-text-field
                               v-model="editedItem.user_id"
                               label="user_id"
                             ></v-text-field>
                           </v-col>
-                          <v-col cols="12" sm="6" md="4">
+                          <v-col cols="12">
                             <v-text-field
                               v-model="editedItem.note"
                               label="メモ 「(期)_(4桁番号)(名前)」の形式"
@@ -101,16 +100,10 @@
                     </v-card-text>
                     <v-card-actions>
                       <v-spacer></v-spacer>
-                      <v-btn
-                        color="blue darken-1"
-                        text
-                        @click="dialogDelete = false"
+                      <v-btn color="primary" text @click="dialogDelete = false"
                         >キャンセル</v-btn
                       >
-                      <v-btn color="blue darken-1" text @click="deleteItem"
-                        >削除</v-btn
-                      >
-                      <v-spacer></v-spacer>
+                      <v-btn color="primary" @click="deleteItem()">削除</v-btn>
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
