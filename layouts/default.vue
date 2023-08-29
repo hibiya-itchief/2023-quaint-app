@@ -4,13 +4,13 @@
       <span>@{{ app_env }} </span>
       <span style="font-size: 0.5em">API:{{ api_url }} </span>
     </div>
-    <div class="humbuger-box">
+    <div class="hamburger-box">
       <div
-        class="humbugermenu"
+        class="hamburgermenu"
         :class="{ active: drawerMenu }"
         @click="drawerMenu = !drawerMenu"
       >
-        <div class="humbuger-btn"><span></span><span></span><span></span></div>
+        <div class="hamburger-btn"><span></span><span></span><span></span></div>
       </div>
     </div>
 
@@ -257,14 +257,14 @@ export default Vue.extend({
   }
 }
 
-.humbuger-box {
+.hamburger-box {
   position: fixed;
   top: 0;
   left: 0;
   z-index: 1000;
 }
 
-.humbugermenu {
+.hamburgermenu {
   position: relative; /* ボタン内側の基点となるためrelativeを指定 */
   cursor: pointer;
   width: 50px;
@@ -273,13 +273,13 @@ export default Vue.extend({
 }
 
 /* ボタン内側 */
-.humbugermenu .humbuger-btn {
+.hamburgermenu .hamburger-btn {
   transition: all 0.6s; /* アニメーションの設定 */
   width: 50px;
   height: 50px;
 }
 
-.humbugermenu span {
+.hamburgermenu span {
   display: inline-block;
   transition: all 0.4s;
   position: absolute;
@@ -290,35 +290,35 @@ export default Vue.extend({
   width: 45%;
 }
 
-.humbugermenu span:nth-of-type(1) {
+.hamburgermenu span:nth-of-type(1) {
   top: 15px;
 }
 
-.humbugermenu span:nth-of-type(2) {
+.hamburgermenu span:nth-of-type(2) {
   top: 23px;
 }
 
-.humbugermenu span:nth-of-type(3) {
+.hamburgermenu span:nth-of-type(3) {
   top: 31px;
 }
 
 /* activeクラスが付与されると .openbtn-areaが360度回転し、その中の線が回転して×に */
-.humbugermenu.active .humbuger-btn {
+.hamburgermenu.active .hamburger-btn {
   transform: rotate(360deg);
 }
 
-.humbugermenu.active span:nth-of-type(1) {
+.hamburgermenu.active span:nth-of-type(1) {
   top: 18px;
   left: 18px;
   transform: translateY(6px) rotate(-45deg);
   width: 30%;
 }
 
-.humbugermenu.active span:nth-of-type(2) {
+.hamburgermenu.active span:nth-of-type(2) {
   opacity: 0;
 }
 
-.humbugermenu.active span:nth-of-type(3) {
+.hamburgermenu.active span:nth-of-type(3) {
   top: 30px;
   left: 18px;
   transform: translateY(-6px) rotate(45deg);
