@@ -87,10 +87,16 @@
               <v-list-item @click="SortGroups('title')">演目名順</v-list-item>
             </v-list>
           </v-menu>
-          <v-icon v-show="$route.query.r == 'true'" @click="ReverseGroups()"
+          <v-icon
+            v-show="$route.query.r == 'true'"
+            class="arrow-rotate"
+            @click="ReverseGroups()"
             >mdi-arrow-up</v-icon
           >
-          <v-icon v-show="$route.query.r != 'true'" @click="ReverseGroups()"
+          <v-icon
+            v-show="$route.query.r != 'true'"
+            class="arrow-rotate"
+            @click="ReverseGroups()"
             >mdi-arrow-down</v-icon
           >
         </v-col>
@@ -416,6 +422,10 @@ export default Vue.extend({
 })
 </script>
 <style>
+.arrow-rotate:active {
+  transform: rotate(180deg);
+}
+
 .text-truncate {
   display: block;
   white-space: nowrap;
