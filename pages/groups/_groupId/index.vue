@@ -249,7 +249,7 @@
                   {{ timeFormatter(selected_event.ends_at) }}
                 </v-card-subtitle>
 
-                <v-card-subtitle v-if="$auth.$state.strategy == 'ad'"
+                <v-card-subtitle v-if="$quaintUserRole('school', $auth.user)"
                   ><span class="text-h5"
                     ><v-icon>mdi-account-supervisor</v-icon>1</span
                   >人</v-card-subtitle
@@ -629,7 +629,6 @@ export default Vue.extend({
         return 1
       }
       this.dialog = false
-      if (this.$auth.$state.strategy === 'ad') person = 1
       await this.$axios
         .post(
           '/groups/' +
