@@ -150,7 +150,7 @@
         </v-col>
         <v-col cols="12" sm="6" lg="4">
           <!--公演時間の選択-->
-          <v-card class="pa-2">
+          <v-card v-if="!IsNotClassroom(group)" class="pa-2">
             <v-card-title>
               <v-icon>mdi-ticket</v-icon>
               観劇予約
@@ -554,6 +554,18 @@ export default Vue.extend({
     },
     checkTakenTickets(index: number) {
       return this.listTakenTickets[index]
+    },
+    IsNotClassroom(group: Group) {
+      for (let i = 0; i < group.tags.length; i++) {
+        if (
+          group.tags[i].tagname === 'Hebe' ||
+          group.tags[i].tagname === '外部団体' ||
+          group.tags[i].tagname === '部活動'
+        ) {
+          return true
+        }
+      }
+      return false
     },
 
     //  未ログイン状態では全ての公演，ログインしている状態ではユーザ属性に合った公演のみが表示されるようにするmethod
