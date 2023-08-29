@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-row justify="center">
+    <v-row v-if="isAdmin" justify="center">
       <v-col cols="12" md="8" lg="6">
         <v-btn icon fab small @click="$router.go(-1)">
           <v-icon>mdi-chevron-left</v-icon>
@@ -133,6 +133,7 @@ type Data = {
   userGroups: { admin: string }
   ownerOf: OwnerOf[]
   headers: { text: string; value: string }[]
+  isAdmin: boolean
   search: ''
   editedItem: OwnerOf
   dialog: boolean
@@ -151,6 +152,7 @@ export default Vue.extend({
         { text: '操作', value: 'actions' },
       ],
       ownerOf: [],
+      isAdmin: false,
       search: '',
       editedItem: {
         group_id: '',
@@ -162,9 +164,9 @@ export default Vue.extend({
     }
   },
   async created() {
-    if (
-      !(this.$auth.user?.groups as string[]).includes(this.userGroups.admin)
-    ) {
+    if ((this.$auth.user?.groups as string[]).includes(this.userGroups.admin)) {
+      this.isAdmin = true
+    } else {
       this.$nuxt.error({ statusCode: 404, message: 'Not Found' })
     }
     this.ownerOf = (await this.$axios.$get('/users/owner_of')) as OwnerOf[]

@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-row justify="center">
+    <v-row v-if="isAdmin" justify="center">
       <v-col cols="12" md="8" lg="6">
         <h1 class="my-2">👑管理者用画面</h1>
         <v-btn class="my-2" outlined color="primary" @click="updateFrontend"
@@ -59,12 +59,13 @@ export default Vue.extend({
       userGroups: {
         admin: process.env.AZURE_AD_GROUPS_QUAINT_ADMIN as string,
       },
+      isAdmin: false,
     }
   },
   created() {
-    if (
-      !(this.$auth.user?.groups as string[]).includes(this.userGroups.admin)
-    ) {
+    if ((this.$auth.user?.groups as string[]).includes(this.userGroups.admin)) {
+      this.isAdmin = true
+    } else {
       this.$nuxt.error({ statusCode: 404, message: 'Not Found' })
     }
   },
