@@ -145,7 +145,7 @@
       <Nuxt class="main-content" />
     </v-main>
 
-    <v-bottom-navigation color="light-blue" fixed app>
+    <v-bottom-navigation color="sairai" fixed app>
       <v-btn to="/">
         <span>ホーム</span>
         <v-icon>mdi-home</v-icon>
@@ -230,6 +230,7 @@ export default Vue.extend({
   min-width: 80px;
   position: relative;
   text-transform: none;
+  font-weight: bold;
 }
 
 .app-env {
@@ -285,7 +286,7 @@ export default Vue.extend({
   left: 14px;
   height: 3px;
   border-radius: 2px;
-  background: #05aaf4;
+  background: #b49656;
   width: 45%;
 }
 
