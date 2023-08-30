@@ -90,38 +90,34 @@
                 <v-card-subtitle class="pb-0 text-truncate">
                   {{ ticketInfo.group.groupname }}</v-card-subtitle
                 >
-
-                <v-card-subtitle
-                  class="grey--text text--darken-2 text-truncate"
-                >
-                  <!--日付：画面がごちゃごちゃするため省略．1日目の整理券を画面収録して2日目に使う人が現れるなどしたら，実装が必要-->
-                  <!--
+                <div style="display: flex">
+                  <v-card-subtitle
+                    class="grey--text text--darken-2 text-truncate"
+                  >
+                    <!--日付：画面がごちゃごちゃするため省略．1日目の整理券を画面収録して2日目に使う人が現れるなどしたら，実装が必要-->
+                    <!--
                 <span class="text-h3"
                   ><v-icon>mdi-calendar</v-icon
                   >{{ dateFormatter(ticketInfo.event.starts_at) }}</span
                 >
                 -->
+                    <!--上演時刻-->
+                    <span class="text-h3"
+                      ><v-icon>mdi-clock-time-nine</v-icon
+                      >{{ timeFormatter(ticketInfo.event.starts_at) }}</span
+                    >
+                    -{{ timeFormatter(ticketInfo.event.ends_at) }}
+                    <v-spacer></v-spacer>
+                    <!--入場人数-->
+                    <span class="text-h3"
+                      ><v-icon>mdi-account-supervisor</v-icon
+                      >{{ ticketInfo.ticket.person }}</span
+                    >人
+                  </v-card-subtitle>
                   <v-spacer></v-spacer>
-                  <!--上演時刻-->
-                  <span class="text-h3"
-                    ><v-icon>mdi-clock-time-nine</v-icon
-                    >{{ timeFormatter(ticketInfo.event.starts_at) }}</span
-                  >
-                  -{{ timeFormatter(ticketInfo.event.ends_at) }}
-                  <v-spacer></v-spacer>
-                  <!--入場人数-->
-                  <span class="text-h3"
-                    ><v-icon>mdi-account-supervisor</v-icon
-                    >{{ ticketInfo.ticket.person }}</span
-                  >人
-                </v-card-subtitle>
+                  <img class="chochin" src="/images/tyoutin.png" />
+                </div>
               </div>
-
-              <v-progress-linear
-                indeterminate
-                height="15px"
-                color="teal"
-              ></v-progress-linear>
               <v-img
                 v-if="ticketInfo.group.public_thumbnail_image_url != null"
                 :src="ticketInfo.group.public_thumbnail_image_url"
@@ -548,5 +544,38 @@ export default Vue.extend({
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.chochin {
+  animation: flap ease 2s infinite;
+  width: 60px;
+  height: 60px;
+  margin-top: auto;
+}
+
+@keyframes flap {
+  0% {
+    transform: translateY(0);
+  }
+
+  10% {
+    transform: translateY(0);
+  }
+
+  20% {
+    transform: translateY(-10px);
+  }
+
+  30% {
+    transform: translateY(0);
+  }
+
+  40% {
+    transform: translateY(-20px) rotate(10deg);
+  }
+
+  50% {
+    transform: translateY(0);
+  }
 }
 </style>
