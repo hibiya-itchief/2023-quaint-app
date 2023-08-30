@@ -126,16 +126,17 @@
                 v-if="ticketInfo.group.public_thumbnail_image_url != null"
                 :src="ticketInfo.group.public_thumbnail_image_url"
                 width="100%"
-                max-height="130px"
+                contain
+                max-height="300px"
               ></v-img>
             </v-card>
           </div>
           <!--取得した整理券一覧-->
-          <v-card v-if="tickets.length !== 0">
+          <v-card v-if="tickets.length !== 0" class="my-4">
             <v-card-title
               ><v-icon>mdi-ticket-account</v-icon>あなたの整理券</v-card-title
             >
-            <v-expansion-panels>
+            <v-expansion-panels inset>
               <v-expansion-panel
                 v-for="ticketInfo in tickets"
                 :key="ticketInfo.ticket.id"
