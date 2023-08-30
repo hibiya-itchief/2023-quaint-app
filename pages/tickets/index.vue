@@ -42,6 +42,7 @@
           <!--整理券未取得の場合に，「探す」タブへ誘導-->
           <v-card
             v-if="
+              now_loading == false &&
               tickets.length == 0 &&
               ($auth.user?.jobTitle?.includes('Visited') ||
                 $auth.$state.strategy === 'ad')
@@ -344,6 +345,7 @@ type Data = {
   error_message: string
   time: string
   seconds: string
+  now_loading: boolean
 }
 export default Vue.extend({
   name: 'UsersTicketsPage',
@@ -364,6 +366,7 @@ export default Vue.extend({
       error_message: '',
       time: '',
       seconds: '',
+      now_loading: true,
     }
   },
   head: {
@@ -467,6 +470,7 @@ export default Vue.extend({
         else return 0
       })
       this.tickets = ticketInfos
+      this.now_loading = false
     },
     timeFormatter(inputDate: string) {
       const d = new Date(inputDate)
