@@ -141,8 +141,16 @@
                 :key="ticketInfo.ticket.id"
                 focusable
               >
-                <!--activeな整理券のみ表示．キャンセル済み整理券は表示されない-->
-                <div v-if="ticketInfo.ticket.status == 'active'">
+                <!--activeな整理券のみ表示．キャンセル済み整理券とUpNextな整理券は表示されない-->
+                <div
+                  v-if="
+                    ticketInfo.ticket.status == 'active' &&
+                    !isUpNext(
+                      new Date(ticketInfo.event.starts_at),
+                      new Date(ticketInfo.event.ends_at)
+                    )
+                  "
+                >
                   <v-expansion-panel-header class="pa-3">
                     <div class="text-truncate">
                       <v-list-item>
@@ -432,18 +440,20 @@ export default Vue.extend({
 
       const ticketInfos: TicketInfo[] = []
       for (const ticket of tickets) {
-        const group: Group = await this.$axios.$get(
-          '/groups/' + ticket.group_id
-        )
-        const event: Event = await this.$axios.$get(
-          '/groups/' + ticket.group_id + '/events/' + ticket.event_id
-        )
-        const ticketInfo: TicketInfo = {
-          group,
-          event,
-          ticket,
+        if (ticket.status === 'active') {
+          const group: Group = await this.$axios.$get(
+            '/groups/' + ticket.group_id
+          )
+          const event: Event = await this.$axios.$get(
+            '/groups/' + ticket.group_id + '/events/' + ticket.event_id
+          )
+          const ticketInfo: TicketInfo = {
+            group,
+            event,
+            ticket,
+          }
+          ticketInfos.push(ticketInfo)
         }
-        ticketInfos.push(ticketInfo)
       }
 
       ticketInfos.sort((first, second) => {
