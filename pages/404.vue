@@ -9,7 +9,8 @@
           「それでもダメな場合は」みたいな
           <a href="https://forms.gle/aRv81UtSCSgS2gHq8"
             >フィードバックを送信(GoogleForm)</a
-          >--->
+          >
+          --->
     </div>
   </v-app>
 </template>
