@@ -146,16 +146,24 @@
                   <v-expansion-panel-header class="pa-3">
                     <div class="text-truncate">
                       <v-list-item>
-                        <v-img
-                          v-if="
-                            ticketInfo.group.public_thumbnail_image_url != null
-                          "
-                          :src="ticketInfo.group.public_thumbnail_image_url"
-                          max-width="90px"
-                          height="165px"
-                          class="mr-2"
-                          contain
-                        ></v-img>
+                        <div>
+                          <v-img
+                            v-if="
+                              ticketInfo.group.public_thumbnail_image_url !=
+                              null
+                            "
+                            height="120px"
+                            width="90px"
+                            contain
+                            :src="ticketInfo.group.public_thumbnail_image_url"
+                          ></v-img>
+                          <v-img
+                            v-else
+                            :class="HashColor(ticketInfo.group.id)"
+                            height="120px"
+                            width="90px"
+                          ></v-img>
+                        </div>
                         <div class="ma-2 text-truncate">
                           <!--取得した整理券の情報を表示-->
                           <v-list-item-subtitle class="text-truncate"
@@ -496,6 +504,29 @@ export default Vue.extend({
         })
       this.cancelDialog = false
       this.fetchTicket()
+    },
+    HashColor(text: string) {
+      // group.idを色数で割った余りでデフォルトの色を決定
+      const colors = [
+        'blue-grey',
+        'brown',
+        'deep-orange',
+        'amber',
+        'lime',
+        'light-green',
+        'teal',
+        'cyan',
+        'light-blue',
+        'indigo',
+        'pink',
+      ]
+      let index = 0
+      for (let i = 0; i < text.length; i++) {
+        // 文字列をUnicodeの和に変換
+        index += text.codePointAt(i) ?? 1
+      }
+      index = index % colors.length
+      return colors[index]
     },
   },
 })
