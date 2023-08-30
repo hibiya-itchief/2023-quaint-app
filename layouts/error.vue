@@ -32,6 +32,7 @@
 import Vue from 'vue'
 export default Vue.extend({
   name: 'EmptyLayout',
+  auth: false,
   layout: 'empty',
   props: {
     error: {

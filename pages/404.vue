@@ -1,6 +1,6 @@
 <template>
   <v-app dark>
-    <div v-if="error.statusCode === 404" id="error-not-found">
+    <div id="error-not-found">
       <h1 v-if="$vuetify.breakpoint.xs" class="status-code-xs">404</h1>
       <h1 v-else class="status-code">404</h1>
       <p>お探しのページは見つかりません。</p>
@@ -18,6 +18,7 @@
 import Vue from 'vue'
 export default Vue.extend({
   name: 'EmptyLayout',
+  auth: false,
   layout: 'empty',
   props: {
     error: {
