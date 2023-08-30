@@ -82,6 +82,12 @@ const nuxtConfig: NuxtConfig = {
   router: {
     base: '/',
     middleware: ['auth'],
+    extendRoutes(routes, resolve) {
+      routes.push({
+        path: '*',
+        component: resolve(__dirname, 'pages/404.vue'),
+      })
+    },
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
