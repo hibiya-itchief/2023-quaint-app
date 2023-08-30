@@ -42,20 +42,38 @@
                 >
                   団体代表者
                 </v-chip>
-
-                <!--
-                <v-chip outlined> Entry </v-chip>
-                <v-chip outlined> Authorizer </v-chip>
-                <v-chip outlined> 家族用アカウント </v-chip>-->
+                <v-chip
+                  v-show="$auth.user?.groups?.includes(userGroups.parents)"
+                  outlined
+                >
+                  保護者用アカウント
+                </v-chip>
+                <v-chip
+                  v-show="$auth.user?.groups?.includes(userGroups.students)"
+                  outlined
+                >
+                  生徒用アカウント
+                </v-chip>
+                <v-chip
+                  v-show="$auth.user?.groups?.includes(userGroups.teachers)"
+                  outlined
+                >
+                  先生用アカウント
+                </v-chip>
+                <v-chip
+                  v-show="$auth.user?.groups?.includes(userGroups.chief)"
+                  outlined
+                >
+                  チーフ会
+                </v-chip>
+                <!--(
+                  userGroups.entry)で同様の処理が可能？
                 <v-chip
                   v-show="$auth.user?.jobTitle?.includes('Visited')"
                   outlined
                 >
                   校内入場処理済み
-                </v-chip>
-                <v-chip v-show="$auth.$state.strategy == 'ad'" outlined>
-                  生徒用アカウント
-                </v-chip>
+                </v-chip>-->
               </v-chip-group>
               <p class="ma-0 pa-0 text-caption grey--text">
                 ユーザーID：{{ $auth.user?.oid ?? $auth.user?.sub }}
