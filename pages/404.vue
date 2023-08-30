@@ -1,6 +1,6 @@
 <template>
   <v-app dark>
-    <div id="error-not-found">
+    <div id="error-page">
       <h1 v-if="$vuetify.breakpoint.xs" class="status-code-xs">404</h1>
       <h1 v-else class="status-code">404</h1>
       <p>お探しのページは見つかりません。</p>
@@ -33,7 +33,7 @@ export default Vue.extend({
 </script>
 
 <style>
-#error-not-found {
+#error-page {
   display: flex;
   justify-content: end;
   align-items: center;
