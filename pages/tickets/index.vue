@@ -130,8 +130,6 @@
               ></v-img>
             </v-card>
           </div>
-        </v-col>
-        <v-col cols="12" sm="6" lg="6">
           <!--取得した整理券一覧-->
           <v-card v-if="tickets.length !== 0">
             <v-card-title
