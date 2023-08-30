@@ -19,6 +19,7 @@
       <h1 v-else class="status-code">{{ error.statusCode }}</h1>
       <p>エラーが発生しました。</p>
       <p>ブラウザのリロードボタンを押し、再読み込みをお試しください。</p>
+      <p>それでも治らない場合は、IT委員にお声がけください。</p>
       <!-- フィードバックに類するものを用意する、
         「それでもダメな場合は」みたいな
         <a href="https://forms.gle/aRv81UtSCSgS2gHq8"
