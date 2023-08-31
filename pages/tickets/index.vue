@@ -119,6 +119,18 @@
                   <img class="chochin" src="/images/tyoutin.png" />
                 </div>
               </div>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <!--終演時刻前の時だけ「整理券をキャンセル」ボタンを表示-->
+                <v-btn
+                  v-if="!isUsed(new Date(ticketInfo.event.ends_at))"
+                  color="error"
+                  @click="selectCancelTicket(ticketInfo)"
+                >
+                  <v-icon>mdi-close</v-icon>
+                  整理券をキャンセル
+                </v-btn>
+              </v-card-actions>
               <v-img
                 v-if="ticketInfo.group.public_thumbnail_image_url != null"
                 :src="ticketInfo.group.public_thumbnail_image_url"
