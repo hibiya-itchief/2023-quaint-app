@@ -245,9 +245,6 @@ const nuxtConfig: NuxtConfig = {
         })
       ).json()) as Group[]
       // デフォルト順にソート
-      groups.sort((x, y) => {
-        return x.id > y.id ? 1 : -1
-      })
       const tags: Tag[] = (await (
         await fetch(baseurl_without_slash + '/tags', {
           method: 'GET',
