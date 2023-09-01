@@ -818,6 +818,13 @@ export default Vue.extend({
     }
   },
   async created() {
+    // 入力フォームに現在の内容を提示
+    this.change_title_input = this.group?.title ?? ''
+    this.change_description_input = this.group?.description ?? ''
+    this.change_twitter_url_input = this.group?.twitter_url ?? ''
+    this.change_instagram_url_input = this.group?.instagram_url ?? ''
+    this.change_stream_url_input = this.group?.stream_url ?? ''
+
     this.hostname = location.host // data()のreturn()内で使うとエラーになるのでここで代入
     if (
       !(this.$auth.user?.groups as string[]).includes(this.userGroups.admin)
