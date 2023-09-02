@@ -1,7 +1,7 @@
 <template>
   <v-app dark>
     <v-row justify="center" align-content="center">
-      <p style="font-size: 150%">読み込み中…</p>
+      <p style="font-size: 150%">ログイン中…</p>
     </v-row>
     <v-row justify="center">
       <v-progress-circular
@@ -30,8 +30,6 @@ export default Vue.extend({
   created() {
     if (this.$route.query.error !== undefined) {
       this.$router.push(`/login?error=loginerror`)
-    } else if (this.$route.query.code === undefined) {
-      this.$nuxt.error({ statusCode: 404, message: 'Not Found' })
     }
   },
 })
