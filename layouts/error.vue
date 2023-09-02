@@ -17,7 +17,7 @@
       <div v-else>
         <p>指定したURLが正しいかご確認の上、再読み込みをお試しください。</p>
       </div>
-      <v-btn outlined href="https://forms.gle/aRv81UtSCSgS2gHq8" align="center"
+      <v-btn outlined href="https://forms.gle/aRv81UtSCSgS2gHq8"
         ><v-icon>mdi-clipboard-text</v-icon>お問い合わせフォーム</v-btn
       >
     </div>
