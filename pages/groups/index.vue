@@ -103,12 +103,17 @@
 
         <v-col class="my-0 py-0" cols="12">
           <v-divider class="my-0 py-0"></v-divider>
+          <!--
+            現状ほぼnowloading文を見ることがないこと、
+            開発環境ではレンダリング中にlocalStorageが使えないことから
+            一旦無効にする
           <div v-show="nowloading">
             <p class="my-0 py-1 text-body-1 grey--text">読み込み中...</p>
             <p class="my-0 py-1 text-caption grey--text">
               時間がかかることがあります(学校のWi-Fi使用中など)
             </p>
           </div>
+          -->
         </v-col>
 
         <v-col
@@ -161,7 +166,7 @@
                 ></v-img>
                 <!--</v-avatar>-->
               </div>
-              <div class="px-1 text-truncate" style="width: 100%;">
+              <div class="px-1 text-truncate" style="width: 100%">
                 <v-card-title class="pb-2 text-truncate">
                   {{ group.title }}
                 </v-card-title>
@@ -185,7 +190,27 @@
                     </v-chip>
                   </v-chip-group>
                   <v-spacer />
-                  <v-icon>mdi-bookmark-outline</v-icon>
+                  <v-icon
+                    v-show="!FilterBookmarks(group)"
+                    color="sairai"
+                    @click.stop="
+                      localStorage.setItem(
+                        'seiryofes.groups.favorite.' + group.id,
+                        group.id
+                      )
+                    "
+                    >mdi-bookmark-outline</v-icon
+                  >
+                  <v-icon
+                    v-show="FilterBookmarks(group)"
+                    color="sairai"
+                    @click.stop="
+                      localStorage.removeItem(
+                        'seiryofes.groups.favorite.' + group.id
+                      )
+                    "
+                    >mdi-bookmark</v-icon
+                  >
                 </v-card-actions>
               </div>
             </div>
@@ -215,11 +240,11 @@ export default Vue.extend({
   auth: false,
   async asyncData({ $axios, payload }): Promise<Partial<Data>> {
     if (payload !== undefined) {
-      return { nowloading: false, groups: payload.groups, tags: payload.tags }
+      return { groups: payload.groups, tags: payload.tags }
     }
     const task = [$axios.$get('/groups'), $axios.$get('/tags')]
     const res = await Promise.all(task)
-    return { nowloading: false, groups: res[0], tags: res[1] }
+    return { groups: res[0], tags: res[1] }
   },
   data(): Data {
     return {
@@ -290,6 +315,9 @@ export default Vue.extend({
         }
       }
     }
+  },
+  mounted() {
+    this.nowloading = false
   },
 
   methods: {
@@ -369,6 +397,7 @@ export default Vue.extend({
     },
 
     FilterGroups(group: Group) {
+      if (this.nowloading === true) return false
       if (this.selectedTag === undefined) {
         if (
           this.search_query === '' ||
@@ -396,6 +425,17 @@ export default Vue.extend({
         return false
       }
     }, // tag全体（{id:hogehoge, tagname:honyohonyo}の形）を用いると，tagが一致している判定がうまく行えなかったので，idを用いてtagの一致を判定している
+
+    FilterBookmarks(group: Group) {
+      // お気に入りならtrue
+      if (this.nowloading === true) return false
+      for (let i = 0; i < localStorage.length; i++) {
+        if ('seiryofes.groups.favorite.' + group.id === localStorage.key(i)) {
+          return true
+        }
+      }
+      return false
+    },
 
     HashColor(text: string) {
       // group.idを色数で割った余りでデフォルトの色を決定
