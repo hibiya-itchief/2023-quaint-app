@@ -77,35 +77,37 @@
               <v-list-item @click="SortGroups('title')">演目名順</v-list-item>
             </v-list>
           </v-menu>
-          <v-icon
-            v-show="display_bookmarks"
-            color="sairai"
-            @click="
-              display_bookmarks = false
-              PushQuery(null, null, undefined, null, null)
-            "
-            >mdi-bookmark-multiple</v-icon
-          >
-          <v-icon
-            v-show="!display_bookmarks"
-            @click="
-              display_bookmarks = true
-              PushQuery(null, null, true, null, null)
-            "
-            >mdi-bookmark-multiple-outline</v-icon
-          >
-          <v-icon
-            v-show="$route.query.r == 'true'"
-            class="arrow-rotate"
-            @click="ReverseGroups()"
-            >mdi-arrow-up</v-icon
-          >
-          <v-icon
-            v-show="$route.query.r != 'true'"
-            class="arrow-rotate"
-            @click="ReverseGroups()"
-            >mdi-arrow-down</v-icon
-          >
+          <div v-if="!nowloading" style="display: inline">
+            <v-icon
+              v-show="display_bookmarks"
+              color="sairai"
+              @click="
+                display_bookmarks = false
+                PushQuery(null, null, undefined, null, null)
+              "
+              >mdi-bookmark-multiple</v-icon
+            >
+            <v-icon
+              v-show="!display_bookmarks"
+              @click="
+                display_bookmarks = true
+                PushQuery(null, null, true, null, null)
+              "
+              >mdi-bookmark-multiple-outline</v-icon
+            >
+            <v-icon
+              v-show="$route.query.r == 'true'"
+              class="arrow-rotate"
+              @click="ReverseGroups()"
+              >mdi-arrow-up</v-icon
+            >
+            <v-icon
+              v-show="$route.query.r != 'true'"
+              class="arrow-rotate"
+              @click="ReverseGroups()"
+              >mdi-arrow-down</v-icon
+            >
+          </div>
         </v-col>
 
         <v-col class="my-0 py-0" cols="12">
@@ -205,6 +207,13 @@
             </div>
           </v-card>
         </v-col>
+        <p
+          v-show="!nowloading && display_bookmarks"
+          class="mt-10"
+          style="text-align: center"
+        >
+          団体の詳細ページでブックマークを追加することができます。
+        </p>
       </v-row>
     </v-container>
   </v-app>
