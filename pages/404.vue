@@ -1,16 +1,19 @@
 <template>
   <v-app dark>
     <div id="error-page">
-      <h1 v-if="$vuetify.breakpoint.xs" class="status-code-xs">404</h1>
-      <h1 v-else class="status-code">404</h1>
+      <div v-if="$vuetify.breakpoint.xs">
+        <h1 class="status-code-xs">404</h1>
+        <h1 class="error-message-xs">Not Found</h1>
+      </div>
+      <div v-else>
+        <h1 class="status-code">404</h1>
+        <h1 class="error-message">Not Found</h1>
+      </div>
       <p>お探しのページは見つかりません。</p>
       <p>指定したURLが正しいかご確認の上、再読み込みをお試しください。</p>
-      <!-- フィードバックに類するものを用意する、
-          「それでもダメな場合は」みたいな
-          <a href="https://forms.gle/aRv81UtSCSgS2gHq8"
-            >フィードバックを送信(GoogleForm)</a
-          >
-          -->
+      <v-btn outlined href="https://forms.gle/aRv81UtSCSgS2gHq8" align="center"
+        ><v-icon>mdi-clipboard-text</v-icon>お問い合わせフォーム</v-btn
+      >
     </div>
   </v-app>
 </template>
@@ -36,7 +39,7 @@ export default Vue.extend({
 <style>
 #error-page {
   display: flex;
-  justify-content: end;
+  justify-content: center;
   align-items: center;
   flex-direction: column;
   margin: auto;
@@ -46,14 +49,30 @@ export default Vue.extend({
 }
 
 .status-code {
+  text-align: center;
   font-family: serif;
   font-size: 1500%;
   color: #b49656;
+  height: 60%;
 }
 
 .status-code-xs {
+  text-align: center;
   font-family: serif;
   font-size: 1000%;
+  color: #b49656;
+  height: 60%;
+}
+
+.error-message {
+  text-align: center;
+  font-size: 300%;
+  color: #b49656;
+}
+
+.error-message-xs {
+  text-align: center;
+  font-size: 200%;
   color: #b49656;
 }
 </style>
