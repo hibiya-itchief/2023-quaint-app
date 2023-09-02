@@ -207,14 +207,14 @@
             </div>
           </v-card>
         </v-col>
-        <p
-          v-show="!nowloading && display_bookmarks"
-          class="mt-10"
-          style="text-align: center"
-        >
-          団体の詳細ページでブックマークを追加することができます。
-        </p>
       </v-row>
+      <p
+        v-show="!nowloading && display_bookmarks"
+        class="mt-10"
+        style="text-align: center"
+      >
+        団体の詳細ページでブックマークを追加することができます。
+      </p>
     </v-container>
   </v-app>
 </template>
