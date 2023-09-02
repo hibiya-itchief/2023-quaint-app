@@ -190,25 +190,7 @@
                     </v-chip>
                   </v-chip-group>
                   <v-spacer />
-                  <v-icon
-                    v-show="!FilterBookmarks(group)"
-                    color="sairai"
-                    @click.stop="
-                      localStorage.setItem(
-                        'seiryofes.groups.favorite.' + group.id,
-                        group.id
-                      )
-                    "
-                    >mdi-bookmark-outline</v-icon
-                  >
-                  <v-icon
-                    v-show="FilterBookmarks(group)"
-                    color="sairai"
-                    @click.stop="
-                      localStorage.removeItem(
-                        'seiryofes.groups.favorite.' + group.id
-                      )
-                    "
+                  <v-icon v-if="FilterBookmarks(group.id)" color="sairai"
                     >mdi-bookmark</v-icon
                   >
                 </v-card-actions>
@@ -426,11 +408,11 @@ export default Vue.extend({
       }
     }, // tag全体（{id:hogehoge, tagname:honyohonyo}の形）を用いると，tagが一致している判定がうまく行えなかったので，idを用いてtagの一致を判定している
 
-    FilterBookmarks(group: Group) {
+    FilterBookmarks(id: string) {
       // お気に入りならtrue
       if (this.nowloading === true) return false
       for (let i = 0; i < localStorage.length; i++) {
-        if ('seiryofes.groups.favorite.' + group.id === localStorage.key(i)) {
+        if ('seiryofes.groups.favorite.' + id === localStorage.key(i)) {
           return true
         }
       }
