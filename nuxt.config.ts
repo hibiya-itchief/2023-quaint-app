@@ -215,6 +215,9 @@ const nuxtConfig: NuxtConfig = {
       dark: false,
       themes: {
         light: {
+          sairai: '#b49656',
+        },
+        dark: {
           primary: colors.blue.darken2,
           accent: colors.grey.darken3,
           secondary: colors.amber.darken3,
@@ -222,7 +225,6 @@ const nuxtConfig: NuxtConfig = {
           warning: colors.amber.base,
           error: colors.deepOrange.accent4,
           success: colors.green.accent3,
-          sairai: '#b49656',
         },
       },
     },
