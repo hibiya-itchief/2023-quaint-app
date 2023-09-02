@@ -161,7 +161,7 @@
                 ></v-img>
                 <!--</v-avatar>-->
               </div>
-              <div class="px-1 text-truncate">
+              <div class="px-1 text-truncate" style="width: 100%;">
                 <v-card-title class="pb-2 text-truncate">
                   {{ group.title }}
                 </v-card-title>
@@ -184,6 +184,8 @@
                       {{ tag.tagname }}
                     </v-chip>
                   </v-chip-group>
+                  <v-spacer />
+                  <v-icon>mdi-bookmark-outline</v-icon>
                 </v-card-actions>
               </div>
             </div>
