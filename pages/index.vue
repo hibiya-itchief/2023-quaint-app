@@ -27,19 +27,36 @@
           >
           <v-card-text>〒100-0014 東京都千代田区永田町2-16-1</v-card-text>
           <v-card-title
-            ><v-icon>mdi-account-group</v-icon
-            >すべての方に御入場いただけます</v-card-title
+            ><v-icon>mdi-account-group</v-icon>すべての方</v-card-title
           >
           <v-card-text
-            >一般の方（中学生含む）、保護者、本校卒業生など。感染症流行状況により変更の可能性あり。</v-card-text
+            >一般の方（中学生含む）、保護者、本校卒業生など全ての方にご入場いただけます。感染症流行状況により変更の可能性があります。</v-card-text
           >
         </v-card>
       </v-col>
 
       <v-col cols="10" md="5" sm="10"
+        ><v-card class="my-auto" to="/access">
+          <div>
+            <v-card-title
+              ><v-icon>mdi-train</v-icon>本校へのアクセス</v-card-title
+            >
+          </div>
+        </v-card></v-col
+      >
+      <v-col cols="10" md="5" sm="10"
         ><v-card class="my-auto" to="/groups">
           <div>
             <v-card-title><v-icon>mdi-magnify</v-icon>公演一覧</v-card-title>
+          </div>
+        </v-card></v-col
+      >
+      <v-col cols="10" md="5" sm="10"
+        ><v-card class="my-auto" to="/groups">
+          <div>
+            <v-card-title
+              ><v-icon>mdi-map-clock</v-icon>タイムテーブル</v-card-title
+            >
           </div>
         </v-card></v-col
       >
