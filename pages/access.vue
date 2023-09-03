@@ -22,14 +22,18 @@
             ※
             傾斜がきついため、ご年配の方やお子様連れの方は永田町駅側からお越しください。
           </p>
-          <br />
-          <p>
+          <p class="sta-gijido">国会議事堂前駅 ▶ 丸ノ内線 / 千代田線</p>
+          <p class="sta-gijido">（溜池山王駅） ▶ 銀座線 / 南北線</p>
+          <p class="sta-gijido-indent">
             ※
             <span class="attention"
               >溜池山王駅・国会議事堂駅側にある正門からの入場はできません</span
             >。
           </p>
-          <p>通用門（永田町駅・赤坂見附駅側）へお回りください。</p>
+          <p class="sta-gijido-indent">5番出口より地図上の迂回路を通り、</p>
+          <p class="sta-gijido-indent">
+            通用門（永田町駅・赤坂見附駅側）へお回りください。
+          </p>
         </v-col>
       </v-row>
     </v-container>
@@ -86,5 +90,14 @@ h2 {
 
 .sta-mitsuke-indent {
   margin-left: 6.5rem;
+}
+
+.sta-gijido {
+  margin-bottom: 0;
+}
+
+.sta-gijido-indent {
+  margin-left: 8.5rem;
+  margin-bottom: 0;
 }
 </style>
