@@ -786,7 +786,7 @@ export default Vue.extend({
       change_thumbnail_image_input: null,
       change_tags_form: false,
       change_events_form: false,
-      add_eventname: '例)1日目第一公演',
+      add_eventname: '例)第1公演',
       add_event_target_list: [
         { target: 'school_parents', text: '生徒・保護者・先生' },
         { target: 'school', text: '生徒・先生' },
