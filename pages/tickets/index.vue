@@ -116,7 +116,7 @@
                     >人
                   </v-card-subtitle>
                   <v-spacer></v-spacer>
-                  <img class="chochin" src="/images/tyoutin.png" />
+                  <img class="chochin" src="/images/chochin.png" />
                 </div>
               </div>
               <v-card-actions>
