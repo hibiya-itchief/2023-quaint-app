@@ -82,6 +82,7 @@ const nuxtConfig: NuxtConfig = {
   router: {
     base: '/',
     middleware: ['auth'],
+    trailingSlash: false,
     extendRoutes(routes, resolve) {
       routes.push({
         path: '*',
