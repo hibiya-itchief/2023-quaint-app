@@ -1,8 +1,19 @@
 <template>
   <v-app>
+    <div v-if="showVideo" class="splash-video">
+      <div class="splash-container">
+        <video
+          src="/images/sairai_short2.mp4"
+          webkit-playsinline
+          playsinline
+          autoplay
+          muted
+        ></video>
+      </div>
+    </div>
     <v-row justify="center">
       <v-col cols="12">
-        <v-parallax src="/images/topBackground.png" height="600">
+        <v-parallax src="/images/topBackground2.jpg" height="600">
           <v-row align="center" justify="center">
             <v-col cols="10" md="5" sm="10">
               <v-card class="text-center">
@@ -93,7 +104,12 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { Route } from 'vue-router'
 import CountDown from '~/components/CountDown.vue'
+type Data = {
+  showVideo: boolean
+  prevRoute: Route | null
+}
 export default Vue.extend({
   name: 'IndexPage',
   auth: false,
@@ -147,6 +163,30 @@ export default Vue.extend({
       },
     ],
   },
+  data(): Data {
+    return {
+      showVideo: true,
+      prevRoute: null,
+    }
+  },
+  beforeRouteEnter(to, from, next) {
+    // vue-routerの処理に割り込んで(?)リファラを取得する
+    next((vm: any) => {
+      vm.prevRoute = from
+    })
+  },
+  mounted() {
+    // リファラが「/」なら(リンク直アクセスor他オリジンから)、最初のさいらいビデオを流す
+    if (
+      this.prevRoute?.fullPath !== undefined &&
+      this.prevRoute?.fullPath !== null &&
+      this.prevRoute?.fullPath === '/'
+    ) {
+      this.showVideo = true
+    } else {
+      this.showVideo = false
+    }
+  },
 })
 </script>
 
@@ -180,5 +220,69 @@ ion-icon {
   font-size: 4vw;
   text-decoration: none;
   color: #000;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+.splash-video {
+  background-color: #fff;
+  position: fixed;
+  top: 0;
+  left: 0;
+  animation: fade-out linear 5.5s forwards;
+
+  /* keyframeに対応していないブラウザで見ると一生画面が真っ白になるので、 */
+  width: 0;
+  height: 0;
+  overflow: hidden; /* スプラッシュ背景が消えた時に、videoがはみ出さないようにする */
+}
+
+.splash-container {
+  /* コンテナをスプラッシュ背景の中央に配置する */
+  width: 100vw;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+video {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+@keyframes fade-out {
+  0% {
+    opacity: 1;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+  }
+
+  90% {
+    opacity: 1;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+  }
+
+  99% {
+    opacity: 0;
+    display: none;
+    width: 100%;
+    height: 100%;
+    z-index: -1000;
+  }
+
+  100% {
+    opacity: 0;
+    display: none;
+    width: 0;
+    height: 0;
+    z-index: -1000;
+  }
 }
 </style>
