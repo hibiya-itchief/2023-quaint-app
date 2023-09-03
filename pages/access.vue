@@ -24,10 +24,12 @@
           </p>
           <br />
           <p>
-            ※ 溜池山王駅・国会議事堂駅側にある<span class="attention"
-              >正門からの入場はできません</span
-            >。通用門（永田町駅・赤坂見附駅側）へお回りください。
+            ※
+            <span class="attention"
+              >溜池山王駅・国会議事堂駅側にある正門からの入場はできません</span
+            >。
           </p>
+          <p>通用門（永田町駅・赤坂見附駅側）へお回りください。</p>
         </v-col>
       </v-row>
     </v-container>
@@ -67,6 +69,7 @@ h2 {
 .attention {
   color: #b49656;
   font-weight: bold;
+  text-decoration: underline;
 }
 
 .sta-nagata {
