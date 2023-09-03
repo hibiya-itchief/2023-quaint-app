@@ -792,6 +792,7 @@ export default Vue.extend({
         { target: 'school', text: '生徒・先生' },
         { target: 'parents', text: '保護者のみ' },
         { target: 'student', text: '生徒のみ' },
+        { target: 'paper', text: '紙整理券' },
       ],
       add_event_target: {
         target: 'school_parents',
