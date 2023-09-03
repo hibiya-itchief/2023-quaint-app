@@ -150,7 +150,7 @@
         </v-col>
         <v-col cols="12" sm="6" lg="4">
           <!--公演時間の選択-->
-          <v-card class="pa-2">
+          <v-card v-if="!IsNotClassroom(group)" class="pa-2">
             <v-card-title>
               <v-icon>mdi-ticket</v-icon>
               観劇予約
@@ -160,13 +160,14 @@
               >現地で見たい公演の整理券を取得できます。配布スケジュールはパンフレットをご覧ください。.</v-card-subtitle
             >
             <v-card-subtitle v-if="!$auth.loggedIn"
-              ><v-btn color="primary" :href="'/login'">ログイン</v-btn
+              ><v-btn depressed color="primary" class="mr-1" :href="'/login'"
+                >ログイン</v-btn
               >すると整理券を取得できます。</v-card-subtitle
             >
             <v-divider class="mb-3"></v-divider>
 
             <v-btn class="ma-2" color="primary" @click="$nuxt.refresh()"
-              ><v-icon>mdi-reload</v-icon>再読み込み</v-btn
+              ><v-icon class="mr-1">mdi-reload</v-icon>再読み込み</v-btn
             >
             <div v-for="(event, index) in suitableEvents()" :key="event.id">
               <v-card
@@ -195,7 +196,11 @@
                 <v-spacer></v-spacer>
                 <div class="my-auto mx-2">
                   <!--ここから配布ステータスの条件分岐-->
-                  <v-btn v-if="!isAvailable(event)" color="grey" outlined
+                  <v-btn
+                    v-if="!isAvailable(event)"
+                    color="grey"
+                    outlined
+                    style="font-weight: bold"
                     >時間外<v-icon>mdi-cancel</v-icon></v-btn
                   >
                   <v-btn
@@ -204,6 +209,7 @@
                     "
                     color="green"
                     outlined
+                    style="font-weight: bold"
                     >配布中<v-icon>mdi-circle-double</v-icon></v-btn
                   >
                   <!--8割以上で黄色になる-->
@@ -214,12 +220,14 @@
                     "
                     color="orange"
                     outlined
-                    >僅少<v-icon>mdi-triangle-outline</v-icon></v-btn
+                    style="font-weight: bold"
+                    >残りわずか<v-icon>mdi-triangle-outline</v-icon></v-btn
                   >
                   <v-btn
                     v-else-if="checkTakenTickets(index) >= checkStock(index)"
                     color="red"
                     outlined
+                    style="font-weight: bold"
                     >完売<v-icon>mdi-close</v-icon></v-btn
                   >
                   <!--ここまで配布ステータスの条件分岐-->
@@ -249,7 +257,7 @@
                   {{ timeFormatter(selected_event.ends_at) }}
                 </v-card-subtitle>
 
-                <v-card-subtitle v-if="$auth.$state.strategy == 'ad'"
+                <v-card-subtitle v-if="$quaintUserRole('school', $auth.user)"
                   ><span class="text-h5"
                     ><v-icon>mdi-account-supervisor</v-icon>1</span
                   >人</v-card-subtitle
@@ -292,8 +300,10 @@
 
             <!--suitableEventsの長さが0の（表示する公演が無い）時，以下のメッセージを表示-->
             <v-col v-if="suitableEvents().length === 0" cols="12">
-              <v-card>
-                <v-card-title>現在選択できる公演はありません。</v-card-title>
+              <v-card class="pa-2">
+                <span class="grey--text text-h5"
+                  >現在選択できる公演はありません。</span
+                >
               </v-card>
             </v-col>
           </v-card>
@@ -545,6 +555,18 @@ export default Vue.extend({
     checkTakenTickets(index: number) {
       return this.listTakenTickets[index]
     },
+    IsNotClassroom(group: Group) {
+      for (let i = 0; i < group.tags.length; i++) {
+        if (
+          group.tags[i].tagname === 'Hebe' ||
+          group.tags[i].tagname === '外部団体' ||
+          group.tags[i].tagname === '部活動'
+        ) {
+          return true
+        }
+      }
+      return false
+    },
 
     //  未ログイン状態では全ての公演，ログインしている状態ではユーザ属性に合った公演のみが表示されるようにするmethod
     suitableEvents() {
@@ -629,7 +651,6 @@ export default Vue.extend({
         return 1
       }
       this.dialog = false
-      if (this.$auth.$state.strategy === 'ad') person = 1
       await this.$axios
         .post(
           '/groups/' +

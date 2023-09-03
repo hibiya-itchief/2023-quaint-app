@@ -49,3 +49,9 @@ export type Ticket = {
   created_at: string
   is_used: boolean
 }
+
+export type OwnerOf = {
+  group_id: string
+  user_id: string
+  note: string
+}

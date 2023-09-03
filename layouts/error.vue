@@ -1,15 +1,31 @@
 <template>
   <v-app dark>
-    <h1 v-if="error.statusCode === 404">
-      {{ pageNotFound }}
-    </h1>
-    <h1 v-else>
-      {{ otherError }}
-    </h1>
-    <NuxtLink to="/"> ホーム </NuxtLink>
-    <a href="https://forms.gle/aRv81UtSCSgS2gHq8"
-      >フィードバックを送信(GoogleForm)</a
-    >
+    <div v-if="error.statusCode === 404" id="error-not-found">
+      <h1 v-if="$vuetify.breakpoint.xs" class="status-code-xs">404</h1>
+      <h1 v-else class="status-code">404</h1>
+      <p>お探しのページは見つかりません。</p>
+      <p>指定したURLが正しいかご確認の上、再読み込みをお試しください。</p>
+      <!-- フィードバックに類するものを用意する、
+        「それでもダメな場合は」みたいな
+        <a href="https://forms.gle/aRv81UtSCSgS2gHq8"
+          >フィードバックを送信(GoogleForm)</a
+        >--->
+    </div>
+    <div v-else id="error-else">
+      <!--暫定-->
+      <h1 v-if="$vuetify.breakpoint.xs" class="status-code-xs">
+        {{ error.statusCode }}
+      </h1>
+      <h1 v-else class="status-code">{{ error.statusCode }}</h1>
+      <p>エラーが発生しました。</p>
+      <p>ブラウザのリロードボタンを押し、再読み込みをお試しください。</p>
+      <p>それでも治らない場合は、IT委員にお声がけください。</p>
+      <!-- フィードバックに類するものを用意する、
+        「それでもダメな場合は」みたいな
+        <a href="https://forms.gle/aRv81UtSCSgS2gHq8"
+          >フィードバックを送信(GoogleForm)</a
+        >--->
+    </div>
   </v-app>
 </template>
 
@@ -17,6 +33,7 @@
 import Vue from 'vue'
 export default Vue.extend({
   name: 'EmptyLayout',
+  auth: false,
   layout: 'empty',
   props: {
     error: {
@@ -24,25 +41,44 @@ export default Vue.extend({
       default: null,
     },
   },
-  data() {
-    return {
-      pageNotFound:
-        '404 お探しのページは見つかりません。指定したURLがあっているか確認の上再読み込みをお試しください',
-      otherError:
-        '不明なエラーが発生しました。ブラウザのリロードボタンを押して再読み込みをお試しください。それでも直らない場合はIT部隊にお声がけください🙇‍♂️',
-    }
-  },
-  head() {
-    const title = 'Error'
-    return {
-      title,
-    }
+  head: {
+    title: 'エラー',
   },
 })
 </script>
 
-<style scoped>
-h1 {
-  font-size: 20px;
+<style>
+#error-not-found {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  flex-direction: column;
+  margin: auto;
+  padding: auto;
+  width: 75%;
+  height: 50%;
+}
+
+#error-else {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  flex-direction: column;
+  margin: auto;
+  padding: auto;
+  width: 75%;
+  height: 50%;
+}
+
+.status-code {
+  font-family: serif;
+  font-size: 1500%;
+  color: #b49656;
+}
+
+.status-code-xs {
+  font-family: serif;
+  font-size: 1000%;
+  color: #b49656;
 }
 </style>

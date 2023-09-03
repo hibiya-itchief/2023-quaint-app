@@ -87,10 +87,16 @@
               <v-list-item @click="SortGroups('title')">演目名順</v-list-item>
             </v-list>
           </v-menu>
-          <v-icon v-show="$route.query.r == 'true'" @click="ReverseGroups()"
+          <v-icon
+            v-show="$route.query.r == 'true'"
+            class="arrow-rotate"
+            @click="ReverseGroups()"
             >mdi-arrow-up</v-icon
           >
-          <v-icon v-show="$route.query.r != 'true'" @click="ReverseGroups()"
+          <v-icon
+            v-show="$route.query.r != 'true'"
+            class="arrow-rotate"
+            @click="ReverseGroups()"
             >mdi-arrow-down</v-icon
           >
         </v-col>
@@ -221,7 +227,7 @@ export default Vue.extend({
       selectedTag: undefined,
       search_result_number: 0,
       search_query: '',
-      sort_displayname: '',
+      sort_displayname: 'デフォルト順',
       query_cache: undefined,
     }
   },
@@ -250,12 +256,23 @@ export default Vue.extend({
       this.PushQuery(null, undefined, null, null)
       this.SearchGroups()
     }
-
-    const query_s =
-      this.$route.query.s === 'groupname' || this.$route.query.s === 'title'
-        ? this.$route.query.s
-        : 'id'
-    this.SortGroups(query_s) // クエリパラメータを見てSortGroupsを実行
+    if (
+      this.$route.query.s === 'groupname' ||
+      this.$route.query.s === 'title'
+    ) {
+      const query_s = this.$route.query.s
+      if (query_s === 'groupname') {
+        this.sort_displayname = '団体名順'
+      } else if (query_s === 'title') {
+        this.sort_displayname = '演目名順'
+      }
+      this.groups.sort((x, y) => {
+        return (x[query_s] ?? '') > (y[query_s] ?? '') ? 1 : -1
+      })
+    }
+    if (this.$route.query.r === 'true') {
+      this.groups.reverse()
+    }
 
     const query_t = this.$route.query.t // query_tは見やすくするためだけに定義
     // クエリパラメータを見てselectedTagを再現
@@ -405,6 +422,10 @@ export default Vue.extend({
 })
 </script>
 <style>
+.arrow-rotate:active {
+  transform: rotate(180deg);
+}
+
 .text-truncate {
   display: block;
   white-space: nowrap;

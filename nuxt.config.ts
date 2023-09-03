@@ -82,6 +82,12 @@ const nuxtConfig: NuxtConfig = {
   router: {
     base: '/',
     middleware: ['auth'],
+    extendRoutes(routes, resolve) {
+      routes.push({
+        path: '*',
+        component: resolve(__dirname, 'pages/404.vue'),
+      })
+    },
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -208,7 +214,7 @@ const nuxtConfig: NuxtConfig = {
     theme: {
       dark: false,
       themes: {
-        dark: {
+        light: {
           primary: colors.blue.darken2,
           accent: colors.grey.darken3,
           secondary: colors.amber.darken3,
@@ -216,6 +222,7 @@ const nuxtConfig: NuxtConfig = {
           warning: colors.amber.base,
           error: colors.deepOrange.accent4,
           success: colors.green.accent3,
+          sairai: '#b49656',
         },
       },
     },
@@ -237,6 +244,10 @@ const nuxtConfig: NuxtConfig = {
           method: 'GET',
         })
       ).json()) as Group[]
+      // デフォルト順にソート
+      groups.sort((x, y) => {
+        return x.id > y.id ? 1 : -1
+      })
       const tags: Tag[] = (await (
         await fetch(baseurl_without_slash + '/tags', {
           method: 'GET',

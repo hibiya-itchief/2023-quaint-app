@@ -4,13 +4,13 @@
       <span>@{{ app_env }} </span>
       <span style="font-size: 0.5em">API:{{ api_url }} </span>
     </div>
-    <div class="humbuger-box">
+    <div class="hamburger-box">
       <div
-        class="humbugermenu"
+        class="hamburgermenu"
         :class="{ active: drawerMenu }"
         @click="drawerMenu = !drawerMenu"
       >
-        <div class="humbuger-btn"><span></span><span></span><span></span></div>
+        <div class="hamburger-btn"><span></span><span></span><span></span></div>
       </div>
     </div>
 
@@ -42,20 +42,38 @@
                 >
                   団体代表者
                 </v-chip>
-
-                <!--
-                <v-chip outlined> Entry </v-chip>
-                <v-chip outlined> Authorizer </v-chip>
-                <v-chip outlined> 家族用アカウント </v-chip>-->
+                <v-chip
+                  v-show="$auth.user?.groups?.includes(userGroups.parents)"
+                  outlined
+                >
+                  保護者用アカウント
+                </v-chip>
+                <v-chip
+                  v-show="$auth.user?.groups?.includes(userGroups.students)"
+                  outlined
+                >
+                  生徒用アカウント
+                </v-chip>
+                <v-chip
+                  v-show="$auth.user?.groups?.includes(userGroups.teachers)"
+                  outlined
+                >
+                  先生用アカウント
+                </v-chip>
+                <v-chip
+                  v-show="$auth.user?.groups?.includes(userGroups.chief)"
+                  outlined
+                >
+                  チーフ会
+                </v-chip>
+                <!--(
+                  userGroups.entry)で同様の処理が可能？
                 <v-chip
                   v-show="$auth.user?.jobTitle?.includes('Visited')"
                   outlined
                 >
                   校内入場処理済み
-                </v-chip>
-                <v-chip v-show="$auth.$state.strategy == 'ad'" outlined>
-                  生徒用アカウント
-                </v-chip>
+                </v-chip>-->
               </v-chip-group>
               <p class="ma-0 pa-0 text-caption grey--text">
                 ユーザーID：{{ $auth.user?.oid ?? $auth.user?.sub }}
@@ -145,7 +163,7 @@
       <Nuxt class="main-content" />
     </v-main>
 
-    <v-bottom-navigation color="light-blue" fixed app>
+    <v-bottom-navigation color="sairai" fixed app>
       <v-btn to="/">
         <span>ホーム</span>
         <v-icon>mdi-home</v-icon>
@@ -230,6 +248,7 @@ export default Vue.extend({
   min-width: 80px;
   position: relative;
   text-transform: none;
+  font-weight: bold;
 }
 
 .app-env {
@@ -256,14 +275,14 @@ export default Vue.extend({
   }
 }
 
-.humbuger-box {
+.hamburger-box {
   position: fixed;
   top: 0;
   left: 0;
   z-index: 1000;
 }
 
-.humbugermenu {
+.hamburgermenu {
   position: relative; /* ボタン内側の基点となるためrelativeを指定 */
   cursor: pointer;
   width: 50px;
@@ -272,52 +291,52 @@ export default Vue.extend({
 }
 
 /* ボタン内側 */
-.humbugermenu .humbuger-btn {
+.hamburgermenu .hamburger-btn {
   transition: all 0.6s; /* アニメーションの設定 */
   width: 50px;
   height: 50px;
 }
 
-.humbugermenu span {
+.hamburgermenu span {
   display: inline-block;
   transition: all 0.4s;
   position: absolute;
   left: 14px;
   height: 3px;
   border-radius: 2px;
-  background: #05aaf4;
+  background: #b49656;
   width: 45%;
 }
 
-.humbugermenu span:nth-of-type(1) {
+.hamburgermenu span:nth-of-type(1) {
   top: 15px;
 }
 
-.humbugermenu span:nth-of-type(2) {
+.hamburgermenu span:nth-of-type(2) {
   top: 23px;
 }
 
-.humbugermenu span:nth-of-type(3) {
+.hamburgermenu span:nth-of-type(3) {
   top: 31px;
 }
 
 /* activeクラスが付与されると .openbtn-areaが360度回転し、その中の線が回転して×に */
-.humbugermenu.active .humbuger-btn {
+.hamburgermenu.active .hamburger-btn {
   transform: rotate(360deg);
 }
 
-.humbugermenu.active span:nth-of-type(1) {
+.hamburgermenu.active span:nth-of-type(1) {
   top: 18px;
   left: 18px;
   transform: translateY(6px) rotate(-45deg);
   width: 30%;
 }
 
-.humbugermenu.active span:nth-of-type(2) {
+.hamburgermenu.active span:nth-of-type(2) {
   opacity: 0;
 }
 
-.humbugermenu.active span:nth-of-type(3) {
+.hamburgermenu.active span:nth-of-type(3) {
   top: 30px;
   left: 18px;
   transform: translateY(-6px) rotate(45deg);
