@@ -1,15 +1,13 @@
 <template>
   <v-app>
     <div v-if="showVideo" class="splash-video">
-      <div class="splash-container">
-        <video
-          src="/images/sairai_short2.mp4"
-          webkit-playsinline
-          playsinline
-          autoplay
-          muted
-        ></video>
-      </div>
+      <video
+        src="/images/sairai_short2.mp4"
+        webkit-playsinline
+        playsinline
+        autoplay
+        muted
+      ></video>
     </div>
     <v-row justify="center">
       <v-col cols="12">
@@ -240,18 +238,13 @@ body {
   overflow: hidden; /* スプラッシュ背景が消えた時に、videoがはみ出さないようにする */
 }
 
-.splash-container {
-  /* コンテナをスプラッシュ背景の中央に配置する */
-  width: 100vw;
+video {
+  max-width: 100%;
+  max-height: 70vh;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-}
-
-video {
-  max-width: 100%;
-  max-height: 100%;
 }
 
 @keyframes fade-out {
