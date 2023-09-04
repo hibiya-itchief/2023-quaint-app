@@ -114,6 +114,18 @@ export default Vue.extend({
   name: 'IndexPage',
   auth: false,
   components: { CountDown },
+  beforeRouteEnter(to, from, next) {
+    // vue-routerの処理に割り込んで(?)リファラを取得する
+    next((vm: any) => {
+      vm.prevRoute = from
+    })
+  },
+  data(): Data {
+    return {
+      showVideo: true,
+      prevRoute: null,
+    }
+  },
   head: {
     meta: [
       { charset: 'utf-8' },
@@ -162,18 +174,6 @@ export default Vue.extend({
         src: 'https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js',
       },
     ],
-  },
-  data(): Data {
-    return {
-      showVideo: true,
-      prevRoute: null,
-    }
-  },
-  beforeRouteEnter(to, from, next) {
-    // vue-routerの処理に割り込んで(?)リファラを取得する
-    next((vm: any) => {
-      vm.prevRoute = from
-    })
   },
   mounted() {
     // リファラが「/」なら(リンク直アクセスor他オリジンから)、最初のさいらいビデオを流す
