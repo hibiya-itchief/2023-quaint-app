@@ -10,13 +10,6 @@
             >
             -->
 
-          <!--再読み込みボタン-->
-          <div class="text-center pa-1">
-            <v-btn class="mx-1 my-1" color="primary" @click="fetchTicket()"
-              ><v-icon>mdi-reload</v-icon>再読み込み</v-btn
-            >
-          </div>
-
           <!--校内への入場処理が行われていない場合に，入場処理を促すメッセージと処理用のQRコードを表示-->
           <!--ここのデザインをもうちょっと可愛く出来ないかな-->
           <v-card
@@ -49,6 +42,7 @@
           <!--整理券未取得の場合に，「探す」タブへ誘導-->
           <v-card
             v-if="
+              now_loading == false &&
               tickets.length == 0 &&
               ($auth.user?.jobTitle?.includes('Visited') ||
                 $auth.$state.strategy === 'ad')
@@ -76,7 +70,7 @@
                 isUpNext(
                   new Date(ticketInfo.event.starts_at),
                   new Date(ticketInfo.event.ends_at)
-                )
+                ) && ticketInfo.ticket.status == 'active'
               "
             >
               <v-card-title class="mb-2"
@@ -97,74 +91,97 @@
                 <v-card-subtitle class="pb-0 text-truncate">
                   {{ ticketInfo.group.groupname }}</v-card-subtitle
                 >
-
-                <v-card-subtitle
-                  class="grey--text text--darken-2 text-truncate"
-                >
-                  <!--日付：画面がごちゃごちゃするため省略．1日目の整理券を画面収録して2日目に使う人が現れるなどしたら，実装が必要-->
-                  <!--
+                <div style="display: flex">
+                  <v-card-subtitle
+                    class="grey--text text--darken-2 text-truncate"
+                  >
+                    <!--日付：画面がごちゃごちゃするため省略．1日目の整理券を画面収録して2日目に使う人が現れるなどしたら，実装が必要-->
+                    <!--
                 <span class="text-h3"
                   ><v-icon>mdi-calendar</v-icon
                   >{{ dateFormatter(ticketInfo.event.starts_at) }}</span
                 >
                 -->
+                    <!--上演時刻-->
+                    <span class="text-h3"
+                      ><v-icon>mdi-clock-time-nine</v-icon
+                      >{{ timeFormatter(ticketInfo.event.starts_at) }}</span
+                    >
+                    -{{ timeFormatter(ticketInfo.event.ends_at) }}
+                    <v-spacer></v-spacer>
+                    <!--入場人数-->
+                    <span class="text-h3"
+                      ><v-icon>mdi-account-supervisor</v-icon
+                      >{{ ticketInfo.ticket.person }}</span
+                    >人
+                  </v-card-subtitle>
                   <v-spacer></v-spacer>
-                  <!--上演時刻-->
-                  <span class="text-h3"
-                    ><v-icon>mdi-clock-time-nine</v-icon
-                    >{{ timeFormatter(ticketInfo.event.starts_at) }}</span
-                  >
-                  -{{ timeFormatter(ticketInfo.event.ends_at) }}
-                  <v-spacer></v-spacer>
-                  <!--入場人数-->
-                  <span class="text-h3"
-                    ><v-icon>mdi-account-supervisor</v-icon
-                    >{{ ticketInfo.ticket.person }}</span
-                  >人
-                </v-card-subtitle>
+                  <img class="chochin" src="/images/chochin.png" />
+                </div>
               </div>
-
-              <v-progress-linear
-                indeterminate
-                height="15px"
-                color="teal"
-              ></v-progress-linear>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <!--終演時刻前の時だけ「整理券をキャンセル」ボタンを表示-->
+                <v-btn
+                  v-if="!isUsed(new Date(ticketInfo.event.ends_at))"
+                  color="error"
+                  @click="selectCancelTicket(ticketInfo)"
+                >
+                  <v-icon>mdi-close</v-icon>
+                  整理券をキャンセル
+                </v-btn>
+              </v-card-actions>
               <v-img
                 v-if="ticketInfo.group.public_thumbnail_image_url != null"
                 :src="ticketInfo.group.public_thumbnail_image_url"
                 width="100%"
-                max-height="130px"
+                contain
+                max-height="300px"
               ></v-img>
             </v-card>
           </div>
-        </v-col>
-        <v-col cols="12" sm="6" lg="6">
           <!--取得した整理券一覧-->
-          <v-card v-if="tickets.length !== 0">
+          <v-card v-if="tickets.length !== 0" class="my-4">
             <v-card-title
               ><v-icon>mdi-ticket-account</v-icon>あなたの整理券</v-card-title
             >
-            <v-expansion-panels>
+            <v-expansion-panels inset>
               <v-expansion-panel
                 v-for="ticketInfo in tickets"
                 :key="ticketInfo.ticket.id"
                 focusable
               >
-                <!--activeな整理券のみ表示．キャンセル済み整理券は表示されない-->
-                <div v-if="ticketInfo.ticket.status == 'active'">
+                <!--activeな整理券のみ表示．キャンセル済み整理券とUpNextな整理券は表示されない-->
+                <div
+                  v-if="
+                    ticketInfo.ticket.status == 'active' &&
+                    !isUpNext(
+                      new Date(ticketInfo.event.starts_at),
+                      new Date(ticketInfo.event.ends_at)
+                    )
+                  "
+                >
                   <v-expansion-panel-header class="pa-3">
                     <div class="text-truncate">
                       <v-list-item>
-                        <v-img
-                          v-if="
-                            ticketInfo.group.public_thumbnail_image_url != null
-                          "
-                          :src="ticketInfo.group.public_thumbnail_image_url"
-                          max-width="90px"
-                          height="165px"
-                          class="mr-2"
-                          contain
-                        ></v-img>
+                        <div>
+                          <v-img
+                            v-if="
+                              ticketInfo.group.public_thumbnail_image_url !=
+                              null
+                            "
+                            height="120px"
+                            width="90px"
+                            contain
+                            :src="ticketInfo.group.public_thumbnail_image_url"
+                          ></v-img>
+                          <v-img
+                            v-else
+                            :class="HashColor(ticketInfo.group.id)"
+                            height="120px"
+                            width="90px"
+                          ></v-img>
+                        </div>
                         <div class="ma-2 text-truncate">
                           <!--取得した整理券の情報を表示-->
                           <v-list-item-subtitle class="text-truncate"
@@ -340,6 +357,7 @@ type Data = {
   error_message: string
   time: string
   seconds: string
+  now_loading: boolean
 }
 export default Vue.extend({
   name: 'UsersTicketsPage',
@@ -360,6 +378,7 @@ export default Vue.extend({
       error_message: '',
       time: '',
       seconds: '',
+      now_loading: true,
     }
   },
   head: {
@@ -433,18 +452,20 @@ export default Vue.extend({
 
       const ticketInfos: TicketInfo[] = []
       for (const ticket of tickets) {
-        const group: Group = await this.$axios.$get(
-          '/groups/' + ticket.group_id
-        )
-        const event: Event = await this.$axios.$get(
-          '/groups/' + ticket.group_id + '/events/' + ticket.event_id
-        )
-        const ticketInfo: TicketInfo = {
-          group,
-          event,
-          ticket,
+        if (ticket.status === 'active') {
+          const group: Group = await this.$axios.$get(
+            '/groups/' + ticket.group_id
+          )
+          const event: Event = await this.$axios.$get(
+            '/groups/' + ticket.group_id + '/events/' + ticket.event_id
+          )
+          const ticketInfo: TicketInfo = {
+            group,
+            event,
+            ticket,
+          }
+          ticketInfos.push(ticketInfo)
         }
-        ticketInfos.push(ticketInfo)
       }
 
       ticketInfos.sort((first, second) => {
@@ -461,6 +482,7 @@ export default Vue.extend({
         else return 0
       })
       this.tickets = ticketInfos
+      this.now_loading = false
     },
     timeFormatter(inputDate: string) {
       const d = new Date(inputDate)
@@ -506,6 +528,29 @@ export default Vue.extend({
       this.cancelDialog = false
       this.fetchTicket()
     },
+    HashColor(text: string) {
+      // group.idを色数で割った余りでデフォルトの色を決定
+      const colors = [
+        'blue-grey',
+        'brown',
+        'deep-orange',
+        'amber',
+        'lime',
+        'light-green',
+        'teal',
+        'cyan',
+        'light-blue',
+        'indigo',
+        'pink',
+      ]
+      let index = 0
+      for (let i = 0; i < text.length; i++) {
+        // 文字列をUnicodeの和に変換
+        index += text.codePointAt(i) ?? 1
+      }
+      index = index % colors.length
+      return colors[index]
+    },
   },
 })
 </script>
@@ -515,5 +560,38 @@ export default Vue.extend({
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.chochin {
+  animation: flap ease 2s infinite;
+  width: 60px;
+  height: 60px;
+  margin-top: auto;
+}
+
+@keyframes flap {
+  0% {
+    transform: translateY(0);
+  }
+
+  10% {
+    transform: translateY(0);
+  }
+
+  20% {
+    transform: translateY(-10px);
+  }
+
+  30% {
+    transform: translateY(0);
+  }
+
+  40% {
+    transform: translateY(-20px) rotate(10deg);
+  }
+
+  50% {
+    transform: translateY(0);
+  }
 }
 </style>

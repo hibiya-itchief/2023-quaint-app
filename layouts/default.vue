@@ -284,10 +284,11 @@ export default Vue.extend({
 
 .hamburgermenu {
   position: relative; /* ボタン内側の基点となるためrelativeを指定 */
+  background: #fff;
   cursor: pointer;
   width: 50px;
   height: 50px;
-  border-radius: 5px;
+  border-radius: 0 0 20px;
 }
 
 /* ボタン内側 */
