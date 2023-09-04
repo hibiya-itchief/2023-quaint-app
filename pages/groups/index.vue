@@ -7,12 +7,13 @@
             v-model="search_query"
             solo
             label="検索"
+            color="sairai"
             prepend-inner-icon="mdi-magnify"
             @input="SearchGroups()"
             @blur="
               const search_query_q =
                 search_query === '' ? undefined : search_query
-              PushQuery(search_query_q, null, null, null)
+              PushQuery(search_query_q, null, null, null, null)
             "
           >
           </v-text-field>
@@ -27,14 +28,11 @@
               <v-btn
                 :disabled="search_query !== ''"
                 depressed
-                width="135"
+                max-width="135"
                 class="text-subtitle-2 text-capitalize"
                 v-bind="attrs"
                 v-on="on"
-                ><span v-if="selectedTag !== null">{{
-                  selectedTag?.tagname ?? 'すべて'
-                }}</span
-                ><span v-else>お気に入り</span><v-spacer /><v-icon
+                >{{ selectedTag?.tagname ?? 'すべて' }}<v-spacer /><v-icon
                   >mdi-chevron-down</v-icon
                 ></v-btn
               >
@@ -42,24 +40,17 @@
             <v-list>
               <v-list-item
                 @click="
-                  PushQuery(null, undefined, null, null)
+                  PushQuery(null, undefined, null, null, null)
                   selectedTag = undefined
                 "
                 >すべて</v-list-item
-              >
-              <v-list-item
-                @click="
-                  PushQuery(null, 'favorite', null, null)
-                  selectedTag = null
-                "
-                >お気に入り</v-list-item
               >
               <v-list-item
                 v-for="tag in tags"
                 :key="tag.id"
                 :value="tag.tagname"
                 @click="
-                  PushQuery(null, tag.tagname, null, null)
+                  PushQuery(null, tag.tagname, null, null, null)
                   selectedTag = tag
                 "
                 >{{ tag.tagname }}</v-list-item
@@ -70,7 +61,7 @@
             <template #activator="{ on, attrs }">
               <v-btn
                 depressed
-                width="150"
+                max-width="150"
                 class="text-subtitle-2 text-capitalize"
                 v-bind="attrs"
                 v-on="on"
@@ -87,28 +78,52 @@
               <v-list-item @click="SortGroups('title')">演目名順</v-list-item>
             </v-list>
           </v-menu>
-          <v-icon
-            v-show="$route.query.r == 'true'"
-            class="arrow-rotate"
-            @click="ReverseGroups()"
-            >mdi-arrow-up</v-icon
-          >
-          <v-icon
-            v-show="$route.query.r != 'true'"
-            class="arrow-rotate"
-            @click="ReverseGroups()"
-            >mdi-arrow-down</v-icon
-          >
+          <div v-if="!nowloading" style="display: inline">
+            <v-icon
+              v-show="display_bookmarks"
+              color="sairai"
+              @click="
+                display_bookmarks = false
+                PushQuery(null, null, undefined, null, null)
+              "
+              >mdi-bookmark-multiple</v-icon
+            >
+            <v-icon
+              v-show="!display_bookmarks"
+              @click="
+                display_bookmarks = true
+                PushQuery(null, null, true, null, null)
+              "
+              >mdi-bookmark-multiple-outline</v-icon
+            >
+            <v-icon
+              v-show="$route.query.r == 'true'"
+              class="arrow-rotate"
+              @click="ReverseGroups()"
+              >mdi-arrow-up</v-icon
+            >
+            <v-icon
+              v-show="$route.query.r != 'true'"
+              class="arrow-rotate"
+              @click="ReverseGroups()"
+              >mdi-arrow-down</v-icon
+            >
+          </div>
         </v-col>
 
         <v-col class="my-0 py-0" cols="12">
           <v-divider class="my-0 py-0"></v-divider>
+          <!--
+            現状ほぼnowloading文を見ることがないこと、
+            開発環境ではレンダリング中にlocalStorageが使えないことから
+            一旦無効にする
           <div v-show="nowloading">
             <p class="my-0 py-1 text-body-1 grey--text">読み込み中...</p>
             <p class="my-0 py-1 text-caption grey--text">
               時間がかかることがあります(学校のWi-Fi使用中など)
             </p>
           </div>
+          -->
         </v-col>
 
         <v-col
@@ -161,7 +176,7 @@
                 ></v-img>
                 <!--</v-avatar>-->
               </div>
-              <div class="px-1 text-truncate">
+              <div class="px-1 text-truncate" style="width: 100%">
                 <v-card-title class="pb-2 text-truncate">
                   {{ group.title }}
                 </v-card-title>
@@ -184,12 +199,23 @@
                       {{ tag.tagname }}
                     </v-chip>
                   </v-chip-group>
+                  <v-spacer />
+                  <v-icon v-if="FilterBookmarks(group.id)" color="sairai"
+                    >mdi-bookmark</v-icon
+                  >
                 </v-card-actions>
               </div>
             </div>
           </v-card>
         </v-col>
       </v-row>
+      <p
+        v-show="!nowloading && display_bookmarks"
+        class="mt-10"
+        style="text-align: center"
+      >
+        団体の詳細ページでブックマークを追加することができます。
+      </p>
     </v-container>
   </v-app>
 </template>
@@ -205,7 +231,8 @@ type Data = {
   sort_displayname: string
   query_cache: any
   search_result_number: number
-  selectedTag: Tag | undefined | null
+  display_bookmarks: boolean
+  selectedTag: Tag | undefined
 }
 
 export default Vue.extend({
@@ -213,11 +240,11 @@ export default Vue.extend({
   auth: false,
   async asyncData({ $axios, payload }): Promise<Partial<Data>> {
     if (payload !== undefined) {
-      return { nowloading: false, groups: payload.groups, tags: payload.tags }
+      return { groups: payload.groups, tags: payload.tags }
     }
     const task = [$axios.$get('/groups'), $axios.$get('/tags')]
     const res = await Promise.all(task)
-    return { nowloading: false, groups: res[0], tags: res[1] }
+    return { groups: res[0], tags: res[1] }
   },
   data(): Data {
     return {
@@ -228,6 +255,7 @@ export default Vue.extend({
       search_result_number: 0,
       search_query: '',
       sort_displayname: 'デフォルト順',
+      display_bookmarks: false,
       query_cache: undefined,
     }
   },
@@ -253,7 +281,7 @@ export default Vue.extend({
     // クエリパラメータを見て検索バー内の文字列を再現など
     if (typeof this.$route.query.q === 'string') {
       this.search_query = this.$route.query.q
-      this.PushQuery(null, undefined, null, null)
+      this.PushQuery(null, undefined, null, null, null)
       this.SearchGroups()
     }
     if (
@@ -274,12 +302,12 @@ export default Vue.extend({
       this.groups.reverse()
     }
 
+    if (this.$route.query.b === 'true') this.display_bookmarks = true
+
     const query_t = this.$route.query.t // query_tは見やすくするためだけに定義
     // クエリパラメータを見てselectedTagを再現
     if (query_t === undefined) {
       this.selectedTag = undefined
-    } else if (query_t === 'favorite') {
-      this.selectedTag = null
     } else if (typeof query_t === 'string') {
       for (let i = 0; i < this.tags.length; i++) {
         if (query_t === this.tags[i].tagname) {
@@ -289,14 +317,18 @@ export default Vue.extend({
       }
     }
   },
+  mounted() {
+    this.nowloading = false
+  },
 
   methods: {
-    PushQuery(Q: any, T: any, S: any, R: any) {
+    PushQuery(Q: any, T: any, B: any, S: any, R: any) {
       Q = Q === null ? this.$route.query.q : Q
       T = T === null ? this.$route.query.t : T
+      B = B === null ? this.$route.query.b : B
       S = S === null ? this.$route.query.s : S
       R = R === null ? this.$route.query.r : R
-      this.$router.push({ query: { q: Q, t: T, s: S, r: R } }) // nullは「現在のクエリを維持」と同義
+      this.$router.push({ query: { q: Q, t: T, b: B, s: S, r: R } }) // nullは「現在のクエリを維持」と同義
     },
     SortGroups(sort: 'id' | 'groupname' | 'title') {
       if (sort === 'groupname') {
@@ -313,7 +345,7 @@ export default Vue.extend({
         this.groups.reverse()
       }
       const sort_query = sort === 'id' ? undefined : sort
-      this.PushQuery(null, null, sort_query, null)
+      this.PushQuery(null, null, null, sort_query, null)
     },
     ReverseGroups() {
       this.SortGroups(
@@ -323,9 +355,9 @@ export default Vue.extend({
       )
       this.groups.reverse()
       if (this.$route.query.r === 'true') {
-        this.PushQuery(null, null, null, undefined)
+        this.PushQuery(null, null, null, null, undefined)
       } else {
-        this.PushQuery(null, null, null, 'true')
+        this.PushQuery(null, null, null, null, 'true')
       }
     },
 
@@ -334,17 +366,17 @@ export default Vue.extend({
         this.selectedTag = this.query_cache
         this.query_cache = undefined
         if (this.selectedTag === undefined) {
-          this.PushQuery(undefined, undefined, null, null)
+          this.PushQuery(undefined, undefined, null, null, null)
         } else if (this.selectedTag === null) {
-          this.PushQuery(undefined, 'favorite', null, null)
+          this.PushQuery(undefined, 'favorite', null, null, null)
         } else {
-          this.PushQuery(undefined, this.selectedTag.tagname, null, null)
+          this.PushQuery(undefined, this.selectedTag.tagname, null, null, null)
         }
       } else {
         if (this.selectedTag !== undefined) {
           this.query_cache = this.selectedTag
           this.selectedTag = undefined
-          this.PushQuery(null, undefined, null, null)
+          this.PushQuery(null, undefined, null, null, null)
         }
         this.search_result_number = 0
         for (let i = 0; i < this.groups.length; i++) {
@@ -367,6 +399,12 @@ export default Vue.extend({
     },
 
     FilterGroups(group: Group) {
+      if (this.nowloading === true) return false
+      if (
+        this.display_bookmarks === true &&
+        this.FilterBookmarks(group.id) === false
+      )
+        return false
       if (this.selectedTag === undefined) {
         if (
           this.search_query === '' ||
@@ -394,6 +432,17 @@ export default Vue.extend({
         return false
       }
     }, // tag全体（{id:hogehoge, tagname:honyohonyo}の形）を用いると，tagが一致している判定がうまく行えなかったので，idを用いてtagの一致を判定している
+
+    FilterBookmarks(id: string) {
+      // お気に入りならtrue
+      if (this.nowloading === true) return false
+      for (let i = 0; i < localStorage.length; i++) {
+        if ('seiryofes.groups.favorite.' + id === localStorage.key(i)) {
+          return true
+        }
+      }
+      return false
+    },
 
     HashColor(text: string) {
       // group.idを色数で割った余りでデフォルトの色を決定

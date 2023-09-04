@@ -86,14 +86,14 @@
                 </div>
               </div>
               <v-btn
-                v-if="IsFavorite(group)"
+                v-if="is_bookmarked"
                 icon
-                class="pink--text"
-                @click="removeFavorite(group)"
-                ><v-icon>mdi-heart</v-icon></v-btn
+                color="sairai"
+                @click="removeBookmark(group.id)"
+                ><v-icon>mdi-bookmark</v-icon></v-btn
               >
-              <v-btn v-else icon @click="addFavorite(group)"
-                ><v-icon>mdi-heart-outline</v-icon></v-btn
+              <v-btn v-else icon @click="addBookmark(group.id)"
+                ><v-icon>mdi-bookmark-outline</v-icon></v-btn
               >
             </v-card-actions>
 
@@ -379,7 +379,8 @@ type Data = {
   ticket_person: number
   person_labels: any[]
   person_icons: any[]
-  displayFavorite: number
+  nowloading: boolean
+  is_bookmarked: boolean
   listStock: number[]
   listTakenTickets: number[]
   view_count: number | string
@@ -430,7 +431,8 @@ export default Vue.extend({
       dialog: false,
       success_snackbar_link: undefined,
       error_snackbar_link: undefined,
-      displayFavorite: 0,
+      nowloading: true,
+      is_bookmarked: false,
       listStock: [],
       listTakenTickets: [],
       view_count: '...',
@@ -522,32 +524,29 @@ export default Vue.extend({
       return this.$quaintUserRole(val.target, this.$auth.user)
     })
   },
+
+  mounted() {
+    for (let i = 0; i < localStorage.length; i++) {
+      if (
+        'seiryofes.groups.favorite.' + this.group?.id ===
+        localStorage.key(i)
+      ) {
+        // お気に入りならtrue
+        this.is_bookmarked = true
+        break
+      }
+    }
+    this.nowloading = false
+  },
+
   methods: {
-    IsFavorite(group: Group) {
-      if (this.displayFavorite === 0) {
-        this.displayFavorite = 1
-        return false
-      }
-      if (this.displayFavorite === 2) {
-        return false
-      }
-      if (this.displayFavorite === 3) {
-        return true
-      }
-      for (let i = 0; i < localStorage.length; i++) {
-        if ('seiryofes.groups.favorite.' + group?.id === localStorage.key(i)) {
-          return true
-        }
-      }
-      return false
+    addBookmark(id: string) {
+      localStorage.setItem('seiryofes.groups.favorite.' + id, id)
+      this.is_bookmarked = true
     },
-    addFavorite(group: Group) {
-      localStorage.setItem('seiryofes.groups.favorite.' + group?.id, group?.id)
-      this.displayFavorite = 3
-    },
-    removeFavorite(group: Group) {
-      localStorage.removeItem('seiryofes.groups.favorite.' + group?.id)
-      this.displayFavorite = 2
+    removeBookmark(id: string) {
+      localStorage.removeItem('seiryofes.groups.favorite.' + id)
+      this.is_bookmarked = false
     },
     checkStock(index: number) {
       return this.listStock[index]
