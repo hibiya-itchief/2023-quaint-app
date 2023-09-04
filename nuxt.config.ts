@@ -82,12 +82,6 @@ const nuxtConfig: NuxtConfig = {
   router: {
     base: '/',
     middleware: ['auth'],
-    extendRoutes(routes, resolve) {
-      routes.push({
-        path: '*',
-        component: resolve(__dirname, 'pages/404.vue'),
-      })
-    },
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -233,6 +227,7 @@ const nuxtConfig: NuxtConfig = {
     transpile: ['defu'],
   },
   generate: {
+    fallback: true,
     async routes() {
       // emvSet.BASEURLの末尾にスラッシュがある場合は削除する
       const baseurl_without_slash =
