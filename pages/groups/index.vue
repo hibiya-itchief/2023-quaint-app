@@ -7,6 +7,7 @@
             v-model="search_query"
             solo
             label="検索"
+            color="sairai"
             prepend-inner-icon="mdi-magnify"
             @input="SearchGroups()"
             @blur="
