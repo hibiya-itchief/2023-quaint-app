@@ -281,7 +281,10 @@ export default Vue.extend({
     // クエリパラメータを見て検索バー内の文字列を再現など
     if (typeof this.$route.query.q === 'string') {
       this.search_query = this.$route.query.q
-      this.PushQuery(null, undefined, null, null, null)
+      // 検索中はタグ選択ができないため、created時もtを削除
+      if (this.$route.query.t !== undefined) {
+        this.PushQuery(null, undefined, null, null, null)
+      }
       this.SearchGroups()
     }
     if (
@@ -322,6 +325,7 @@ export default Vue.extend({
   },
 
   methods: {
+    // それぞれ、Qは検索バーの内容、Tはタグ、Bはブックマーク、Sはソート(並び替え)、Rは昇順/降順の切り替え(ReverseのR)
     PushQuery(Q: any, T: any, B: any, S: any, R: any) {
       Q = Q === null ? this.$route.query.q : Q
       T = T === null ? this.$route.query.t : T
