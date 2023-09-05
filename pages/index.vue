@@ -25,25 +25,53 @@
           </v-row>
         </v-parallax>
       </v-col>
-      <v-col cols="10">
-        <v-card class="pa-3">
-          <v-card-title class="justify-center"
-            ><v-icon>mdi-information</v-icon>開催概要</v-card-title
-          >
-          <v-card-title><v-icon>mdi-calendar</v-icon>2023/9/16-17</v-card-title>
-          <v-card-title
-            ><v-icon>mdi-map-marker</v-icon>東京都立日比谷高校</v-card-title
-          >
-          <v-card-text>〒100-0014 東京都千代田区永田町2-16-1</v-card-text>
-          <v-card-title
-            ><v-icon>mdi-account-group</v-icon>すべての方</v-card-title
-          >
-          <v-card-text
-            >一般の方（中学生含む）、保護者、本校卒業生など全ての方にご入場いただけます。感染症流行状況により変更の可能性があります。</v-card-text
-          >
-        </v-card>
-      </v-col>
 
+      <v-col cols="10">
+        <h1 class="info-title">開催概要</h1>
+        <v-row>
+          <v-col cols="12" sm="6" md="6">
+            <h2 class="info-subtitle">令和5年度</h2>
+            <h2 class="info-subtitle">9月16日(土)ー17日(日)</h2>
+            <br />
+            <h2 class="info-subtitle">第48回 星陵祭</h2>
+            <h1
+              class="info-subtitle"
+              style="font-family: serif; font-weight: bold; color: #b49656"
+            >
+              「祭徠」
+            </h1>
+            <br />
+            <h2 class="info-subtitle">東京都立日比谷高等学校</h2>
+            <p class="info-caption">〒100-0014 東京都千代田区永田町2-16-1</p>
+            <br />
+            <h2 class="info-subtitle">すべての方に</h2>
+            <h2 class="info-subtitle">ご入場いただけます。</h2>
+            <!-- 日比谷公式からこの記述が消えたので一旦消去
+              <p class="info-caption">感染症の流行状況により変更の可能性があります。</p>
+              -->
+            <br />
+            <br />
+          </v-col>
+          <v-col cols="12" sm="6" md="6">
+            <h2 class="info-subtitle">9月16日</h2>
+            <br />
+            <h3 class="info-subtitle">8時00分 開門</h3>
+            <h3 class="info-subtitle">16時00分 公開終了</h3>
+            <br />
+            <br />
+            <h2 class="info-subtitle">9月17日</h2>
+            <br />
+            <h3 class="info-subtitle">8時00分 開門</h3>
+            <h3 class="info-subtitle">15時20分 公開終了</h3>
+            <br />
+            <br />
+            <h3 class="info-subtitle">
+              詳しくは<span style="color: red">このページ</span>をご覧ください。
+            </h3>
+          </v-col>
+        </v-row>
+      </v-col>
+      <!--
       <v-container>
         <v-row justify="center">
           <v-col cols="11">
@@ -95,7 +123,7 @@
           </v-col>
         </v-row>
       </v-container>
-
+-->
       <v-col cols="10" md="5" sm="10"
         ><v-card class="my-auto" to="/groups">
           <div>
@@ -243,6 +271,26 @@ export default Vue.extend({
 body {
   margin: 0;
   padding: 0;
+}
+
+.info-title {
+  display: inline-block;
+  padding: 0.5rem 3rem 0.5rem 0;
+  margin-bottom: 5rem;
+  border-bottom: 3px solid #b49656;
+  font-family: serif;
+  font-weight: bold;
+}
+
+.info-subtitle {
+  text-align: center;
+  font-weight: normal;
+}
+
+.info-caption {
+  text-align: center;
+  font-weight: normal;
+  color: #666;
 }
 
 #access-title {
