@@ -55,13 +55,13 @@
           <v-col cols="12" sm="6" md="6">
             <h2 class="info-subtitle">9月16日</h2>
             <br />
-            <h3 class="info-subtitle">8時00分 開門</h3>
+            <h3 class="info-subtitle">8時30分 受付開始</h3>
             <h3 class="info-subtitle">16時00分 公開終了</h3>
             <br />
             <br />
             <h2 class="info-subtitle">9月17日</h2>
             <br />
-            <h3 class="info-subtitle">8時00分 開門</h3>
+            <h3 class="info-subtitle">8時30分 受付開始</h3>
             <h3 class="info-subtitle">15時20分 公開終了</h3>
             <br />
             <br />
@@ -76,7 +76,7 @@
       <v-row justify="center" class="pb-10">
         <v-col cols="10">
           <h1 class="pages-title">ご案内</h1>
-          <v-row>
+          <v-row justify="center">
             <v-col
               v-for="page in pages"
               :key="page.icon"
@@ -300,8 +300,16 @@ body {
   font-size: 20px;
 }
 
+.pages-xs:hover {
+  transform: scale(1.1, 1.1);
+}
+
 .pages-else {
   font-size: 30px;
+}
+
+.pages-else:hover {
+  transform: scale(1.1, 1.1);
 }
 
 .pages-text {

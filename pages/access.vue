@@ -27,7 +27,7 @@
           <p class="sta-gijido-indent">
             ※
             <span class="attention"
-              >溜池山王駅・国会議事堂駅側にある正門からの入場はできません</span
+              >溜池山王駅・国会議事堂前駅側にある正門からの入場はできません</span
             >。
           </p>
           <p class="sta-gijido-indent">5番出口より地図上の迂回路を通り、</p>
