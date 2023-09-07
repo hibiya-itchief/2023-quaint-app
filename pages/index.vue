@@ -25,77 +25,77 @@
           </v-row>
         </v-parallax>
       </v-col>
-      <v-col cols="10">
-        <v-card class="pa-3">
-          <v-card-title class="justify-center"
-            ><v-icon>mdi-information</v-icon>開催概要</v-card-title
-          >
-          <v-card-title><v-icon>mdi-calendar</v-icon>2023/9/16-17</v-card-title>
-          <v-card-title
-            ><v-icon>mdi-map-marker</v-icon>東京都立日比谷高校</v-card-title
-          >
-          <v-card-text>〒100-0014 東京都千代田区永田町2-16-1</v-card-text>
-          <v-card-title
-            ><v-icon>mdi-account-group</v-icon>すべての方</v-card-title
-          >
-          <v-card-text
-            >一般の方（中学生含む）、保護者、本校卒業生など全ての方にご入場いただけます。感染症流行状況により変更の可能性があります。</v-card-text
-          >
-        </v-card>
-      </v-col>
 
-      <v-container>
-        <v-row justify="center">
-          <v-col cols="11">
-            <h1 id="access-title">アクセス</h1>
-            <v-row>
-              <v-col cols="12" sm="6" md="6">
-                <v-img
-                  class="access-img"
-                  src="/images/accessMap.png"
-                  alt="周辺の地図"
-                />
-              </v-col>
-              <v-col cols="12" sm="6" md="6">
-                <h2 id="access-subtitle">ご来場方法</h2>
-                <br />
-                <p>ご来場の際には以下の最寄り駅が使用できます。</p>
-                <p class="access-nagata">
-                  永田町駅 ▶ 有楽町線 / 半蔵門線 / 南北線
-                </p>
-                <p class="access-nagata-indent">
-                  6番出口より参議院議長公邸を右手に、1つ目の交差点を右に曲がり、そのまま道に沿ってお進み下さい。
-                </p>
-                <p class="access-mitsuke">赤坂見附駅 ▶ 銀座線 / 丸ノ内線</p>
-                <p class="access-mitsuke-indent">
-                  11番出口よりプルデンシャルタワー横の新坂（遅刻坂）をお上り下さい。
-                </p>
-                <p class="access-mitsuke-indent">
-                  ※
-                  傾斜がきついため、ご年配の方やお子様連れの方は永田町駅側からお越しください。
-                </p>
-                <p class="access-gijido">
-                  国会議事堂前駅 ▶ 丸ノ内線 / 千代田線
-                </p>
-                <p class="access-gijido">（溜池山王駅） ▶ 銀座線 / 南北線</p>
-                <p class="access-gijido-indent">
-                  ※
-                  <span class="access-attention"
-                    >溜池山王駅・国会議事堂駅側にある正門からの入場はできません</span
-                  >。
-                </p>
-                <p class="access-gijido-indent">
-                  5番出口より地図上の迂回路を通り、
-                </p>
-                <p class="access-gijido-indent">
-                  通用門（永田町駅・赤坂見附駅側）へお回りください。
-                </p>
-              </v-col>
-            </v-row>
+      <v-col cols="10">
+        <h1 class="info-title">開催概要</h1>
+        <v-row>
+          <v-col cols="12" sm="6" md="6">
+            <h2 class="info-subtitle">令和5年度</h2>
+            <h2 class="info-subtitle">9月16日(土)ー17日(日)</h2>
+            <br />
+            <h2 class="info-subtitle">第48回 星陵祭</h2>
+            <h1
+              class="info-subtitle"
+              style="font-family: serif; font-weight: bold; color: #b49656"
+            >
+              「祭徠」
+            </h1>
+            <br />
+            <h2 class="info-subtitle">東京都立日比谷高等学校</h2>
+            <p class="info-caption">〒100-0014 東京都千代田区永田町2-16-1</p>
+            <br />
+            <h2 class="info-subtitle">すべての方に</h2>
+            <h2 class="info-subtitle">ご入場いただけます。</h2>
+            <!-- 日比谷公式からこの記述が消えたので一旦消去
+              <p class="info-caption">感染症の流行状況により変更の可能性があります。</p>
+              -->
+            <br />
+            <br />
+          </v-col>
+          <v-col cols="12" sm="6" md="6">
+            <h2 class="info-subtitle">9月16日</h2>
+            <br />
+            <h3 class="info-subtitle">8時30分 受付開始</h3>
+            <h3 class="info-subtitle">16時00分 公開終了</h3>
+            <br />
+            <br />
+            <h2 class="info-subtitle">9月17日</h2>
+            <br />
+            <h3 class="info-subtitle">8時30分 受付開始</h3>
+            <h3 class="info-subtitle">15時20分 公開終了</h3>
+            <br />
+            <br />
+            <h3 class="info-subtitle">詳しくは追って掲載します。</h3>
           </v-col>
         </v-row>
-      </v-container>
-
+      </v-col>
+    </v-row>
+    <div style="margin-top: 30px; width: 100%; background-color: #b49656">
+      <v-row justify="center" class="pb-10">
+        <v-col cols="10">
+          <h1 class="pages-title">ご案内</h1>
+          <v-row justify="center">
+            <v-col
+              v-for="page in pages"
+              :key="page.icon"
+              cols="6"
+              sm="4"
+              md="3"
+              class="my-0 py-2"
+              :class="$vuetify.breakpoint.xs ? 'pages-xs' : 'pages-else'"
+            >
+              <v-card class="pa-1" outlined :to="page.link">
+                <v-icon size="100" color="sairai" style="display: flex">{{
+                  page.icon
+                }}</v-icon>
+                <p class="pages-text">{{ page.text }}</p>
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-col>
+      </v-row>
+    </div>
+    <v-row justify="center" class="pt-6">
       <v-col cols="10" md="5" sm="10"
         ><v-card class="my-auto" to="/groups">
           <div>
@@ -107,7 +107,8 @@
         ><v-card class="my-auto" to="/tickets">
           <div>
             <v-card-title
-              ><v-icon>mdi-ticket</v-icon>あなたの整理券</v-card-title
+              ><v-icon x-large color="sairai">mdi-ticket</v-icon
+              >あなたの整理券</v-card-title
             >
           </div>
         </v-card></v-col
@@ -158,6 +159,7 @@ import CountDown from '~/components/CountDown.vue'
 type Data = {
   showVideo: boolean
   prevRoute: Route | null
+  pages: object
 }
 export default Vue.extend({
   name: 'IndexPage',
@@ -173,6 +175,22 @@ export default Vue.extend({
     return {
       showVideo: true,
       prevRoute: null,
+      pages: [
+        { icon: 'mdi-hexagon-outline', text: '星陵祭とは', link: '/about' },
+        {
+          icon: 'mdi-ticket-confirmation',
+          text: '整理券制度',
+          link: '/system',
+        },
+        { icon: 'mdi-train', text: 'アクセス', link: '/access' },
+        { icon: 'mdi-map', text: '校内マップ', link: '/map' },
+        { icon: 'mdi-clock', text: 'スケジュール', link: '/schedule' },
+        {
+          icon: 'mdi-tooltip-question-outline',
+          text: 'ヘルプ',
+          link: '/help',
+        },
+      ],
     }
   },
   head: {
@@ -245,7 +263,7 @@ body {
   padding: 0;
 }
 
-#access-title {
+.info-title {
   display: inline-block;
   padding: 0.5rem 3rem 0.5rem 0;
   margin-bottom: 5rem;
@@ -254,44 +272,44 @@ body {
   font-weight: bold;
 }
 
-#access-subtitle {
+.info-subtitle {
   text-align: center;
   font-weight: normal;
 }
 
-.access-img {
-  border: 9px solid #b49656;
+.info-caption {
+  text-align: center;
+  font-weight: normal;
+  color: #666;
 }
 
-.access-attention {
-  color: #b49656;
+.pages-title {
+  margin-top: 10px;
+  display: inline-block;
+  padding: 0.5rem 3rem 0.5rem 0;
+  margin-bottom: 5rem;
+  border-bottom: 3px solid #fff;
+  font-family: serif;
   font-weight: bold;
-  text-decoration: underline;
+  color: #fff;
 }
 
-.access-nagata {
-  margin-bottom: 0;
+.pages-xs {
+  font-size: 20px;
 }
 
-.access-nagata-indent {
-  margin-left: 5.5rem;
+.pages-else {
+  font-size: 30px;
 }
 
-.access-mitsuke {
-  margin-bottom: 0;
+.pages-else:hover {
+  transform: scale(1.1, 1.1);
 }
 
-.access-mitsuke-indent {
-  margin-left: 6.5rem;
-}
-
-.access-gijido {
-  margin-bottom: 0;
-}
-
-.access-gijido-indent {
-  margin-left: 8.5rem;
-  margin-bottom: 0;
+.pages-text {
+  text-align: center;
+  font-family: serif;
+  font-weight: bold;
 }
 
 html,
