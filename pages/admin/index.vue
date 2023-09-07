@@ -66,7 +66,7 @@ export default Vue.extend({
     if ((this.$auth.user?.groups as string[]).includes(this.userGroups.admin)) {
       this.isAdmin = true
     } else {
-      this.$nuxt.error({ statusCode: 404, message: 'Not Found' })
+      this.$nuxt.error({ statusCode: 403, message: 'Forbidden' })
     }
   },
   methods: {

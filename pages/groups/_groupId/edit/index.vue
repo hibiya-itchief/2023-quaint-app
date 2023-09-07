@@ -837,10 +837,10 @@ export default Vue.extend({
             (await this.$axios.$get('/users/me/owner_of')) as string[]
           ).includes(this.$route.params.groupId)
         ) {
-          this.$nuxt.error({ statusCode: 404, message: 'Not Found' })
+          this.$nuxt.error({ statusCode: 403, message: 'Forbidden' })
         }
       } else {
-        this.$nuxt.error({ statusCode: 404, message: 'Not Found' })
+        this.$nuxt.error({ statusCode: 403, message: 'Forbidden' })
       }
     }
   },
