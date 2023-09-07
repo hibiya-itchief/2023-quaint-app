@@ -205,7 +205,7 @@
                   >
                   <v-btn
                     v-else-if="
-                      checkTakenTickets(index) / checkStock(index) < 0.8
+                      checkTakenTickets(index) / checkStock(index) < 0.5
                     "
                     color="green"
                     outlined
@@ -215,7 +215,7 @@
                   <!--8割以上で黄色になる-->
                   <v-btn
                     v-else-if="
-                      checkTakenTickets(index) / checkStock(index) >= 0.8 &&
+                      checkTakenTickets(index) / checkStock(index) >= 0.5 &&
                       checkTakenTickets(index) < checkStock(index)
                     "
                     color="orange"
