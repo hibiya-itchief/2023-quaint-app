@@ -65,9 +65,7 @@
             <h3 class="info-subtitle">15時20分 公開終了</h3>
             <br />
             <br />
-            <h3 class="info-subtitle">
-              詳しくは<span style="color: red">このページ</span>をご覧ください。
-            </h3>
+            <h3 class="info-subtitle">詳しくは追って掲載します。</h3>
           </v-col>
         </v-row>
       </v-col>
@@ -97,7 +95,7 @@
         </v-col>
       </v-row>
     </div>
-    <v-row justify="center">
+    <v-row justify="center" class="pt-6">
       <v-col cols="10" md="5" sm="10"
         ><v-card class="my-auto" to="/groups">
           <div>
@@ -178,19 +176,19 @@ export default Vue.extend({
       showVideo: true,
       prevRoute: null,
       pages: [
-        { icon: 'mdi-hexagon-outline', text: '星陵祭とは', link: '/access' },
+        { icon: 'mdi-hexagon-outline', text: '星陵祭とは', link: '/about' },
         {
           icon: 'mdi-ticket-confirmation',
           text: '整理券制度',
-          link: '/access',
+          link: '/system',
         },
         { icon: 'mdi-train', text: 'アクセス', link: '/access' },
-        { icon: 'mdi-map', text: '校内マップ', link: '/access' },
-        { icon: 'mdi-clock', text: 'スケジュール', link: '/access' },
+        { icon: 'mdi-map', text: '校内マップ', link: '/map' },
+        { icon: 'mdi-clock', text: 'スケジュール', link: '/schedule' },
         {
           icon: 'mdi-tooltip-question-outline',
           text: 'ヘルプ',
-          link: '/access',
+          link: '/help',
         },
       ],
     }
@@ -298,10 +296,6 @@ body {
 
 .pages-xs {
   font-size: 20px;
-}
-
-.pages-xs:hover {
-  transform: scale(1.1, 1.1);
 }
 
 .pages-else {
