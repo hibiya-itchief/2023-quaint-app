@@ -18,7 +18,7 @@ const nuxtConfig: NuxtConfig = {
       lang: 'ja',
       prefix: 'og: http://ogp.me/ns#', // OGPを使う宣言
     },
-    titleTemplate: '%s - 日比谷高校星陵祭公式サイト',
+    titleTemplate: '%s - 日比谷高校星陵祭2023「祭徠」公式サイト',
     title: '星陵祭',
     meta: [
       { charset: 'utf-8' },
@@ -209,6 +209,9 @@ const nuxtConfig: NuxtConfig = {
       dark: false,
       themes: {
         light: {
+          sairai: '#b49656',
+        },
+        dark: {
           primary: colors.blue.darken2,
           accent: colors.grey.darken3,
           secondary: colors.amber.darken3,
@@ -216,7 +219,6 @@ const nuxtConfig: NuxtConfig = {
           warning: colors.amber.base,
           error: colors.deepOrange.accent4,
           success: colors.green.accent3,
-          sairai: '#b49656',
         },
       },
     },

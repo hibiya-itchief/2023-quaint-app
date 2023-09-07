@@ -44,6 +44,19 @@
                 団体情報を編集
               </v-btn>
             </v-card-actions>
+            <v-card-actions class="py-1">
+              <v-btn
+                color="blue-grey"
+                dark
+                outlined
+                rounded
+                width="100%"
+                :to="'/groups/' + group?.id + '/data'"
+              >
+                <v-icon>mdi-ticket-confirmation</v-icon>
+                残席情報を確認
+              </v-btn>
+            </v-card-actions>
             <v-card-actions class="mx-auto">
               <v-btn
                 color="primary"
@@ -205,7 +218,7 @@
                   >
                   <v-btn
                     v-else-if="
-                      checkTakenTickets(index) / checkStock(index) < 0.8
+                      checkTakenTickets(index) / checkStock(index) < 0.5
                     "
                     color="green"
                     outlined
@@ -215,7 +228,7 @@
                   <!--8割以上で黄色になる-->
                   <v-btn
                     v-else-if="
-                      checkTakenTickets(index) / checkStock(index) >= 0.8 &&
+                      checkTakenTickets(index) / checkStock(index) >= 0.5 &&
                       checkTakenTickets(index) < checkStock(index)
                     "
                     color="orange"

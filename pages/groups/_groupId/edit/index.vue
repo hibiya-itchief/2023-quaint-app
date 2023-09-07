@@ -3,6 +3,9 @@
     <v-container>
       <v-row justify="center" class="ma-0 pa-0">
         <v-col cols="12" sm="8" md="6" class="ma-0 pa-0">
+          <v-btn icon fab small @click="$router.go(-1)">
+            <v-icon>mdi-chevron-left</v-icon>
+          </v-btn>
           <h2 class="mx-1 px-0">
             <v-icon color="blue-grey">mdi-pencil</v-icon>{{ group?.groupname }}
             <span class="grey--text text-subtitle-1">団体情報の編集</span>
@@ -786,21 +789,17 @@ export default Vue.extend({
       change_thumbnail_image_input: null,
       change_tags_form: false,
       change_events_form: false,
-      add_eventname: '例)1日目第一公演',
+      add_eventname: '例)第1公演',
       add_event_target_list: [
-        {
-          target: 'visited',
-          text: '入校処理済みの一般客と学校関係者(通常はこれを選択してください)',
-        },
-        { target: 'school', text: '学校関係者(生徒や先生のみ)' },
-        {
-          target: 'guest',
-          text: 'すべての人(インターネット上の誰でも取れることに注意してください)',
-        },
+        { target: 'school_parents', text: '生徒・保護者・先生' },
+        { target: 'school', text: '生徒・先生' },
+        { target: 'parents', text: '保護者のみ' },
+        { target: 'student', text: '生徒のみ' },
+        { target: 'paper', text: '紙整理券' },
       ],
       add_event_target: {
-        target: 'visited',
-        text: '入校処理済みの一般客と学校関係者(通常はこれを選択してください)',
+        target: 'school_parents',
+        text: '生徒・保護者・先生',
       },
       add_event_ticket_stock: 24,
       add_event_starts_at: '2023-09-17T09:30',
@@ -837,10 +836,10 @@ export default Vue.extend({
             (await this.$axios.$get('/users/me/owner_of')) as string[]
           ).includes(this.$route.params.groupId)
         ) {
-          this.$nuxt.error({ statusCode: 404, message: 'Not Found' })
+          this.$nuxt.error({ statusCode: 403, message: 'Forbidden' })
         }
       } else {
-        this.$nuxt.error({ statusCode: 404, message: 'Not Found' })
+        this.$nuxt.error({ statusCode: 403, message: 'Forbidden' })
       }
     }
   },
