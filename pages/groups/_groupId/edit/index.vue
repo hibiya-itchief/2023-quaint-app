@@ -3,6 +3,9 @@
     <v-container>
       <v-row justify="center" class="ma-0 pa-0">
         <v-col cols="12" sm="8" md="6" class="ma-0 pa-0">
+          <v-btn icon fab small @click="$router.go(-1)">
+            <v-icon>mdi-chevron-left</v-icon>
+          </v-btn>
           <h2 class="mx-1 px-0">
             <v-icon color="blue-grey">mdi-pencil</v-icon>{{ group?.groupname }}
             <span class="grey--text text-subtitle-1">団体情報の編集</span>

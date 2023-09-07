@@ -44,6 +44,19 @@
                 団体情報を編集
               </v-btn>
             </v-card-actions>
+            <v-card-actions class="py-1">
+              <v-btn
+                color="blue-grey"
+                dark
+                outlined
+                rounded
+                width="100%"
+                :to="'/groups/' + group?.id + '/data'"
+              >
+                <v-icon>mdi-ticket-confirmation</v-icon>
+                残席情報を確認
+              </v-btn>
+            </v-card-actions>
             <v-card-actions class="mx-auto">
               <v-btn
                 color="primary"
