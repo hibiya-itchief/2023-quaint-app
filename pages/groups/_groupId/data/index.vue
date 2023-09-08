@@ -107,8 +107,7 @@ type Data = {
   listTakenTickets: string[]
 }
 export default Vue.extend({
-  name: 'IndivisualGroupPage',
-  auth: false,
+  name: 'IndivisualGroupPageData',
   async asyncData({ params, $axios, payload }): Promise<Partial<Data>> {
     const events = await $axios.$get('/groups/' + params.groupId + '/events')
 
