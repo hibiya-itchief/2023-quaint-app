@@ -497,6 +497,13 @@ export default Vue.extend({
           )
         )
       }
+      // 公演の始まる順に。時間外なら下へ
+      this.events.sort((x: Event, y: Event) => {
+        return x.starts_at > y.starts_at ? 1 : -1
+      })
+      this.events.sort((i: Event) => {
+        return !this.isAvailable(i) ? 1 : -1
+      })
 
       Promise.all(getTicketsInfo).then((ticketsInfo) => {
         for (let i = 0; i < ticketsInfo.length; i++) {
