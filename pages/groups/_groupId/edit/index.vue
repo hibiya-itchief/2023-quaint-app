@@ -50,10 +50,12 @@
               <a class="mx-0 my-2 pa-0 text-body-2">編集できません</a>
             </v-card-title>
             <v-card-text class="ma-0 pa-0">
-              <span class="mx-0 my-2 pa-0 text-body-1"
+              <NuxtLink
+                class="grey--text text--darken-2 mx-0 my-2 pa-0 text-body-1"
+                :to="`/groups/${group?.id}`"
                 ><span class="grey--text text--darken-2"
                   >https://{{ hostname }}/groups/</span
-                >{{ group?.id }}</span
+                >{{ group?.id }}</NuxtLink
               >
             </v-card-text>
           </v-card>
