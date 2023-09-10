@@ -635,7 +635,7 @@
               </v-card-actions>
             </div>
           </v-card>
-          <v-dialog v-model="delete_group_dialog">
+          <v-dialog v-model="delete_group_dialog" max-width="500">
             <v-card>
               <v-card-title>本当にこの団体を削除しますか?</v-card-title>
               <v-card-text>この操作は取り消せません</v-card-text>
