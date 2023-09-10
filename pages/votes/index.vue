@@ -13,7 +13,7 @@
           <!--公演未観覧の場合-->
           <v-card
             v-if="
-              usedticket.length == 0 &&
+              tickets[0].length + tickets[1].length == 0 &&
               ($auth.user?.jobTitle?.includes('Visited') ||
                 $auth.$state.strategy === 'ad')
             "
@@ -32,50 +32,78 @@
           <!--投票済みの場合-->
           <v-card
             v-if="
-              ($auth.user?.jobTitle?.includes('Visited') ||
-                $auth.$state.strategy === 'ad' ||
-                $auth.$state.voted === true )
+              $auth.user?.jobTitle?.includes('Visited') ||
+              $auth.$state.strategy === 'ad' ||
+              isVoted === true
             "
             class="ma-1 pa-2"
           >
             <div>
               <v-card-title>既に投票済みです</v-card-title>
               <v-card-actions>
-                <v-btn :href="'/'" block
-                  >トップページに戻る</v-btn
-                >
+                <v-btn :href="'/'" block>トップページに戻る</v-btn>
               </v-card-actions>
             </div>
           </v-card>
 
-          <v-card v-if="watched.length !== 0 && $auth.$state.voted === false">
+          <v-card
+            v-if="
+              tickets[0].length + tickets[1].length !== 0 && isVoted == false
+            "
+          >
             <v-card-title>優秀クラス劇投票</v-card-title>
 
             <form>
-              <select v-model="voteclass">
-                <option v-for="watched in wathceds" v-bind:key="watched">{{ watched }}</option>
+              <div>1年生</div>
+              <select v-model="voteclass1">
+                <option value="">投票しない</option>
+                <option
+                  v-for="ticketInfo in tickets[0]"
+                  :key="ticketInfo"
+                  value="{{ ticketInfo.group.id }}"
+                >
+                  {{ ticketInfo.group.name }}-{{ ticketInfo.event.title }}
+                </option>
               </select>
-              <v-btn @click="vote(voteclass)">投票！</v-btn>
+              <div>2年生</div>
+              <select v-model="voteclass2">
+                <option value="">投票しない</option>
+                <option
+                  v-for="ticketInfo in tickets[1]"
+                  :key="ticketInfo"
+                  value="{{ ticketInfo.group.id }}"
+                >
+                  {{ ticketInfo.group.name }}-{{ ticketInfo.event.title }}
+                </option>
+              </select>
+              <v-btn @click="selectedVoteClass = [voteclass1, voteclass2]"
+                >投票！</v-btn
+              >
             </form>
           </v-card>
-          
+
           <!--投票確定ダイアログ-->
           <v-dialog
-            v-if="selectedVoteClass"
+            v-if="selectedVoteClass != null"
             v-model="voteDialog"
             max-width="500"
           >
             <v-card>
               <v-card-title class="text-h5">
-                {{ selectedVoteClass }}で投票を確定しますか？
+                投票を確定しますか？
               </v-card-title>
               <v-card-text>この操作は取り消せません</v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn text @click="voteDialog = false">いいえ</v-btn>
-                <v-btn @click="TrueVote(selectedVoteClass)"
-                  >はい</v-btn
+                <v-btn
+                  text
+                  @click="
+                    voteDialog = false
+                    selectedVoteClass = null
+                  "
+                  >いいえ</v-btn
                 >
+                <v-btn @click="vote(selectedVoteClass)">はい</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -91,9 +119,8 @@
   </v-app>
 </template>
 
-
 <script lang="ts">
-import { Event, Group, Vote } from 'types/quaint'
+import { Event, Group } from 'types/quaint'
 import Vue from 'vue'
 type TicketInfo = {
   group: Group
@@ -112,6 +139,7 @@ type Data = {
   error_message: string
   time: string
   seconds: string
+  isVoted: boolean
 }
 export default Vue.extend({
   name: 'UsersVotePage',
@@ -129,12 +157,13 @@ export default Vue.extend({
       error_message: '',
       time: '',
       seconds: '',
+      isVoted: true,
     }
   },
   head: {
     title: '投票',
   },
-  async created() {
+  created() {
     // initだと思う
     this.getOption()
     // 500msごとに現在時刻を取得
@@ -174,6 +203,7 @@ export default Vue.extend({
     },
     async getOption() {
       const tickets: Ticket[] = await this.$axios.$get('/users/me/tickets')
+      this.isVoted = await this.$axios.$get('/votes')
 
       const ticketInfos: TicketInfo[] = []
       for (const ticket of tickets) {
@@ -204,7 +234,19 @@ export default Vue.extend({
           return 1
         else return 0
       })
-      this.tickets = ticketInfos
+
+      // ticketを1年、2年のみにする
+      const ticketsInfor = [[], []]
+      ticketInfos.forEach((ticketInfo) => {
+        if (isUsed(new Date(ticketInfo.event.ends_at))) {
+          if (searchTag(ticketInfo.group.tags, '1年生')) {
+            ticketsInfor[0].push(ticketInfo)
+          } else if (searchTag(ticketInfo.group.tags, '2年生')) {
+            ticketsInfor[1].push(ticketInfo)
+          }
+        }
+      })
+      this.tickets = ticketsInfor
     },
     timeFormatter(inputDate: string) {
       const d = new Date(inputDate)
@@ -225,9 +267,8 @@ export default Vue.extend({
       const d = new Date(inputDate)
       return d.getMonth() + 1 + '/' + d.getDate()
     },
-    selectCancelTicket(ticketInfo: TicketInfo) {
-      this.cancelDialog = true
-      this.selectedTicket = ticketInfo
+    vote(ids) {
+      return this.$axios.$post('/votes/' + ids[0] + '/' + ids[1])
     },
     async CancelTicket(deleteTicket: TicketInfo) {
       await this.$axios
@@ -249,6 +290,15 @@ export default Vue.extend({
         })
       this.cancelDialog = false
       this.getOption()
+    },
+    searchTag(data, g_tags) {
+      let ii = false
+      g_tags.forEach((tag) => {
+        if (tag === data) {
+          ii = true
+        }
+      })
+      return ii
     },
   },
 })
