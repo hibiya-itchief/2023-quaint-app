@@ -248,25 +248,6 @@ export default Vue.extend({
       })
       this.tickets = ticketsInfor
     },
-    timeFormatter(inputDate: string) {
-      const d = new Date(inputDate)
-      return (
-        /*
-        d.getMonth() +
-        1 +
-        '月' +
-        d.getDate() +
-        '日 ' +
-        */
-        d.getHours().toString().padStart(2, '0') +
-        ':' +
-        d.getMinutes().toString().padStart(2, '0')
-      )
-    },
-    dateFormatter(inputDate: string) {
-      const d = new Date(inputDate)
-      return d.getMonth() + 1 + '/' + d.getDate()
-    },
     vote(ids) {
       return this.$axios.$post('/votes/' + ids[0] + '/' + ids[1])
     },
