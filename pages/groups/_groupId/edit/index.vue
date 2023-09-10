@@ -508,7 +508,11 @@
             </div>
           </v-card>
 
-          <v-card v-show="true" class="mx-1 my-1 px-2 py-2" elevation="1">
+          <v-card
+            v-if="!IsNotClassroom(group)"
+            class="mx-1 my-1 px-2 py-2"
+            elevation="1"
+          >
             <v-card-title class="ma-0 pa-0">
               <p
                 class="mx-0 my-1 pa-0 grey--text text--darken-2 text-subtitle-2"
@@ -846,6 +850,18 @@ export default Vue.extend({
     }
   },
   methods: {
+    IsNotClassroom(group: Group) {
+      for (let i = 0; i < group.tags.length; i++) {
+        if (
+          group.tags[i].tagname === 'Hebe' ||
+          group.tags[i].tagname === '外部団体' ||
+          group.tags[i].tagname === '部活動'
+        ) {
+          return true
+        }
+      }
+      return false
+    },
     DateFormatter(inputDate: string) {
       const d = new Date(inputDate)
       return (
