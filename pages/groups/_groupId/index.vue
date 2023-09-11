@@ -45,7 +45,10 @@
                 団体情報を編集
               </v-btn>
             </v-card-actions>
-            <v-card-actions v-if="editable == true" class="py-1">
+            <v-card-actions
+              v-if="editable == true && !IsNotClassroom(group)"
+              class="py-1"
+            >
               <v-btn
                 color="blue-grey"
                 dark
