@@ -65,7 +65,10 @@
             <h3 class="info-subtitle">15時20分 公開終了</h3>
             <br />
             <br />
-            <h3 class="info-subtitle">詳しくは追って掲載します。</h3>
+            <h3 class="info-subtitle">
+              詳しくは<NuxtLink to="/schedule">こちらのページ</NuxtLink
+              >をご覧ください。
+            </h3>
           </v-col>
         </v-row>
       </v-col>
