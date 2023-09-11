@@ -690,7 +690,7 @@ export default Vue.extend({
             this.error_message = e.response.data.detail
           } else {
             this.error_message =
-              '予期せぬエラーが発生しました。IT部隊にお声がけください🙇‍♂️'
+              '予期せぬエラーが発生しました。IT委員にお声がけください🙇‍♂️'
           }
           this.error_snackbar_link = undefined
           this.error_alert = true
