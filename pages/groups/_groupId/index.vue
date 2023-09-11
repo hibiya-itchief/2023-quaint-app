@@ -226,7 +226,7 @@
                     style="font-weight: bold"
                     >配布中<v-icon>mdi-circle-double</v-icon></v-btn
                   >
-                  <!--8割以上で黄色になる-->
+                  <!--5割以上で黄色になる-->
                   <v-btn
                     v-else-if="
                       checkTakenTickets(index) / checkStock(index) >= 0.5 &&
