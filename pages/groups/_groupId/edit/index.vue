@@ -50,10 +50,12 @@
               <a class="mx-0 my-2 pa-0 text-body-2">編集できません</a>
             </v-card-title>
             <v-card-text class="ma-0 pa-0">
-              <span class="mx-0 my-2 pa-0 text-body-1"
+              <NuxtLink
+                class="grey--text text--darken-2 mx-0 my-2 pa-0 text-body-1"
+                :to="`/groups/${group?.id}`"
                 ><span class="grey--text text--darken-2"
                   >https://{{ hostname }}/groups/</span
-                >{{ group?.id }}</span
+                >{{ group?.id }}</NuxtLink
               >
             </v-card-text>
           </v-card>
@@ -506,7 +508,11 @@
             </div>
           </v-card>
 
-          <v-card v-show="true" class="mx-1 my-1 px-2 py-2" elevation="1">
+          <v-card
+            v-if="!IsNotClassroom(group)"
+            class="mx-1 my-1 px-2 py-2"
+            elevation="1"
+          >
             <v-card-title class="ma-0 pa-0">
               <p
                 class="mx-0 my-1 pa-0 grey--text text--darken-2 text-subtitle-2"
@@ -633,7 +639,7 @@
               </v-card-actions>
             </div>
           </v-card>
-          <v-dialog v-model="delete_group_dialog">
+          <v-dialog v-model="delete_group_dialog" max-width="500">
             <v-card>
               <v-card-title>本当にこの団体を削除しますか?</v-card-title>
               <v-card-text>この操作は取り消せません</v-card-text>
@@ -844,6 +850,18 @@ export default Vue.extend({
     }
   },
   methods: {
+    IsNotClassroom(group: Group) {
+      for (let i = 0; i < group.tags.length; i++) {
+        if (
+          group.tags[i].tagname === 'Hebe' ||
+          group.tags[i].tagname === '外部団体' ||
+          group.tags[i].tagname === '部活動'
+        ) {
+          return true
+        }
+      }
+      return false
+    },
     DateFormatter(inputDate: string) {
       const d = new Date(inputDate)
       return (
