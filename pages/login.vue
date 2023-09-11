@@ -39,6 +39,10 @@
       <v-col cols="11" md="6" lg="4" class="ma-0 pa-0">
         <v-sheet color="white" elevation="4" class="py-4 px-2">
           <h2 align="center" class="text-h5 ma-3">一般向け整理券配布方法</h2>
+          <p align="center" class="mb-5">
+            <NuxtLink to="/schedule">配布スケジュール</NuxtLink
+            >やパンフレットにも掲載されています。<br />
+          </p>
           <p align="center" class="">3年生クラス劇の配布&emsp;＠サブアリーナ</p>
           <p align="center" class="text-caption">
             3年生のクラス劇の整理券配布は、体育館棟1階サブアリーナで行います。配布開始は1つ前の公演が始まってからです。<br />

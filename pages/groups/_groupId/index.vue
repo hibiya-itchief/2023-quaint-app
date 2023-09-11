@@ -174,7 +174,10 @@
               <v-spacer></v-spacer>
             </v-card-title>
             <v-card-subtitle
-              >現地で見たい公演の整理券を取得できます。配布スケジュールはパンフレットをご覧ください。.</v-card-subtitle
+              >現地で見たい公演の整理券を取得できます。詳しい時間帯は<NuxtLink
+                to="/schedule"
+                >配布スケジュール</NuxtLink
+              >やパンフレットをご覧ください。</v-card-subtitle
             >
             <v-card-subtitle v-if="!$auth.loggedIn"
               ><v-btn depressed color="primary" class="mr-1" :href="'/login'"
@@ -323,6 +326,19 @@
                 >
               </v-card>
             </v-col>
+          </v-card>
+          <v-card v-else class="pa-2">
+            <v-card-title>
+              <v-icon>mdi-ticket-confirmation</v-icon>
+              観劇について
+              <v-spacer></v-spacer>
+            </v-card-title>
+            <v-card-subtitle
+              >この団体では整理券が取得できません。<br />
+              詳しい時間帯は<NuxtLink to="/schedule"
+                >部活動のタイムテーブル</NuxtLink
+              >やパンフレットをご覧ください。</v-card-subtitle
+            >
           </v-card>
         </v-col>
       </v-row>
