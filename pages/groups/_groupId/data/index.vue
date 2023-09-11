@@ -9,7 +9,7 @@
           <v-card-title class="text-h5">
             <v-icon class="mx-1" color="blue-grey"
               >mdi-ticket-confirmation</v-icon
-            >{{ group?.groupname }}
+            >{{ group.groupname }}
             <span class="mx-1 grey--text text-subtitle-1"
               >整理券の残席状況</span
             >
@@ -51,21 +51,21 @@
                     >
                     <v-btn
                       v-else-if="
-                        checkTakenTickets(index) / checkStock(index) < 0.8
+                        checkTakenTickets(index) / checkStock(index) < 0.5
                       "
                       color="green"
                       outlined
                       >配布中<v-icon>mdi-circle-double</v-icon></v-btn
                     >
-                    <!--8割以上で黄色になる-->
+                    <!--5割以上で黄色になる-->
                     <v-btn
                       v-else-if="
-                        checkTakenTickets(index) / checkStock(index) >= 0.8 &&
+                        checkTakenTickets(index) / checkStock(index) >= 0.5 &&
                         checkTakenTickets(index) < checkStock(index)
                       "
                       color="orange"
                       outlined
-                      >僅少<v-icon>mdi-triangle-outline</v-icon></v-btn
+                      >残りわずか<v-icon>mdi-triangle-outline</v-icon></v-btn
                     >
                     <v-btn
                       v-else-if="checkTakenTickets(index) >= checkStock(index)"
@@ -77,7 +77,7 @@
                   </div>
                 </v-card>
                 <span class="ma-3"
-                  >満席率：{{ checkTakenTickets(index) ?? '-' }} /
+                  >取得率：{{ checkTakenTickets(index) ?? '-' }} /
                   {{ checkStock(index) ?? '-' }}
                 </span>
               </v-card>
@@ -110,6 +110,19 @@ export default Vue.extend({
   name: 'IndivisualGroupPageData',
   async asyncData({ params, $axios, payload }): Promise<Partial<Data>> {
     const events = await $axios.$get('/groups/' + params.groupId + '/events')
+    events.sort((i: Event) => {
+      return i.target === 'paper' ? 1 : -1
+    })
+    events.sort((x: Event, y: Event) => {
+      return x.starts_at > y.starts_at ? 1 : -1
+    })
+    // 下はisAvailableと同じ処理
+    events.sort((i: Event) => {
+      return new Date() > new Date(i.sell_starts) &&
+        new Date(i.sell_ends) > new Date()
+        ? -1
+        : 1
+    })
 
     if (payload !== undefined) {
       return { group: payload, events }

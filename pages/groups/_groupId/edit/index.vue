@@ -7,7 +7,7 @@
             <v-icon>mdi-chevron-left</v-icon>
           </v-btn>
           <h2 class="mx-1 px-0">
-            <v-icon color="blue-grey">mdi-pencil</v-icon>{{ group?.groupname }}
+            <v-icon color="blue-grey">mdi-pencil</v-icon>{{ group.groupname }}
             <span class="grey--text text-subtitle-1">団体情報の編集</span>
           </h2>
           <p class="pa-2">

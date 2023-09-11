@@ -45,7 +45,10 @@
                 団体情報を編集
               </v-btn>
             </v-card-actions>
-            <v-card-actions v-if="editable == true" class="py-1">
+            <v-card-actions
+              v-if="editable == true && !IsNotClassroom(group)"
+              class="py-1"
+            >
               <v-btn
                 color="blue-grey"
                 dark
@@ -226,7 +229,7 @@
                     style="font-weight: bold"
                     >配布中<v-icon>mdi-circle-double</v-icon></v-btn
                   >
-                  <!--8割以上で黄色になる-->
+                  <!--5割以上で黄色になる-->
                   <v-btn
                     v-else-if="
                       checkTakenTickets(index) / checkStock(index) >= 0.5 &&
@@ -404,6 +407,19 @@ export default Vue.extend({
   auth: false,
   async asyncData({ params, $axios, payload }): Promise<Partial<Data>> {
     const events = await $axios.$get('/groups/' + params.groupId + '/events')
+    events.sort((i: Event) => {
+      return i.target === 'paper' ? 1 : -1
+    })
+    events.sort((x: Event, y: Event) => {
+      return x.starts_at > y.starts_at ? 1 : -1
+    })
+    // 下はisAvailableと同じ処理
+    events.sort((i: Event) => {
+      return new Date() > new Date(i.sell_starts) &&
+        new Date(i.sell_ends) > new Date()
+        ? -1
+        : 1
+    })
 
     if (payload !== undefined) {
       return { group: payload, events }
@@ -498,13 +514,6 @@ export default Vue.extend({
           )
         )
       }
-      // 公演の始まる順に。時間外なら下へ
-      this.events.sort((x: Event, y: Event) => {
-        return x.starts_at > y.starts_at ? 1 : -1
-      })
-      this.events.sort((i: Event) => {
-        return !this.isAvailable(i) ? 1 : -1
-      })
 
       Promise.all(getTicketsInfo).then((ticketsInfo) => {
         for (let i = 0; i < ticketsInfo.length; i++) {
