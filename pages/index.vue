@@ -31,14 +31,23 @@
         <v-row>
           <v-col cols="12" sm="6" md="6">
             <h2 class="info-subtitle">令和5年度</h2>
-            <h2 class="info-subtitle">9月16日(土)ー17日(日)</h2>
+            <h2 class="info-subtitle">
+              9月16日(<span style="color: blue">土</span>)ー17日(<span
+                style="color: red"
+                >日</span
+              >)
+            </h2>
             <br />
-            <h2 class="info-subtitle">第48回 星陵祭</h2>
+            <h2 class="info-subtitle">
+              第48回 <ruby>星陵<rt>せいりょう</rt></ruby
+              >祭
+            </h2>
             <h1
               class="info-subtitle"
               style="font-family: serif; font-weight: bold; color: #b49656"
             >
-              「祭徠」
+              「<ruby>祭徠<rt>さいらい</rt></ruby
+              >」
             </h1>
             <br />
             <h2 class="info-subtitle">東京都立日比谷高等学校</h2>
@@ -162,7 +171,7 @@ import CountDown from '~/components/CountDown.vue'
 type Data = {
   showVideo: boolean
   prevRoute: Route | null
-  pages: object
+  pages: any[]
 }
 export default Vue.extend({
   name: 'IndexPage',
