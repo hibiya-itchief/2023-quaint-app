@@ -891,7 +891,7 @@ export default Vue.extend({
             }
           } else {
             this.error_message =
-              '予期しないエラーが発生しました。IT部隊にお声がけください🙇‍♂️'
+              '予期しないエラーが発生しました。IT委員にお声がけください🙇‍♂️'
           }
           this.error_alert = true
         })
@@ -922,7 +922,7 @@ export default Vue.extend({
             }
           } else {
             this.error_message =
-              '予期しないエラーが発生しました。IT部隊にお声がけください🙇‍♂️'
+              '予期しないエラーが発生しました。IT委員にお声がけください🙇‍♂️'
           }
           this.error_alert = true
           this.$nuxt.refresh()
@@ -944,7 +944,7 @@ export default Vue.extend({
             }
           } else {
             this.error_message =
-              '予期しないエラーが発生しました。IT部隊にお声がけください🙇‍♂️'
+              '予期しないエラーが発生しました。IT委員にお声がけください🙇‍♂️'
           }
           this.error_alert = true
         })
@@ -968,7 +968,7 @@ export default Vue.extend({
               }
             } else {
               this.error_message =
-                '予期しないエラーが発生しました。IT部隊にお声がけください🙇‍♂️'
+                '予期しないエラーが発生しました。IT委員にお声がけください🙇‍♂️'
             }
             this.error_alert = true
           })
@@ -994,7 +994,7 @@ export default Vue.extend({
             }
           } else {
             this.error_message =
-              '予期しないエラーが発生しました。IT部隊にお声がけください🙇‍♂️'
+              '予期しないエラーが発生しました。IT委員にお声がけください🙇‍♂️'
           }
           this.error_alert = true
           this.$nuxt.refresh()
@@ -1026,7 +1026,7 @@ export default Vue.extend({
               }
             } else {
               this.error_message =
-                '予期しないエラーが発生しました。IT部隊にお声がけください🙇‍♂️'
+                '予期しないエラーが発生しました。IT委員にお声がけください🙇‍♂️'
             }
             this.error_alert = true
             this.$nuxt.refresh()
@@ -1052,7 +1052,7 @@ export default Vue.extend({
             }
           } else {
             this.error_message =
-              '予期しないエラーが発生しました。IT部隊にお声がけください🙇‍♂️'
+              '予期しないエラーが発生しました。IT委員にお声がけください🙇‍♂️'
           }
           this.error_alert = true
           this.$nuxt.refresh()
