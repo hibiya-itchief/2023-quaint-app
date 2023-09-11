@@ -66,7 +66,7 @@
             <br />
             <br />
             <h3 class="info-subtitle">
-              詳しくは<NuxtLink to="/schedule">こちらのページ</NuxtLink
+              詳しくは<NuxtLink to="/schedule">スケジュール</NuxtLink
               >をご覧ください。
             </h3>
           </v-col>

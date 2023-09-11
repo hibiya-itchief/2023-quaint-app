@@ -26,7 +26,7 @@
           </h3>
         </v-col>
       </v-row>
-      <v-row id="ticketsschedule" class="my-10" justify="center">
+      <v-row class="my-10" justify="center">
         <v-col cols="12">
           <h2>整理券の配布スケジュール</h2>
           <p class="my-5">
@@ -64,7 +64,7 @@
           />
         </v-col>
       </v-row>
-      <v-row id="timetable" class="mt-10" justify="center">
+      <v-row class="mt-10" justify="center">
         <v-col cols="12">
           <h2>部活動のタイムテーブル</h2>
         </v-col>
