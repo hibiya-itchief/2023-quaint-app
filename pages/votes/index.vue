@@ -171,23 +171,6 @@ export default Vue.extend({
   },
 
   methods: {
-    // upNext（開演X分前から終演時刻まで）かどうかを判定するmethod
-    // 引数には（開演時刻，終演時刻）を代入
-    isUpNext: function (start: Date, end: Date) {
-      const date = new Date()
-      // 現在時刻を取得
-      const currentTime: Date = new Date(date.getTime())
-      // 開演20分前の時刻を計算する
-      const MinutesBeforeStart = new Date(start.getTime() - 1000 * 60 * 20)
-
-      // 「 開演20分前<現在時刻」かつ「現在時刻<終演時刻」を判定
-      if (MinutesBeforeStart < currentTime && currentTime < end) {
-        return true
-      } else {
-        return false
-      }
-    },
-
     // 整理券が使用されたかどうか判定するmethod（時間だけで管理している）
     // 引数には（終演時刻）を代入
     isUsed: function (end: Date) {
