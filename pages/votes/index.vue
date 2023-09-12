@@ -76,18 +76,18 @@
                   {{ ticketInfo.group.name }}-{{ ticketInfo.event.title }}
                 </option>
               </select>
-              <v-btn @click="selectedVoteClass = [voteclass1, voteclass2]"
+              <v-btn
+                @click="
+                  selectedVoteClass = [voteclass1, voteclass2]
+                  voteDialog = true
+                "
                 >投票！</v-btn
               >
             </form>
           </v-card>
 
           <!--投票確定ダイアログ-->
-          <v-dialog
-            v-if="selectedVoteClass != null"
-            v-model="voteDialog"
-            max-width="500"
-          >
+          <v-dialog v-model="voteDialog" max-width="500">
             <v-card>
               <v-card-title class="text-h5">
                 投票を確定しますか？
@@ -99,7 +99,7 @@
                   text
                   @click="
                     voteDialog = false
-                    selectedVoteClass = null
+                    selectedVoteClass = []
                   "
                   >いいえ</v-btn
                 >
@@ -132,7 +132,7 @@ type Data = {
   events: Event[]
   tickets: TicketInfo[]
   voteDialog: boolean
-  selectedVoteClass: TicketInfo | null
+  selectedVoteClass: string[]
   success_alert: boolean
   error_alert: boolean
   success_message: string
@@ -150,7 +150,7 @@ export default Vue.extend({
       events: [],
       tickets: [],
       voteDialog: false,
-      selectedVoteClass: null,
+      selectedVoteClass: [],
       success_alert: false,
       error_alert: false,
       success_message: '',
@@ -203,7 +203,8 @@ export default Vue.extend({
     },
     async getOption() {
       const tickets: Ticket[] = await this.$axios.$get('/users/me/tickets')
-      this.isVoted = await this.$axios.$get('/votes')
+      this.isVoted = true
+      // (await this.$axios.$get('/votes').length) === 0 ? false : true
 
       const ticketInfos: TicketInfo[] = []
       for (const ticket of tickets) {
@@ -248,28 +249,18 @@ export default Vue.extend({
       })
       this.tickets = ticketsInfor
     },
-    vote(ids) {
-      return this.$axios.$post('/votes/' + ids[0] + '/' + ids[1])
-    },
-    async CancelTicket(deleteTicket: TicketInfo) {
+    async vote(ids) {
       await this.$axios
-        .delete(
-          '/groups/' +
-            deleteTicket.group.id +
-            '/events/' +
-            deleteTicket.event.id +
-            '/tickets/' +
-            deleteTicket.ticket.id
-        )
+        .$post('/votes/' + ids[0] + '/' + ids[1])
         .then(() => {
           this.success_alert = true
-          this.success_message = '整理券が正常にキャンセルされました'
+          this.success_message = '投票が完了しました'
         })
         .catch((e) => {
           this.error_alert = true
           this.error_message = e.message
         })
-      this.cancelDialog = false
+      this.voteDialog = false
       this.getOption()
     },
     searchTag(data, g_tags) {
