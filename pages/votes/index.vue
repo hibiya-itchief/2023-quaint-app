@@ -48,7 +48,7 @@
 
           <v-card
             v-if="
-              tickets[0].length + tickets[1].length !== 0 && isVoted == false
+              tickets[0].length + tickets[1].length !== 0 && isVoted === false
             "
           >
             <v-card-title>優秀クラス劇投票</v-card-title>
@@ -157,7 +157,7 @@ export default Vue.extend({
       error_message: '',
       time: '',
       seconds: '',
-      isVoted: true,
+      isVoted: false,
     }
   },
   head: {
@@ -203,8 +203,7 @@ export default Vue.extend({
     },
     async getOption() {
       const tickets: Ticket[] = await this.$axios.$get('/users/me/tickets')
-      this.isVoted = true
-      // (await this.$axios.$get('/votes').length) === 0 ? false : true
+      this.isVoted = await this.$axios.$get('/votes').length
 
       const ticketInfos: TicketInfo[] = []
       for (const ticket of tickets) {
