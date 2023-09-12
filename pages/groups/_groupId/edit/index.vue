@@ -7,7 +7,7 @@
             <v-icon>mdi-chevron-left</v-icon>
           </v-btn>
           <h2 class="mx-1 px-0">
-            <v-icon color="blue-grey">mdi-pencil</v-icon>{{ group?.groupname }}
+            <v-icon color="blue-grey">mdi-pencil</v-icon>{{ group.groupname }}
             <span class="grey--text text-subtitle-1">団体情報の編集</span>
           </h2>
           <p class="pa-2">
@@ -442,7 +442,11 @@
             </div>
           </v-card>
 
-          <v-card class="mx-1 my-1 px-2 py-2" elevation="1">
+          <v-card
+            v-show="$auth.user?.groups?.includes(userGroups.admin)"
+            class="mx-1 my-1 px-2 py-2"
+            elevation="1"
+          >
             <v-card-title class="ma-0 pa-0">
               <p
                 class="mx-0 my-1 pa-0 grey--text text--darken-2 text-subtitle-2"
@@ -891,7 +895,7 @@ export default Vue.extend({
             }
           } else {
             this.error_message =
-              '予期しないエラーが発生しました。IT部隊にお声がけください🙇‍♂️'
+              '予期しないエラーが発生しました。IT委員にお声がけください🙇‍♂️'
           }
           this.error_alert = true
         })
@@ -922,7 +926,7 @@ export default Vue.extend({
             }
           } else {
             this.error_message =
-              '予期しないエラーが発生しました。IT部隊にお声がけください🙇‍♂️'
+              '予期しないエラーが発生しました。IT委員にお声がけください🙇‍♂️'
           }
           this.error_alert = true
           this.$nuxt.refresh()
@@ -944,7 +948,7 @@ export default Vue.extend({
             }
           } else {
             this.error_message =
-              '予期しないエラーが発生しました。IT部隊にお声がけください🙇‍♂️'
+              '予期しないエラーが発生しました。IT委員にお声がけください🙇‍♂️'
           }
           this.error_alert = true
         })
@@ -968,7 +972,7 @@ export default Vue.extend({
               }
             } else {
               this.error_message =
-                '予期しないエラーが発生しました。IT部隊にお声がけください🙇‍♂️'
+                '予期しないエラーが発生しました。IT委員にお声がけください🙇‍♂️'
             }
             this.error_alert = true
           })
@@ -994,7 +998,7 @@ export default Vue.extend({
             }
           } else {
             this.error_message =
-              '予期しないエラーが発生しました。IT部隊にお声がけください🙇‍♂️'
+              '予期しないエラーが発生しました。IT委員にお声がけください🙇‍♂️'
           }
           this.error_alert = true
           this.$nuxt.refresh()
@@ -1026,7 +1030,7 @@ export default Vue.extend({
               }
             } else {
               this.error_message =
-                '予期しないエラーが発生しました。IT部隊にお声がけください🙇‍♂️'
+                '予期しないエラーが発生しました。IT委員にお声がけください🙇‍♂️'
             }
             this.error_alert = true
             this.$nuxt.refresh()
@@ -1052,7 +1056,7 @@ export default Vue.extend({
             }
           } else {
             this.error_message =
-              '予期しないエラーが発生しました。IT部隊にお声がけください🙇‍♂️'
+              '予期しないエラーが発生しました。IT委員にお声がけください🙇‍♂️'
           }
           this.error_alert = true
           this.$nuxt.refresh()

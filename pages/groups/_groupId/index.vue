@@ -45,7 +45,10 @@
                 団体情報を編集
               </v-btn>
             </v-card-actions>
-            <v-card-actions v-if="editable == true" class="py-1">
+            <v-card-actions
+              v-if="editable == true && !IsNotClassroom(group)"
+              class="py-1"
+            >
               <v-btn
                 color="blue-grey"
                 dark
@@ -171,7 +174,10 @@
               <v-spacer></v-spacer>
             </v-card-title>
             <v-card-subtitle
-              >現地で見たい公演の整理券を取得できます。配布スケジュールはパンフレットをご覧ください。.</v-card-subtitle
+              >現地で見たい公演の整理券を取得できます。詳しい時間帯は<NuxtLink
+                to="/schedule"
+                >配布スケジュール</NuxtLink
+              >やパンフレットをご覧ください。</v-card-subtitle
             >
             <v-card-subtitle v-if="!$auth.loggedIn"
               ><v-btn depressed color="primary" class="mr-1" :href="'/login'"
@@ -226,7 +232,7 @@
                     style="font-weight: bold"
                     >配布中<v-icon>mdi-circle-double</v-icon></v-btn
                   >
-                  <!--8割以上で黄色になる-->
+                  <!--5割以上で黄色になる-->
                   <v-btn
                     v-else-if="
                       checkTakenTickets(index) / checkStock(index) >= 0.5 &&
@@ -321,6 +327,19 @@
               </v-card>
             </v-col>
           </v-card>
+          <v-card v-else class="pa-2">
+            <v-card-title>
+              <v-icon>mdi-ticket-confirmation</v-icon>
+              観劇について
+              <v-spacer></v-spacer>
+            </v-card-title>
+            <v-card-subtitle
+              >この団体では整理券が取得できません。<br />
+              詳しい時間帯は<NuxtLink to="/schedule"
+                >部活動のタイムテーブル</NuxtLink
+              >やパンフレットをご覧ください。</v-card-subtitle
+            >
+          </v-card>
         </v-col>
       </v-row>
       <v-snackbar v-model="success_alert" color="success" elevation="2">
@@ -404,6 +423,19 @@ export default Vue.extend({
   auth: false,
   async asyncData({ params, $axios, payload }): Promise<Partial<Data>> {
     const events = await $axios.$get('/groups/' + params.groupId + '/events')
+    events.sort((i: Event) => {
+      return i.target === 'paper' ? 1 : -1
+    })
+    events.sort((x: Event, y: Event) => {
+      return x.starts_at > y.starts_at ? 1 : -1
+    })
+    // 下はisAvailableと同じ処理
+    events.sort((i: Event) => {
+      return new Date() > new Date(i.sell_starts) &&
+        new Date(i.sell_ends) > new Date()
+        ? -1
+        : 1
+    })
 
     if (payload !== undefined) {
       return { group: payload, events }
@@ -498,13 +530,6 @@ export default Vue.extend({
           )
         )
       }
-      // 公演の始まる順に。時間外なら下へ
-      this.events.sort((x: Event, y: Event) => {
-        return x.starts_at > y.starts_at ? 1 : -1
-      })
-      this.events.sort((i: Event) => {
-        return !this.isAvailable(i) ? 1 : -1
-      })
 
       Promise.all(getTicketsInfo).then((ticketsInfo) => {
         for (let i = 0; i < ticketsInfo.length; i++) {
@@ -690,7 +715,7 @@ export default Vue.extend({
             this.error_message = e.response.data.detail
           } else {
             this.error_message =
-              '予期せぬエラーが発生しました。IT部隊にお声がけください🙇‍♂️'
+              '予期せぬエラーが発生しました。IT委員にお声がけください🙇‍♂️'
           }
           this.error_snackbar_link = undefined
           this.error_alert = true
