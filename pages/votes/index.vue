@@ -119,7 +119,7 @@
   </v-app>
 </template>
 
-<!--script lang="ts">
+<script lang="ts">
 import { Event, Group } from 'types/quaint'
 import Vue from 'vue'
 type TicketInfo = {
@@ -173,7 +173,7 @@ export default Vue.extend({
   methods: {
     // 整理券が使用されたかどうか判定するmethod（時間だけで管理している）
     // 引数には（終演時刻）を代入
-    isUsed: function (end: Date) {
+    /* isUsed: function (end: Date) {
       const date = new Date()
       const currentTime: Date = new Date(date.getTime())
 
@@ -253,7 +253,11 @@ export default Vue.extend({
         }
       })
       return ii
+    }, */
+    async getOption() {
+      const tickets: Ticket[] = await this.$axios.$get('/users/me/tickets')
+      trace(tickets)
     },
   },
 })
-</script-->
+</script>
