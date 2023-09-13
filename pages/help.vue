@@ -5,7 +5,10 @@
       <v-row justify="center">
         <v-col cols="12">
           <div style="border-left: 5px solid #b49656; padding: 2px 8px">
-            <h2>オンライン整理券の使い方ガイド</h2>
+            <h2>
+              オンライン整理券の<br />
+              使い方ガイド
+            </h2>
             <br />
 
             <div>
