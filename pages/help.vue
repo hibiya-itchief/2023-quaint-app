@@ -252,15 +252,15 @@
               </p>
               <v-divider />
             </div>
-
-            <h3 class="my-10">
-              オンライン整理券システム・当サイトに関して、<br />
-              IT委員に相談したいことがある場合は2F大職員室横のIT質問ブースまでお越しください。<br />
-              第1公演の整理券配布開始の10分前から第5公演終了の10分後まで受け付けております。<br />
-              <NuxtLink to="/map">校内マップ</NuxtLink><br />
-              <NuxtLink to="/schedule">配布スケジュール</NuxtLink>
-            </h3>
           </div>
+
+          <h3 class="my-10">
+            オンライン整理券システム・当サイトに関して、<br />
+            IT委員に相談したいことがある場合は2F大職員室横のIT質問ブースまでお越しください。<br />
+            第1公演の整理券配布開始の10分前から第5公演終了の10分後まで受け付けております。<br />
+            <NuxtLink to="/map">校内マップ</NuxtLink><br />
+            <NuxtLink to="/schedule">配布スケジュール</NuxtLink>
+          </h3>
         </v-col>
       </v-row>
     </v-container>

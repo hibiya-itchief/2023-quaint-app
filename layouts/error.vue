@@ -17,8 +17,13 @@
       <div v-else>
         <p>指定したURLが正しいかご確認の上、再読み込みをお試しください。</p>
       </div>
-      <v-btn outlined href="https://forms.gle/aRv81UtSCSgS2gHq8"
-        ><v-icon>mdi-clipboard-text</v-icon>お問い合わせフォーム</v-btn
+      <v-btn
+        nuxt-link
+        outlined
+        to="/help"
+        color="sairai"
+        style="font-weight: bold"
+        >ヘルプページ</v-btn
       >
     </div>
   </v-app>
