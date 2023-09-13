@@ -119,7 +119,7 @@
   </v-app>
 </template>
 
-<script lang="ts">
+<!--script lang="ts">
 import { Event, Group } from 'types/quaint'
 import Vue from 'vue'
 type TicketInfo = {
@@ -256,4 +256,4 @@ export default Vue.extend({
     },
   },
 })
-</script>
+</script-->
