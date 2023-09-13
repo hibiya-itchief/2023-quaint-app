@@ -4,18 +4,19 @@
       <h1 id="title">ヘルプ</h1>
       <v-row justify="center">
         <v-col cols="12">
-          <h2>よくあるご質問とその回答をまとめました。</h2>
+          <h2>オンライン整理券の使い方ガイド</h2>
           <br />
 
           <div>
             <v-card flat :ripple="false" @click="g1 = !g1">
               <div class="pa-5 questions-box">
                 <v-icon large color="sairai">mdi-exclamation-thick</v-icon>
-                <h3>ログインの方法を教えてください。</h3>
+                <h3>ログインの方法</h3>
               </div>
             </v-card>
             <p v-show="g1" class="pl-5 pt-2 fade-in">
-              画面左上の**≡**（三本線のメニュー）をタップし、「ログイン」をタップするとログイン画面が表示されます。ご自身のアカウント名とパスワードを入力してください。<br />
+              画面左上の<span style="color: #b49656"> ≡ </span
+              >（三本線のメニュー）をタップし、「ログイン」をタップするとログイン画面が表示されます。ご自身のアカウント名とパスワードを入力してください。<br />
               <br />
               【生徒の方へ】<br />
               学校のアカウント(〜@metro.ed.jpで終わるアカウント)を使ってログインしてください。<br />
@@ -24,7 +25,9 @@
               各ご家庭にアカウントを2つ配布しています。一方のアカウントで取得した整理券はもう一方のアカウントには反映されません。別のアカウントとして区別して利用するようお願いいたします。<br />
               <br />
               【一般の方へ】<br />
-              **今年度はオンライン整理券をご利用いただけません**。つきましては、当サイトはログインをせずにご利用ください。観劇の際には体育棟にて配布している紙の整理券をご利用ください。<br />
+              <span style="font-weight: bold; color: #b49656"
+                >今年度はオンライン整理券をご利用いただけません</span
+              >。つきましては、当サイトはログインをせずにご利用ください。観劇の際には体育棟にて配布している紙の整理券をご利用ください。<br />
               詳しくは<NuxtLink to="/system">整理券制度</NuxtLink
               >のページをご覧ください。
             </p>
@@ -66,7 +69,9 @@
               >のページをご覧ください。<br />
               <br />
               【一般の方】<br />
-              **今年度はオンライン整理券をご利用いただけません**。観劇の際には体育棟にて配布している紙の整理券をご利用ください。<br />
+              <span style="font-weight: bold; color: #b49656"
+                >今年度はオンライン整理券をご利用いただけません</span
+              >。観劇の際には体育棟にて配布している紙の整理券をご利用ください。<br />
               詳しくは<NuxtLink to="/system">整理券制度</NuxtLink
               >のページをご覧ください。
             </p>
@@ -108,6 +113,8 @@
             <v-divider />
           </div>
 
+          <h2 class="my-10">よくあるトラブル、質問</h2>
+
           <div>
             <v-card flat :ripple="false" @click="q1 = !q1">
               <div class="pa-5 questions-box">
@@ -117,9 +124,8 @@
             </v-card>
             <p v-show="q1" class="pl-5 pt-2 fade-in">
               IT委員が個別で対応いたしますので、お手数ですが2F大職員室横のIT質問ブースまでお越しください。<br />
-              <NuxtLink to="/map">校内マップ</NuxtLink><br />
-              <br />
               第1公演の整理券配布開始の10分前から第5公演終了の10分後まで受け付けております。<br />
+              <NuxtLink to="/map">校内マップ</NuxtLink><br />
               <NuxtLink to="/schedule">配布スケジュール</NuxtLink><br />
             </p>
             <v-divider />
@@ -133,7 +139,8 @@
               </div>
             </v-card>
             <p v-show="q2" class="pl-5 pt-2 fade-in">
-              画面左上の**≡**(三本線のメニュー)をタップしてください。<br />
+              画面左上の<span style="color: #b49656"> ≡ </span
+              >(三本線のメニュー)をタップしてください。<br />
               ログイン中であればアカウント名が表示されます。 （画像）<br />
             </p>
             <v-divider />
@@ -234,24 +241,20 @@
             </v-card>
             <p v-show="q8" class="pl-5 pt-2 fade-in">
               そのような場合は、2F大職員室横のIT質問ブースまでお越しください。<br />
-              <NuxtLink to="/map">校内マップ</NuxtLink><br />
-              <br />
               第1公演の整理券配布開始の10分前から第5公演終了の10分後まで受け付けております。<br />
+              <NuxtLink to="/map">校内マップ</NuxtLink><br />
               <NuxtLink to="/schedule">配布スケジュール</NuxtLink>
             </p>
             <v-divider />
           </div>
 
-          <div class="pt-10">
-            <p v-show="true" class="pl-5 pt-2 fade-in">
-              オンライン整理券システム・当サイトに関して、IT委員に相談したいことがある場合は2F大職員室横のIT質問ブースまでお越しください。<br />
-              <NuxtLink to="/map">校内マップ</NuxtLink><br />
-              <br />
-              第1公演の整理券配布開始の10分前から第5公演終了の10分後まで受け付けております。<br />
-              <NuxtLink to="/schedule">配布スケジュール</NuxtLink>
-            </p>
-            <v-divider />
-          </div>
+          <h3 class="my-10">
+            オンライン整理券システム・当サイトに関して、<br />
+            IT委員に相談したいことがある場合は2F大職員室横のIT質問ブースまでお越しください。<br />
+            第1公演の整理券配布開始の10分前から第5公演終了の10分後まで受け付けております。<br />
+            <NuxtLink to="/map">校内マップ</NuxtLink><br />
+            <NuxtLink to="/schedule">配布スケジュール</NuxtLink>
+          </h3>
         </v-col>
       </v-row>
     </v-container>
@@ -293,7 +296,7 @@ h2 {
 }
 
 h3 {
-  display: inline;
+  text-align: center;
   font-weight: normal;
 }
 
