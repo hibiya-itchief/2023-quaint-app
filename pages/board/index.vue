@@ -13,12 +13,10 @@
               <th rowspan="2">11R</th>
               <th>次</th>
               <td>
-                <!--
-                    <v-icon      v-if="!isAvailable(event)" color="grey">mdi-cancel</v-icon>
-                    <v-icon      v-else-if="checkTakenTickets(index) / checkStock(index) < 0.5" color="green">mdi-circle-double</v-icon>
-                    <v-icon      v-else-if="checkTakenTickets(index) / checkStock(index) >= 0.5 &&            checkTakenTickets(index) < checkStock(index)" color="orange">mdi-triangle-outline</v-icon>
-                    <v-icon      v-else-if="checkTakenTickets(index) >= checkStock(index)" color="red">mdi-close</v-icon>
--->
+                    <v-icon      v-if="!isAvailable(rooms[0].sell_starts_1st,rooms[0].sell_ends_1st)" color="grey">mdi-cancel</v-icon>
+                    <v-icon      v-else-if="rooms[0].taken_tickets_1st / rooms[0].stock_1st < 0.5" color="green">mdi-circle-double</v-icon>
+                    <v-icon      v-else-if="rooms[0].taken_tickets_1st / rooms[0].stock_1st >= 0.5 &&            rooms[0].taken_tickets_1st < rooms[0].stock_1st" color="orange">mdi-triangle-outline</v-icon>
+                    <v-icon      v-else-if="rooms[0].taken_tickets_1st >= rooms[0].stock_1st" color="red">mdi-close</v-icon>
               </td>
               <td>o</td>
             </tr>
@@ -137,6 +135,7 @@ export default Vue.extend({
     const groups: Group[] = await Promise.all(groups_task)
 
     // 完成品の受け皿を作成
+    // templateで使う際は、rooms[i]のiにあたる数字は11Rから38Rまでを順番に並べたときをイメージ
     const rooms: RoomData[] = []
 
     // 全クラスの必要な内容をroomsに詰める
@@ -187,7 +186,6 @@ export default Vue.extend({
         rooms.push()
       }
     }
-
     return { rooms }
   },
   data(): Data {
@@ -200,7 +198,19 @@ export default Vue.extend({
   head: {
     title: 'インフォメーションボード',
   },
-  methods: {},
+  methods: {
+        // isAvailable: 整理券が配布時間内であればtrue，それ以外はfalseを返すmethod
+    isAvailable(sell_starts: string, sell_ends: string) {
+      if (
+        new Date() > new Date(sell_starts) &&
+        new Date(sell_ends) > new Date()
+      ) {
+        return true
+      } else {
+        return false
+      }
+    }
+  },
 })
 </script>
 
