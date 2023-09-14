@@ -55,27 +55,37 @@
 
             <form>
               <div>1年生</div>
-              <select v-model="voteclass1">
-                <option value="">投票しない</option>
-                <option
+              <v-list v-model="voteclass1">
+                <v-list-item value="">投票しない</v-list-item>
+                <v-list-item
                   v-for="ticketInfo in tickets[0]"
-                  :key="ticketInfo"
-                  value="{{ ticketInfo.group.id }}"
+                  :key="ticketInfo.group.id"
+                  :value="ticketInfo.group.id"
                 >
-                  {{ ticketInfo.group.name }}-{{ ticketInfo.event.title }}
-                </option>
-              </select>
+                  {{ ticketInfo.group.name }} - {{ ticketInfo.event.title }}
+                </v-list-item>
+              </v-list>
               <div>2年生</div>
-              <select v-model="voteclass2">
+              <!--select v-model="voteclass2">
                 <option value="">投票しない</option>
                 <option
                   v-for="ticketInfo in tickets[1]"
-                  :key="ticketInfo"
-                  value="{{ ticketInfo.group.id }}"
+                  :key="ticketInfo.group.id"
+                  :value="ticketInfo.group.id"
                 >
-                  {{ ticketInfo.group.name }}-{{ ticketInfo.event.title }}
+                  {{ ticketInfo.group.name }} - {{ ticketInfo.event.title }}
                 </option>
-              </select>
+              </select-->
+              <v-list v-model="voteclass2">
+                <v-list-item value="">投票しない</v-list-item>
+                <v-list-item
+                  v-for="ticketInfo in tickets[1]"
+                  :key="ticketInfo.group.id"
+                  :value="ticketInfo.group.id"
+                >
+                  {{ ticketInfo.group.name }} - {{ ticketInfo.event.title }}
+                </v-list-item>
+              </v-list>
               <v-btn
                 @click="
                   selectedVoteClass = [voteclass1, voteclass2]
