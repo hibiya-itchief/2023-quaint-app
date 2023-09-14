@@ -133,7 +133,7 @@
               <p v-show="q1" class="pl-5 pt-2 fade-in">
                 IT委員が個別で対応いたしますので、お手数ですが2F大職員室横のIT質問ブースまでお越しください。<br />
                 第1公演の整理券配布開始の10分前から第5公演終了の10分後まで受け付けております。<br />
-                <NuxtLink to="/map">校内マップ</NuxtLink><br />
+                <!--<NuxtLink to="/map">校内マップ</NuxtLink><br />-->
                 <NuxtLink to="/schedule">配布スケジュール</NuxtLink><br />
               </p>
               <v-divider />
@@ -149,7 +149,13 @@
               <p v-show="q2" class="pl-5 pt-2 fade-in">
                 画面左上の<span style="color: #b49656"> ≡ </span
                 >(三本線のメニュー)をタップしてください。<br />
-                ログイン中であればアカウント名が表示されます。 （画像）<br />
+                ログイン中であればアカウント名が表示されます。<br />
+                <v-img
+                  class="img"
+                  max-width="300"
+                  src="/images/helpLogin.png"
+                  alt="ログイン時の表示"
+                />
               </p>
               <v-divider />
             </div>
@@ -181,7 +187,12 @@
               <p v-show="q4" class="pl-5 pt-2 fade-in">
                 ブックマークだけを表示する設定になっている可能性があります。<br />
                 ページ上部の旗のマークに色がついていないことを確認してください。<br />
-                （画像）
+                <v-img
+                  class="img"
+                  max-width="300"
+                  src="/images/helpBookmark.png"
+                  alt="ブックマーク表示時の画像"
+                />
               </p>
               <v-divider />
             </div>
@@ -250,7 +261,7 @@
               <p v-show="q8" class="pl-5 pt-2 fade-in">
                 そのような場合は、2F大職員室横のIT質問ブースまでお越しください。<br />
                 第1公演の整理券配布開始の10分前から第5公演終了の10分後まで受け付けております。<br />
-                <NuxtLink to="/map">校内マップ</NuxtLink><br />
+                <!--<NuxtLink to="/map">校内マップ</NuxtLink><br />-->
                 <NuxtLink to="/schedule">配布スケジュール</NuxtLink>
               </p>
               <v-divider />
@@ -261,7 +272,7 @@
             オンライン整理券システム・当サイトに関して、<br />
             IT委員に相談したいことがある場合は2F大職員室横のIT質問ブースまでお越しください。<br />
             第1公演の整理券配布開始の10分前から第5公演終了の10分後まで受け付けております。<br />
-            <NuxtLink to="/map">校内マップ</NuxtLink><br />
+            <!--<NuxtLink to="/map">校内マップ</NuxtLink><br />-->
             <NuxtLink to="/schedule">配布スケジュール</NuxtLink>
           </h3>
         </v-col>
@@ -344,5 +355,9 @@ h3 {
   to {
     opacity: 1;
   }
+}
+
+.img {
+  border: 9px solid #b49656;
 }
 </style>
