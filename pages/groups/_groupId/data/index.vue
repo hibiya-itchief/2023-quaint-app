@@ -114,7 +114,7 @@ export default Vue.extend({
       return i.target === 'paper' ? 1 : -1
     })
     events.sort((x: Event, y: Event) => {
-      return x.starts_at > y.starts_at ? 1 : -1
+      return new Date(x.starts_at) > new Date(y.starts_at) ? 1 : -1
     })
     // 下はisAvailableと同じ処理
     events.sort((i: Event) => {
