@@ -120,7 +120,7 @@
 </template>
 
 <script lang="ts">
-import { Event, Group } from 'types/quaint'
+import { Event, Group, Ticket } from 'types/quaint'
 import Vue from 'vue'
 type TicketInfo = {
   group: Group
@@ -184,6 +184,15 @@ export default Vue.extend({
         return false
       }
     },
+    searchTag(data, g_tags) {
+      let ii = false
+      g_tags.forEach((tag) => {
+        if (tag === data) {
+          ii = true
+        }
+      })
+      return ii
+    },
     async getOption() {
       const tickets: Ticket[] = await this.$axios.$get('/users/me/tickets')
       this.isVoted = await this.$axios.$get('/votes').length
@@ -244,15 +253,6 @@ export default Vue.extend({
         })
       this.voteDialog = false
       this.getOption()
-    },
-    searchTag(data, g_tags) {
-      let ii = false
-      g_tags.forEach((tag) => {
-        if (tag === data) {
-          ii = true
-        }
-      })
-      return ii
     },
   },
 })
