@@ -263,6 +263,12 @@ const nuxtConfig: NuxtConfig = {
           payload: { group, tags },
         }
       })
+      const groupDataRoutes = groups.map((group) => {
+        return {
+          route: `/groups/${group.id}/data`,
+          payload: { group },
+        }
+      })
       return [
         {
           route: '/groups',
@@ -270,6 +276,7 @@ const nuxtConfig: NuxtConfig = {
         },
         ...groupRoutes,
         ...groupEditRoutes,
+        ...groupDataRoutes,
       ]
     },
   },
