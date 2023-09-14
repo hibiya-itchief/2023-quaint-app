@@ -152,14 +152,6 @@
       -->
 
       <!--コピーライトとか-->
-      <v-col cols="10">
-        <v-btn href="https://forms.gle/aRv81UtSCSgS2gHq8" class="ma-2"
-          ><v-icon>mdi-list-box</v-icon>フィードバック(Googleフォーム)</v-btn
-        >
-        <v-btn href="https://github.com/hibiya-itchief" class="ma-2"
-          ><v-icon>mdi-github</v-icon>GitHub</v-btn
-        >
-      </v-col>
     </v-row>
   </v-app>
 </template>
