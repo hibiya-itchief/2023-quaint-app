@@ -120,7 +120,7 @@
 </template>
 
 <script lang="ts">
-import { Event, Group, Ticket } from 'types/quaint'
+import { Event, Group, Ticket, Tag } from 'types/quaint'
 import Vue from 'vue'
 type TicketInfo = {
   group: Group
@@ -184,10 +184,10 @@ export default Vue.extend({
         return false
       }
     },
-    searchTag(data, g_tags) {
+    searchTag(data: Tag[], g_tags: str) {
       let ii = false
-      g_tags.forEach((tag) => {
-        if (tag === data) {
+      g_tags.forEach((tag: Tag) => {
+        if (tag.tagname === data) {
           ii = true
         }
       })
@@ -228,7 +228,7 @@ export default Vue.extend({
       })
 
       // ticketを1年、2年のみにする
-      const ticketsInfor = [[], []]
+      const ticketsInfor: TicketInfo[][] = [[], []]
       ticketInfos.forEach((ticketInfo) => {
         if (isUsed(new Date(ticketInfo.event.ends_at))) {
           if (searchTag(ticketInfo.group.tags, '1年生')) {
@@ -240,7 +240,7 @@ export default Vue.extend({
       })
       this.tickets = ticketsInfor
     },
-    async vote(ids) {
+    async vote(ids: str[]) {
       await this.$axios
         .$post('/votes/' + ids[0] + '/' + ids[1])
         .then(() => {
