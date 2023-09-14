@@ -46,39 +46,46 @@
                   <v-spacer></v-spacer>
                   <div class="my-auto mx-2">
                     <!--ここから配布ステータスの条件分岐-->
-                    <v-btn v-if="!isAvailable(event)" color="grey" outlined
+                    <v-btn
+                      v-if="!isAvailable(event)"
+                      color="grey"
+                      outlined
+                      style="font-weight: bold"
                       >時間外<v-icon>mdi-cancel</v-icon></v-btn
                     >
                     <v-btn
                       v-else-if="
-                        checkTakenTickets(index) / checkStock(index) < 0.5
+                        listTakenTickets[index] / listStock[index] < 0.5
                       "
                       color="green"
                       outlined
+                      style="font-weight: bold"
                       >配布中<v-icon>mdi-circle-double</v-icon></v-btn
                     >
                     <!--5割以上で黄色になる-->
                     <v-btn
                       v-else-if="
-                        checkTakenTickets(index) / checkStock(index) >= 0.5 &&
-                        checkTakenTickets(index) < checkStock(index)
+                        listTakenTickets[index] / listStock[index] >= 0.5 &&
+                        listTakenTickets[index] < listStock[index]
                       "
                       color="orange"
                       outlined
+                      style="font-size: 80%; font-weight: bold"
                       >残りわずか<v-icon>mdi-triangle-outline</v-icon></v-btn
                     >
                     <v-btn
-                      v-else-if="checkTakenTickets(index) >= checkStock(index)"
+                      v-else-if="listTakenTickets[index] >= listStock[index]"
                       color="red"
                       outlined
+                      style="font-weight: bold"
                       >完売<v-icon>mdi-close</v-icon></v-btn
                     >
                     <!--ここまで配布ステータスの条件分岐-->
                   </div>
                 </v-card>
                 <span class="ma-3"
-                  >取得率：{{ checkTakenTickets(index) ?? '-' }} /
-                  {{ checkStock(index) ?? '-' }}
+                  >取得率：{{ listTakenTickets[index] ?? '-' }} /
+                  {{ listStock[index] ?? '-' }}
                 </span>
               </v-card>
             </v-col>
@@ -92,19 +99,11 @@
 import { Event, Group } from 'types/quaint'
 import Vue from 'vue'
 type Data = {
-  userGroups: {
-    admin: string
-    entry: string
-    owner: string
-    parents: string
-    students: string
-    teachers: string
-    chief: string
-  }
+  userGroups: { admin: string; owner: string }
   group: Group | undefined
   events: Event[]
-  listStock: string[]
-  listTakenTickets: string[]
+  listStock: number[]
+  listTakenTickets: number[]
 }
 export default Vue.extend({
   name: 'IndivisualGroupPageData',
@@ -114,7 +113,7 @@ export default Vue.extend({
       return i.target === 'paper' ? 1 : -1
     })
     events.sort((x: Event, y: Event) => {
-      return x.starts_at > y.starts_at ? 1 : -1
+      return new Date(x.starts_at) > new Date(y.starts_at) ? 1 : -1
     })
     // 下はisAvailableと同じ処理
     events.sort((i: Event) => {
@@ -124,23 +123,35 @@ export default Vue.extend({
         : 1
     })
 
-    if (payload !== undefined) {
-      return { group: payload, events }
-    }
-    const group = await $axios.$get('/groups/' + params.groupId)
+    // nuxt generate時はpayloadを代入
+    const group = payload ?? (await $axios.$get('/groups/' + params.groupId))
 
-    return { group, events }
+    // 各ticketsを取得
+    if (events.length !== 0) {
+      const getTicketsInfo = []
+      for (let i = 0; i < events.length; i++) {
+        getTicketsInfo.push(
+          $axios.$get(`/groups/${group.id}/events/${events[i].id}/tickets`)
+        )
+      }
+      const listStock: number[] = []
+      const listTakenTickets: number[] = []
+      Promise.all(getTicketsInfo).then((ticketsInfo) => {
+        for (let i = 0; i < ticketsInfo.length; i++) {
+          listStock.push(ticketsInfo[i].stock)
+          listTakenTickets.push(ticketsInfo[i].taken_tickets)
+        }
+      })
+      return { group, events, listStock, listTakenTickets }
+    } else {
+      return { group, events }
+    }
   },
   data(): Data {
     return {
       userGroups: {
         admin: process.env.AZURE_AD_GROUPS_QUAINT_ADMIN as string,
-        entry: process.env.AZURE_AD_GROUPS_QUAINT_ENTRY as string,
         owner: process.env.AZURE_AD_GROUPS_QUAINT_OWNER as string,
-        parents: process.env.AZURE_AD_GROUPS_QUAINT_PARENTS as string,
-        students: process.env.AZURE_AD_GROUPS_QUAINT_STUDENTS as string,
-        teachers: process.env.AZURE_AD_GROUPS_QUAINT_TEACHERS as string,
-        chief: process.env.AZURE_AD_GROUPS_QUAINT_CHIEF as string,
       },
       group: undefined,
       events: [],
@@ -154,26 +165,6 @@ export default Vue.extend({
     }
   },
   async created() {
-    if (this.events.length !== 0) {
-      const getTicketsInfo = []
-      for (let i = 0; i < this.events.length; i++) {
-        getTicketsInfo.push(
-          this.$axios.$get(
-            '/groups/' +
-              this.group?.id +
-              '/events/' +
-              this.events[i].id +
-              '/tickets'
-          )
-        )
-      }
-      Promise.all(getTicketsInfo).then((ticketsInfo) => {
-        for (let i = 0; i < ticketsInfo.length; i++) {
-          this.listStock.push(ticketsInfo[i].stock)
-          this.listTakenTickets.push(ticketsInfo[i].taken_tickets)
-        }
-      })
-    }
     if (
       !(this.$auth.user?.groups as string[]).includes(this.userGroups.admin)
     ) {
@@ -193,13 +184,6 @@ export default Vue.extend({
     }
   },
   methods: {
-    checkStock(index: number) {
-      return this.listStock[index]
-    },
-    checkTakenTickets(index: number) {
-      return this.listTakenTickets[index]
-    },
-
     isToday(
       inputSellStarts: string,
       inputSellEnds: string,
