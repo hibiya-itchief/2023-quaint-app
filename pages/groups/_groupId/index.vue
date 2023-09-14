@@ -238,7 +238,7 @@
                     "
                     color="orange"
                     outlined
-                    style="font-weight: bold"
+                    style="font-size: 80%; font-weight: bold"
                     >残りわずか<v-icon>mdi-triangle-outline</v-icon></v-btn
                   >
                   <v-btn
