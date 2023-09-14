@@ -130,7 +130,7 @@ type TicketInfo = {
 type Data = {
   groups: Group[]
   events: Event[]
-  tickets: TicketInfo[]
+  tickets: TicketInfo[][]
   voteDialog: boolean
   selectedVoteClass: string[]
   success_alert: boolean
@@ -148,7 +148,7 @@ export default Vue.extend({
     return {
       groups: [],
       events: [],
-      tickets: [],
+      tickets: [[], []],
       voteDialog: false,
       selectedVoteClass: [],
       success_alert: false,
@@ -173,7 +173,8 @@ export default Vue.extend({
   methods: {
     // 整理券が使用されたかどうか判定するmethod（時間だけで管理している）
     // 引数には（終演時刻）を代入
-    isUsed: function (end: Date) {
+    // isUsed: function (end: Date) {
+    isUsed(end: Date) {
       const date = new Date()
       const currentTime: Date = new Date(date.getTime())
 
@@ -184,7 +185,7 @@ export default Vue.extend({
         return false
       }
     },
-    searchTag(data: Tag[], g_tags: str) {
+    searchTag(g_tags: Tag[], data: string) {
       let ii = false
       g_tags.forEach((tag: Tag) => {
         if (tag.tagname === data) {
@@ -195,7 +196,8 @@ export default Vue.extend({
     },
     async getOption() {
       const tickets: Ticket[] = await this.$axios.$get('/users/me/tickets')
-      this.isVoted = await this.$axios.$get('/votes').length
+      const idVoted: Ticket[] = await this.$axios.$get('/votes')
+      this.isVoted = idVoted.length !== 0
 
       const ticketInfos: TicketInfo[] = []
       for (const ticket of tickets) {
@@ -230,17 +232,17 @@ export default Vue.extend({
       // ticketを1年、2年のみにする
       const ticketsInfor: TicketInfo[][] = [[], []]
       ticketInfos.forEach((ticketInfo) => {
-        if (isUsed(new Date(ticketInfo.event.ends_at))) {
-          if (searchTag(ticketInfo.group.tags, '1年生')) {
+        if (this.isUsed(new Date(ticketInfo.event.ends_at))) {
+          if (this.searchTag(ticketInfo.group.tags, '1年生')) {
             ticketsInfor[0].push(ticketInfo)
-          } else if (searchTag(ticketInfo.group.tags, '2年生')) {
+          } else if (this.searchTag(ticketInfo.group.tags, '2年生')) {
             ticketsInfor[1].push(ticketInfo)
           }
         }
       })
       this.tickets = ticketsInfor
     },
-    async vote(ids: str[]) {
+    async vote(ids: string[]) {
       await this.$axios
         .$post('/votes/' + ids[0] + '/' + ids[1])
         .then(() => {
