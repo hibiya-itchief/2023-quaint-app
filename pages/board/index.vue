@@ -2,7 +2,44 @@
   <v-app class="pa-0">
     <v-row>
       <v-col cols="4" class="pa-2.25 pr-0">
-        <v-img class="img" src="/images/map1F.png" />
+        <v-img class="img" src="/images/map1F.png">
+          <table border="1" cellpadding="6" cellspacing="0">
+            <tr>
+              <th colspan="2"></th>
+              <th>オンライン</th>
+              <th>紙整理券</th>
+            </tr>
+            <tr>
+              <th rowspan="2">11R</th>
+              <th>次</th>
+              <td>
+                <!--
+                    <v-icon      v-if="!isAvailable(event)" color="grey">mdi-cancel</v-icon>
+                    <v-icon      v-else-if="checkTakenTickets(index) / checkStock(index) < 0.5" color="green">mdi-circle-double</v-icon>
+                    <v-icon      v-else-if="checkTakenTickets(index) / checkStock(index) >= 0.5 &&            checkTakenTickets(index) < checkStock(index)" color="orange">mdi-triangle-outline</v-icon>
+                    <v-icon      v-else-if="checkTakenTickets(index) >= checkStock(index)" color="red">mdi-close</v-icon>
+-->
+              </td>
+              <td>o</td>
+            </tr>
+            <tr>
+              <th>次の次</th>
+              <td>x</td>
+              <td>o</td>
+            </tr>
+            <tr>
+              <th rowspan="2">12R</th>
+              <th>次</th>
+              <td>x</td>
+              <td>o</td>
+            </tr>
+            <tr>
+              <th>次の次</th>
+              <td>x</td>
+              <td>o</td>
+            </tr>
+          </table></v-img
+        >
         <v-img class="img" src="/images/map2F.png" />
       </v-col>
       <v-col cols="4" class="pa-2.25 pl-0">
@@ -61,35 +98,109 @@
 </template>
 
 <script lang="ts">
-import { Group } from 'types/quaint'
+import { Group, Event } from 'types/quaint'
 import Vue from 'vue'
+type RoomData = {
+  group_id: string
+  event_id_1st: string
+  event_id_2nd: string
+  starts_at_1st: string
+  starts_at_2nd: string
+  ends_at_1st: string
+  ends_at_2nd: string
+  sell_starts_1st: string
+  sell_starts_2nd: string
+  sell_ends_1st: string
+  sell_ends_2nd: string
+  taken_tickets_1st: number
+  taken_tickets_2nd: number
+  stock_1st: number
+  stock_2nd: number
+}
 type Data = {
   groups: Group[]
-  //  onAirHebe: Group | undefined
-  //  upNextHebe: Group |undefined
+  events: Event[]
+  rooms: RoomData[]
 }
 
 export default Vue.extend({
   name: 'InformationBoardPage',
   auth: false,
-  async asyncData({ $axios, payload }): Promise<Partial<Data>> {
-    if (payload !== undefined) {
-      return { groups: payload.groups }
+  async asyncData({ $axios }): Promise<Partial<Data>> {
+    // ここでクラス劇オンリーのgroupsを作成
+    const groups_task = []
+    for (let i = 0; i < 24; i++) {
+      const room_num =
+        ((i + 1) % 8 === 0 ? 8 : (i + 1) % 8) + 10 * (((i / 8) | 0) + 1)
+      groups_task.push($axios.$get(`/groups/${room_num}r`))
     }
-    const task = [$axios.$get('/groups')]
-    const res = await Promise.all(task)
-    return { groups: res[0] }
+    const groups: Group[] = await Promise.all(groups_task)
+
+    // 完成品の受け皿を作成
+    const rooms: RoomData[] = []
+
+    // 全クラスの必要な内容をroomsに詰める
+
+    for (let i = 0; i < groups.length; i++) {
+      // ここで各クラスのsort済みeventsを作成
+      const events: Event[] = await $axios.$get(
+        `/groups/${groups[i].id}/events`
+      )
+      if (events.length !== 0) {
+        events.sort((i: Event) => {
+          return i.target === 'paper' ? 1 : -1
+        })
+        events.sort((x: Event, y: Event) => {
+          return new Date(x.starts_at) > new Date(y.starts_at) ? 1 : -1
+        })
+        events.sort((i: Event) => {
+          return new Date() > new Date(i.sell_starts) &&
+            new Date(i.sell_ends) > new Date()
+            ? -1
+            : 1
+        })
+
+        // 次、次の次、の残席状況を入手
+        const tickets_info = await Promise.all([
+          $axios.$get(`/groups/${groups[i].id}/events/${events[0].id}/tickets`),
+          $axios.$get(`/groups/${groups[i].id}/events/${events[1].id}/tickets`),
+        ])
+
+        rooms.push({
+          group_id: groups[i].id,
+          event_id_1st: events[0].id,
+          event_id_2nd: events[1].id,
+          starts_at_1st: events[0].starts_at,
+          starts_at_2nd: events[1].starts_at,
+          ends_at_1st: events[0].ends_at,
+          ends_at_2nd: events[1].ends_at,
+          sell_starts_1st: events[0].sell_starts,
+          sell_starts_2nd: events[1].sell_starts,
+          sell_ends_1st: events[0].sell_ends,
+          sell_ends_2nd: events[1].sell_ends,
+          taken_tickets_1st: tickets_info[0].taken_tickets,
+          taken_tickets_2nd: tickets_info[1].taken_tickets,
+          stock_1st: tickets_info[0].stock,
+          stock_2nd: tickets_info[1].stock,
+        })
+      } else {
+        rooms.push()
+      }
+    }
+
+    return { rooms }
   },
   data(): Data {
     return {
       groups: [],
-      //      onAirHebe: undefined,
-      //      upNextHebe: undefined,
+      events: [],
+      rooms: [],
     }
   },
   head: {
     title: 'インフォメーションボード',
   },
+  methods: {},
 })
 </script>
 
@@ -97,6 +208,10 @@ export default Vue.extend({
 h2 {
   text-align: center;
   font-weight: normal;
+}
+
+table {
+  background-color: #fff;
 }
 
 #title {
