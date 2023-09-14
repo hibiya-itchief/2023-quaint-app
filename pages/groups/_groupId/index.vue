@@ -194,7 +194,7 @@
                 class="ma-2 d-flex"
                 :disabled="
                   !isAvailable(event) ||
-                  checkTakenTickets(index) >= checkStock(index)
+                  listTakenTickets[index] >= listStock[index]
                 "
                 @click.stop="selectEvent(event)"
               >
@@ -224,9 +224,7 @@
                     >時間外<v-icon>mdi-cancel</v-icon></v-btn
                   >
                   <v-btn
-                    v-else-if="
-                      checkTakenTickets(index) / checkStock(index) < 0.5
-                    "
+                    v-else-if="listTakenTickets[index] / listStock[index] < 0.5"
                     color="green"
                     outlined
                     style="font-weight: bold"
@@ -235,16 +233,16 @@
                   <!--5割以上で黄色になる-->
                   <v-btn
                     v-else-if="
-                      checkTakenTickets(index) / checkStock(index) >= 0.5 &&
-                      checkTakenTickets(index) < checkStock(index)
+                      listTakenTickets[index] / listStock[index] >= 0.5 &&
+                      listTakenTickets[index] < listStock[index]
                     "
                     color="orange"
                     outlined
-                    style="font-weight: bold"
+                    style="font-size: 80%; font-weight: bold"
                     >残りわずか<v-icon>mdi-triangle-outline</v-icon></v-btn
                   >
                   <v-btn
-                    v-else-if="checkTakenTickets(index) >= checkStock(index)"
+                    v-else-if="listTakenTickets[index] >= listStock[index]"
                     color="red"
                     outlined
                     style="font-weight: bold"
@@ -437,12 +435,29 @@ export default Vue.extend({
         : 1
     })
 
-    if (payload !== undefined) {
-      return { group: payload, events }
-    }
-    const group = await $axios.$get('/groups/' + params.groupId)
+    // nuxt generate時はpayloadを代入
+    const group = payload ?? (await $axios.$get('/groups/' + params.groupId))
 
-    return { group, events }
+    // 各ticketsを取得
+    if (events.length !== 0) {
+      const getTicketsInfo = []
+      for (let i = 0; i < events.length; i++) {
+        getTicketsInfo.push(
+          $axios.$get(`/groups/${group.id}/events/${events[i].id}/tickets`)
+        )
+      }
+      const listStock: number[] = []
+      const listTakenTickets: number[] = []
+      Promise.all(getTicketsInfo).then((ticketsInfo) => {
+        for (let i = 0; i < ticketsInfo.length; i++) {
+          listStock.push(ticketsInfo[i].stock)
+          listTakenTickets.push(ticketsInfo[i].taken_tickets)
+        }
+      })
+      return { group, events, listStock, listTakenTickets }
+    } else {
+      return { group, events }
+    }
   },
   data(): Data {
     return {
@@ -517,28 +532,6 @@ export default Vue.extend({
     }
   },
   created() {
-    if (this.events.length !== 0) {
-      const getTicketsInfo = []
-      for (let i = 0; i < this.events.length; i++) {
-        getTicketsInfo.push(
-          this.$axios.$get(
-            '/groups/' +
-              this.group?.id +
-              '/events/' +
-              this.events[i].id +
-              '/tickets'
-          )
-        )
-      }
-
-      Promise.all(getTicketsInfo).then((ticketsInfo) => {
-        for (let i = 0; i < ticketsInfo.length; i++) {
-          this.listStock.push(ticketsInfo[i].stock)
-          this.listTakenTickets.push(ticketsInfo[i].taken_tickets)
-        }
-      })
-    }
-
     // admin権限を持つ もしくは この団体にowner権限を持つユーザーがアクセスするとtrueになりページを編集できる
     // 実際に編集できるかどうかはAPIがJWTで認証するのでここはあくまでフロント側の制御
     if (this.$auth.user?.groups && Array.isArray(this.$auth.user?.groups)) {
@@ -593,12 +586,6 @@ export default Vue.extend({
     removeBookmark(id: string) {
       localStorage.removeItem('seiryofes.groups.favorite.' + id)
       this.is_bookmarked = false
-    },
-    checkStock(index: number) {
-      return this.listStock[index]
-    },
-    checkTakenTickets(index: number) {
-      return this.listTakenTickets[index]
     },
     IsNotClassroom(group: Group) {
       for (let i = 0; i < group.tags.length; i++) {
