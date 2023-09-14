@@ -51,7 +51,7 @@
                     >
                     <v-btn
                       v-else-if="
-                        checkTakenTickets(index) / checkStock(index) < 0.5
+                        listTakenTickets[index] / listStock[index] < 0.5
                       "
                       color="green"
                       outlined
@@ -60,15 +60,15 @@
                     <!--5割以上で黄色になる-->
                     <v-btn
                       v-else-if="
-                        checkTakenTickets(index) / checkStock(index) >= 0.5 &&
-                        checkTakenTickets(index) < checkStock(index)
+                        listTakenTickets[index] / listStock[index] >= 0.5 &&
+                        listTakenTickets[index] < listStock[index]
                       "
                       color="orange"
                       outlined
                       >残りわずか<v-icon>mdi-triangle-outline</v-icon></v-btn
                     >
                     <v-btn
-                      v-else-if="checkTakenTickets(index) >= checkStock(index)"
+                      v-else-if="listTakenTickets[index] >= listStock[index]"
                       color="red"
                       outlined
                       >完売<v-icon>mdi-close</v-icon></v-btn
@@ -77,8 +77,8 @@
                   </div>
                 </v-card>
                 <span class="ma-3"
-                  >取得率：{{ checkTakenTickets(index) ?? '-' }} /
-                  {{ checkStock(index) ?? '-' }}
+                  >取得率：{{ listTakenTickets[index] ?? '-' }} /
+                  {{ listStock[index] ?? '-' }}
                 </span>
               </v-card>
             </v-col>
@@ -103,8 +103,8 @@ type Data = {
   }
   group: Group | undefined
   events: Event[]
-  listStock: string[]
-  listTakenTickets: string[]
+  listStock: number[]
+  listTakenTickets: number[]
 }
 export default Vue.extend({
   name: 'IndivisualGroupPageData',
@@ -124,12 +124,29 @@ export default Vue.extend({
         : 1
     })
 
-    if (payload !== undefined) {
-      return { group: payload, events }
-    }
-    const group = await $axios.$get('/groups/' + params.groupId)
+    // nuxt generate時はpayloadを代入
+    const group = payload ?? (await $axios.$get('/groups/' + params.groupId))
 
-    return { group, events }
+    // 各ticketsを取得
+    if (events.length !== 0) {
+      const getTicketsInfo = []
+      for (let i = 0; i < events.length; i++) {
+        getTicketsInfo.push(
+          $axios.$get(`/groups/${group.id}/events/${events[i].id}/tickets`)
+        )
+      }
+      const listStock: number[] = []
+      const listTakenTickets: number[] = []
+      Promise.all(getTicketsInfo).then((ticketsInfo) => {
+        for (let i = 0; i < ticketsInfo.length; i++) {
+          listStock.push(ticketsInfo[i].stock)
+          listTakenTickets.push(ticketsInfo[i].taken_tickets)
+        }
+      })
+      return { group, events, listStock, listTakenTickets }
+    } else {
+      return { group, events }
+    }
   },
   data(): Data {
     return {
@@ -154,26 +171,6 @@ export default Vue.extend({
     }
   },
   async created() {
-    if (this.events.length !== 0) {
-      const getTicketsInfo = []
-      for (let i = 0; i < this.events.length; i++) {
-        getTicketsInfo.push(
-          this.$axios.$get(
-            '/groups/' +
-              this.group?.id +
-              '/events/' +
-              this.events[i].id +
-              '/tickets'
-          )
-        )
-      }
-      Promise.all(getTicketsInfo).then((ticketsInfo) => {
-        for (let i = 0; i < ticketsInfo.length; i++) {
-          this.listStock.push(ticketsInfo[i].stock)
-          this.listTakenTickets.push(ticketsInfo[i].taken_tickets)
-        }
-      })
-    }
     if (
       !(this.$auth.user?.groups as string[]).includes(this.userGroups.admin)
     ) {
@@ -193,13 +190,6 @@ export default Vue.extend({
     }
   },
   methods: {
-    checkStock(index: number) {
-      return this.listStock[index]
-    },
-    checkTakenTickets(index: number) {
-      return this.listTakenTickets[index]
-    },
-
     isToday(
       inputSellStarts: string,
       inputSellEnds: string,
