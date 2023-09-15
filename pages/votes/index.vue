@@ -226,10 +226,11 @@ export default Vue.extend({
       // 2023/9/17 15:20より前ならTrue
       const date = new Date()
       const currentTime: Date = new Date(date.getTime())
-      return currentTime - 1694931600000 < 0
+      const limitTime: Date = new Date(1694931600000)
+      return currentTime < limitTime
     },
     searchTag(g_tags: Tag[], data: string) {
-      let ii = false
+      let ii: boolean = false
       g_tags.forEach((tag: Tag) => {
         if (tag.tagname === data) {
           ii = true
@@ -254,9 +255,9 @@ export default Vue.extend({
           }
         })
     },
-    Normal(tickets: Ticket[]) {
+    async Normal(tickets: Ticket[]) {
       this.isVoted = false
-      this.whileVote = isFinish()
+      this.whileVote = this.isFinish()
 
       const ticketInfos: TicketInfo[] = []
       for (const ticket of tickets) {
@@ -302,7 +303,7 @@ export default Vue.extend({
       this.tickets = ticketsInfor
     },
     async vote(ids: string[]) {
-      if (isFinish() !== true) {
+      if (this.isFinish() !== true) {
         this.error_alert = true
         this.error_message = '投票可能時間は終了しました。'
       } else {
