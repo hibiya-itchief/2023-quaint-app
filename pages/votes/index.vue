@@ -239,8 +239,23 @@ export default Vue.extend({
     },
     async getOption() {
       const tickets: Ticket[] = await this.$axios.$get('/users/me/tickets')
-      const idVoted: Ticket[] = await this.$axios.$get('/votes')
-      this.isVoted = idVoted.length !== 0
+      await this.$axios
+        .$get('/users/me/votes')
+        .then(() => {
+          this.error_alert = true
+          this.error_message = '既に投票済みです。'
+        })
+        .catch((e) => {
+          if (e.message !== '404') {
+            this.error_alert = true
+            this.error_message = e.message
+          } else {
+            this.nomal(tickets)
+          }
+        })
+    },
+    nomal(tickets: Ticket[]) {
+      this.isVoted = false
       this.whileVote = isFinish()
 
       const ticketInfos: TicketInfo[] = []
