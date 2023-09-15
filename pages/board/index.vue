@@ -1,14 +1,17 @@
 <template>
   <v-app class="pa-0">
-    <v-row>
-      <v-col cols="4" class="pa-2.25 pr-0">
-        <v-img class="img" src="/images/map1F.png">
-          <table border="1" cellpadding="6" cellspacing="0">
+    <v-container>
+      <h1 style="text-align: center; font-family: serif; font-weight: bold">
+        オンライン整理券の残席状況
+      </h1>
+      <v-row justify="center">
+        <v-col cols="4" class="pa-2.25 pr-0">
+          <table border="1" style="margin: auto">
             <thead>
               <tr>
-                <th colspan="2"></th>
-                <th>オンライン</th>
-                <th>紙整理券</th>
+                <th colspan="3" style="font-size: 200%; font-weight: bold">
+                  1F
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -16,115 +19,247 @@
                 <th rowspan="2">11R</th>
                 <th>次</th>
                 <td>
-                  <v-icon
-                    v-if="
-                      !isAvailable(
-                        rooms[0].sell_starts_1st,
-                        rooms[0].sell_ends_1st
-                      )
-                    "
-                    color="grey"
-                    >mdi-cancel</v-icon
-                  >
-                  <v-icon
-                    v-else-if="
-                      rooms[0].taken_tickets_1st / rooms[0].stock_1st < 0.5
-                    "
-                    color="green"
-                    >mdi-circle-double</v-icon
-                  >
-                  <v-icon
-                    v-else-if="
-                      rooms[0].taken_tickets_1st / rooms[0].stock_1st >= 0.5 &&
-                      rooms[0].taken_tickets_1st < rooms[0].stock_1st
-                    "
-                    color="orange"
-                    >mdi-triangle-outline</v-icon
-                  >
-                  <v-icon
-                    v-else-if="rooms[0].taken_tickets_1st >= rooms[0].stock_1st"
-                    color="red"
-                    >mdi-close</v-icon
-                  >
+                  <v-icon color="grey">mdi-cancel</v-icon>
                 </td>
-                <td>o</td>
               </tr>
               <tr>
                 <th>次の次</th>
-                <td>x</td>
-                <td>o</td>
+                <td><v-icon color="grey">mdi-cancel</v-icon></td>
               </tr>
               <tr>
                 <th rowspan="2">12R</th>
                 <th>次</th>
-                <td>x</td>
-                <td>o</td>
+                <td><v-icon color="grey">mdi-cancel</v-icon></td>
               </tr>
               <tr>
                 <th>次の次</th>
-                <td>x</td>
-                <td>o</td>
+                <td><v-icon color="grey">mdi-cancel</v-icon></td>
               </tr>
             </tbody>
-          </table></v-img
-        >
-        <v-img class="img" src="/images/map2F.png" />
-      </v-col>
-      <v-col cols="4" class="pa-2.25 pl-0">
-        <v-img class="img" src="/images/map3F.png" />
-        <v-img class="img" src="/images/map4F.png" />
-      </v-col>
-      <v-col cols="4" class=""> </v-col>
-    </v-row>
+          </table>
+          <table class="mt-10" border="1" style="margin: auto">
+            <thead>
+              <tr>
+                <th colspan="3" style="font-size: 200%; font-weight: bold">
+                  2F(地上)
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th rowspan="2">21R</th>
+                <th>次</th>
+                <td>
+                  <v-icon color="grey">mdi-cancel</v-icon>
+                </td>
+              </tr>
+              <tr>
+                <th>次の次</th>
+                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+              </tr>
+              <tr>
+                <th rowspan="2">22R</th>
+                <th>次</th>
+                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+              </tr>
+              <tr>
+                <th>次の次</th>
+                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+              </tr>
 
-    <!--
-      <v-row class="mt-30" justify="center">
-        <v-menu offset-y>
-          <template #activator="{ on, attrs }">
-            <v-btn
-              depressed
-              class="text-subtitle-2 text-capitalize"
-              v-bind="attrs"
-              v-on="on"
-              >{{ 'nowplayingのhebe' ?? '未設定' }}<v-spacer /><v-icon
-                >mdi-chevron-down</v-icon
-              ></v-btn
-            >
-          </template>
-          <v-list>
-            <v-list-item
-              v-for="hebe in hebes"
-              :key="hebe.id"
-              :value="hebe.groupname"
-              @click="console.log('hebeをpost')"
-              >{{ hebe.groupname }}</v-list-item
-            >
-          </v-list>
-        </v-menu>
-        <v-menu offset-y>
-          <template #activator="{ on, attrs }">
-            <v-btn
-              depressed
-              class="text-subtitle-2 text-capitalize"
-              v-bind="attrs"
-              v-on="on"
-              >{{ 'upnextのhebe' ?? '未設定' }}<v-spacer /><v-icon
-                >mdi-chevron-down</v-icon
-              ></v-btn
-            >
-          </template>
-          <v-list>
-            <v-list-item
-              v-for="hebe in hebes"
-              :key="hebe.id"
-              :value="hebe.groupname"
-              @click="console.log('hebeをpost')"
-              >{{ hebe.groupname }}</v-list-item
-            >
-          </v-list>
-        </v-menu>
+              <tr>
+                <th class="g3">31R</th>
+                <th class="g3">次</th>
+                <td class="g3"><v-icon color="grey">mdi-cancel</v-icon></td>
+              </tr>
+              <tr>
+                <th class="g3">32R</th>
+                <th class="g3">次</th>
+                <td class="g3"><v-icon color="grey">mdi-cancel</v-icon></td>
+              </tr>
+            </tbody>
+          </table>
+        </v-col>
+        <v-col cols="4" class="pa-2.25 pr-0">
+          <table border="1" style="margin: auto">
+            <thead>
+              <tr>
+                <th colspan="3" style="font-size: 200%; font-weight: bold">
+                  3F
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th rowspan="2">13R</th>
+                <th>次</th>
+                <td>
+                  <v-icon color="grey">mdi-cancel</v-icon>
+                </td>
+              </tr>
+              <tr>
+                <th>次の次</th>
+                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+              </tr>
+              <tr>
+                <th rowspan="2">14R</th>
+                <th>次</th>
+                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+              </tr>
+              <tr>
+                <th>次の次</th>
+                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+              </tr>
+              <tr>
+                <th rowspan="2">15R</th>
+                <th>次</th>
+                <td>
+                  <v-icon color="grey">mdi-cancel</v-icon>
+                </td>
+              </tr>
+              <tr>
+                <th>次の次</th>
+                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+              </tr>
+              <tr>
+                <th rowspan="2">23R</th>
+                <th>次</th>
+                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+              </tr>
+              <tr>
+                <th>次の次</th>
+                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+              </tr>
+              <tr>
+                <th rowspan="2">24R</th>
+                <th>次</th>
+                <td>
+                  <v-icon color="grey">mdi-cancel</v-icon>
+                </td>
+              </tr>
+              <tr>
+                <th>次の次</th>
+                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+              </tr>
+              <tr>
+                <th rowspan="2">25R</th>
+                <th>次</th>
+                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+              </tr>
+              <tr>
+                <th>次の次</th>
+                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+              </tr>
+
+              <tr>
+                <th class="g3">33R</th>
+                <th class="g3">次</th>
+                <td class="g3"><v-icon color="grey">mdi-cancel</v-icon></td>
+              </tr>
+              <tr>
+                <th class="g3">34R</th>
+                <th class="g3">次</th>
+                <td class="g3"><v-icon color="grey">mdi-cancel</v-icon></td>
+              </tr>
+              <tr>
+                <th class="g3">35R</th>
+                <th class="g3">次</th>
+                <td class="g3"><v-icon color="grey">mdi-cancel</v-icon></td>
+              </tr>
+            </tbody>
+          </table>
+        </v-col>
+        <v-col cols="4" class="pa-2.25 pr-0">
+          <table border="1" style="margin: auto">
+            <thead>
+              <tr>
+                <th colspan="3" style="font-size: 200%; font-weight: bold">
+                  4F
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th rowspan="2">16R</th>
+                <th>次</th>
+                <td>
+                  <v-icon color="grey">mdi-cancel</v-icon>
+                </td>
+              </tr>
+              <tr>
+                <th>次の次</th>
+                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+              </tr>
+              <tr>
+                <th rowspan="2">17R</th>
+                <th>次</th>
+                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+              </tr>
+              <tr>
+                <th>次の次</th>
+                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+              </tr>
+              <tr>
+                <th rowspan="2">18R</th>
+                <th>次</th>
+                <td>
+                  <v-icon color="grey">mdi-cancel</v-icon>
+                </td>
+              </tr>
+              <tr>
+                <th>次の次</th>
+                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+              </tr>
+              <tr>
+                <th rowspan="2">26R</th>
+                <th>次</th>
+                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+              </tr>
+              <tr>
+                <th>次の次</th>
+                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+              </tr>
+              <tr>
+                <th rowspan="2">27R</th>
+                <th>次</th>
+                <td>
+                  <v-icon color="grey">mdi-cancel</v-icon>
+                </td>
+              </tr>
+              <tr>
+                <th>次の次</th>
+                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+              </tr>
+              <tr>
+                <th rowspan="2">28R</th>
+                <th>次</th>
+                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+              </tr>
+              <tr>
+                <th>次の次</th>
+                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+              </tr>
+
+              <tr>
+                <th class="g3">36R</th>
+                <th class="g3">次</th>
+                <td class="g3"><v-icon color="grey">mdi-cancel</v-icon></td>
+              </tr>
+              <tr>
+                <th class="g3">37R</th>
+                <th class="g3">次</th>
+                <td class="g3"><v-icon color="grey">mdi-cancel</v-icon></td>
+              </tr>
+              <tr>
+                <th class="g3">38R</th>
+                <th class="g3">次</th>
+                <td class="g3"><v-icon color="grey">mdi-cancel</v-icon></td>
+              </tr>
+            </tbody>
+          </table>
+        </v-col>
       </v-row>
-    -->
+    </v-container>
   </v-app>
 </template>
 
@@ -253,6 +388,21 @@ h2 {
 
 table {
   background-color: #fff;
+  border-collapse: collapse;
+  text-align: center;
+  align-content: center;
+  font-weight: normal;
+}
+
+th {
+  font-weight: normal;
+  width: 60px;
+  height: 30px;
+}
+
+td {
+  width: 80px;
+  height: 30px;
 }
 
 #title {
@@ -264,7 +414,7 @@ table {
   font-weight: bold;
 }
 
-.img {
-  border: 9px solid #b49656;
+.g3 {
+  height: 60px;
 }
 </style>
