@@ -195,6 +195,11 @@ export default Vue.extend({
         return false
       }
     },
+    isFinish() {
+      const date = new Date()
+      const currentTime: Date = new Date(date.getTime())
+      return currentTime - 1694931600000 > 0
+    },
     searchTag(g_tags: Tag[], data: string) {
       let ii = false
       g_tags.forEach((tag: Tag) => {
