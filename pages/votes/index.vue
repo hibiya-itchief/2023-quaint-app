@@ -29,15 +29,27 @@
             </div>
           </v-card>
 
-          <!--投票済みの場合-->
+          <!--時間切れの場合-->
           <v-card
             v-if="
-              $auth.user?.jobTitle?.includes('Visited') ||
-              $auth.$state.strategy === 'ad' ||
-              isVoted === true
+              tickets[0].length + tickets[1].length == 0 &&
+              ($auth.user?.jobTitle?.includes('Visited') ||
+                $auth.$state.strategy === 'ad')
             "
             class="ma-1 pa-2"
           >
+            <div>
+              <v-card-title>投票期間は終了しました。</v-card-title>
+              <v-card-actions>
+                <v-btn :href="'/groups'" block
+                  >アーカイブ公演を探しに行きましょう✨</v-btn
+                >
+              </v-card-actions>
+            </div>
+          </v-card>
+
+          <!--投票済みの場合-->
+          <v-card v-if="isFinish !== true" class="ma-1 pa-2">
             <div>
               <v-card-title>既に投票済みです</v-card-title>
               <v-card-actions>
@@ -150,6 +162,7 @@ type Data = {
   time: string
   seconds: string
   isVoted: boolean
+  whileVote: boolean
 }
 export default Vue.extend({
   name: 'UsersVotePage',
@@ -168,6 +181,7 @@ export default Vue.extend({
       time: '',
       seconds: '',
       isVoted: false,
+      whileVote: false,
     }
   },
   head: {
@@ -196,9 +210,10 @@ export default Vue.extend({
       }
     },
     isFinish() {
+      // 2023/9/17 15:20より前ならTrue
       const date = new Date()
       const currentTime: Date = new Date(date.getTime())
-      return currentTime - 1694931600000 > 0
+      return currentTime - 1694931600000 < 0
     },
     searchTag(g_tags: Tag[], data: string) {
       let ii = false
@@ -213,6 +228,7 @@ export default Vue.extend({
       const tickets: Ticket[] = await this.$axios.$get('/users/me/tickets')
       const idVoted: Ticket[] = await this.$axios.$get('/votes')
       this.isVoted = idVoted.length !== 0
+      this.whileVote = isFinish()
 
       const ticketInfos: TicketInfo[] = []
       for (const ticket of tickets) {
@@ -258,18 +274,23 @@ export default Vue.extend({
       this.tickets = ticketsInfor
     },
     async vote(ids: string[]) {
-      await this.$axios
-        .$post('/votes/' + ids[0] + '/' + ids[1])
-        .then(() => {
-          this.success_alert = true
-          this.success_message = '投票が完了しました'
-        })
-        .catch((e) => {
-          this.error_alert = true
-          this.error_message = e.message
-        })
-      this.voteDialog = false
-      this.getOption()
+      if (isFinish() !== true) {
+        this.error_alert = true
+        this.error_message = '投票可能時間は終了しました。'
+      } else {
+        await this.$axios
+          .$post('/votes/' + ids[0] + '/' + ids[1])
+          .then(() => {
+            this.success_alert = true
+            this.success_message = '投票が完了しました'
+          })
+          .catch((e) => {
+            this.error_alert = true
+            this.error_message = e.message
+          })
+        this.voteDialog = false
+        this.getOption()
+      }
     },
   },
 })
