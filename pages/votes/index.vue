@@ -30,7 +30,14 @@
           </v-card>
 
           <!--時間切れの場合-->
-          <v-card v-if="!whileVote" class="ma-1 pa-2">
+          <v-card
+            v-if="
+              !whileVote &&
+              ($auth.user?.jobTitle?.includes('Visited') ||
+                $auth.$state.strategy === 'ad')
+            "
+            class="ma-1 pa-2"
+          >
             <div>
               <v-card-title>投票期間は終了しました。</v-card-title>
               <v-card-actions>
@@ -45,8 +52,10 @@
           <v-card
             v-if="
               tickets[0].length + tickets[1].length !== 0 &&
-              !isVoted &&
-              whileVote
+              isVoted &&
+              whileVote &&
+              ($auth.user?.jobTitle?.includes('Visited') ||
+                $auth.$state.strategy === 'ad')
             "
             class="ma-1 pa-2"
           >
@@ -60,7 +69,11 @@
 
           <v-card
             v-if="
-              tickets[0].length + tickets[1].length !== 0 && isVoted === false
+              tickets[0].length + tickets[1].length !== 0 &&
+              !isVoted &&
+              whileVote &&
+              ($auth.user?.jobTitle?.includes('Visited') ||
+                $auth.$state.strategy === 'ad')
             "
           >
             <v-card-title>優秀クラス劇投票</v-card-title>
