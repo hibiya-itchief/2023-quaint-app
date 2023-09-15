@@ -250,11 +250,11 @@ export default Vue.extend({
             this.error_alert = true
             this.error_message = e.message
           } else {
-            this.nomal(tickets)
+            this.Normal(tickets)
           }
         })
     },
-    nomal(tickets: Ticket[]) {
+    Normal(tickets: Ticket[]) {
       this.isVoted = false
       this.whileVote = isFinish()
 
