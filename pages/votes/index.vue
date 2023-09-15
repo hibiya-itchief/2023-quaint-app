@@ -247,7 +247,7 @@ export default Vue.extend({
           this.error_message = '既に投票済みです。'
         })
         .catch((e) => {
-          if (e.message !== '404') {
+          if (e.response.status !== 404) {
             this.error_alert = true
             this.error_message = e.message
           } else {
