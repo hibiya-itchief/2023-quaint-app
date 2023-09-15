@@ -3,6 +3,20 @@
     <v-container name="ticket_container">
       <v-row justify="center" align-content="center">
         <v-col cols="12" sm="6" lg="6">
+          <v-btn
+            v-show="$auth.user?.groups?.includes(userGroups.parents)"
+            href="https://forms.office.com/Pages/ResponsePage.aspx?id=07VbxZj7okm9Yto1xwcA4mrjYZ4y3-RGkgE_OQbXv41UNEVDRU9BWUtWUlI5REtGTjZaUzNFVkNVNi4u"
+            class="primary"
+          >
+            保護者用投票フォーム
+          </v-btn>
+          <v-btn
+            v-show="$auth.user?.groups?.includes(userGroups.students)"
+            href="https://forms.office.com/Pages/ResponsePage.aspx?id=07VbxZj7okm9Yto1xwcA4mrjYZ4y3-RGkgE_OQbXv41UOTNTRlIzRTJIMU1IQUI2UlFEM1dWTlk0RS4u"
+            class="primary"
+          >
+            生徒用投票フォーム
+          </v-btn>
           <!--現在時刻を表示・現在時刻を取得するとv-progress-linearが正常に動作しないため非表示-->
           <!--
             <v-chip v-if="time" label class="ma-1"
@@ -358,6 +372,15 @@ type Data = {
   time: string
   seconds: string
   now_loading: boolean
+  userGroups: {
+    admin: string
+    entry: string
+    owner: string
+    parents: string
+    students: string
+    teachers: string
+    chief: string
+  }
 }
 export default Vue.extend({
   name: 'UsersTicketsPage',
@@ -379,6 +402,15 @@ export default Vue.extend({
       time: '',
       seconds: '',
       now_loading: true,
+      userGroups: {
+        admin: process.env.AZURE_AD_GROUPS_QUAINT_ADMIN as string,
+        entry: process.env.AZURE_AD_GROUPS_QUAINT_ENTRY as string,
+        owner: process.env.AZURE_AD_GROUPS_QUAINT_OWNER as string,
+        parents: process.env.AZURE_AD_GROUPS_QUAINT_PARENTS as string,
+        students: process.env.AZURE_AD_GROUPS_QUAINT_STUDENTS as string,
+        teachers: process.env.AZURE_AD_GROUPS_QUAINT_TEACHERS as string,
+        chief: process.env.AZURE_AD_GROUPS_QUAINT_CHIEF as string,
+      },
     }
   },
   head: {
