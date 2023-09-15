@@ -49,7 +49,7 @@
           </v-card>
 
           <!--投票済みの場合-->
-          <v-card v-if="isFinish !== true" class="ma-1 pa-2">
+          <v-card v-if="!whileVote" class="ma-1 pa-2">
             <div>
               <v-card-title>既に投票済みです</v-card-title>
               <v-card-actions>
