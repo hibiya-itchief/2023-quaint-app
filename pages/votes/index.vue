@@ -239,7 +239,6 @@ export default Vue.extend({
       return ii
     },
     async getOption() {
-      const tickets: Ticket[] = await this.$axios.$get('/users/me/tickets')
       await this.$axios
         .$get('/users/me/votes')
         .then(() => {
@@ -251,11 +250,12 @@ export default Vue.extend({
             this.error_alert = true
             this.error_message = e.message
           } else {
-            this.Normal(tickets)
+            this.Normal()
           }
         })
     },
-    async Normal(tickets: Ticket[]) {
+    async Normal() {
+      const tickets: Ticket[] = await this.$axios.$get('/users/me/tickets')
       this.isVoted = false
       this.whileVote = this.isFinish()
 
