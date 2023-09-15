@@ -4,40 +4,68 @@
       <v-col cols="4" class="pa-2.25 pr-0">
         <v-img class="img" src="/images/map1F.png">
           <table border="1" cellpadding="6" cellspacing="0">
-            <tr>
-              <th colspan="2"></th>
-              <th>オンライン</th>
-              <th>紙整理券</th>
-            </tr>
-            <tr>
-              <th rowspan="2">11R</th>
-              <th>次</th>
-              <td>
-                <!--
-                    <v-icon      v-if="!isAvailable(event)" color="grey">mdi-cancel</v-icon>
-                    <v-icon      v-else-if="checkTakenTickets(index) / checkStock(index) < 0.5" color="green">mdi-circle-double</v-icon>
-                    <v-icon      v-else-if="checkTakenTickets(index) / checkStock(index) >= 0.5 &&            checkTakenTickets(index) < checkStock(index)" color="orange">mdi-triangle-outline</v-icon>
-                    <v-icon      v-else-if="checkTakenTickets(index) >= checkStock(index)" color="red">mdi-close</v-icon>
--->
-              </td>
-              <td>o</td>
-            </tr>
-            <tr>
-              <th>次の次</th>
-              <td>x</td>
-              <td>o</td>
-            </tr>
-            <tr>
-              <th rowspan="2">12R</th>
-              <th>次</th>
-              <td>x</td>
-              <td>o</td>
-            </tr>
-            <tr>
-              <th>次の次</th>
-              <td>x</td>
-              <td>o</td>
-            </tr>
+            <thead>
+              <tr>
+                <th colspan="2"></th>
+                <th>オンライン</th>
+                <th>紙整理券</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th rowspan="2">11R</th>
+                <th>次</th>
+                <td>
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[0].sell_starts_1st,
+                        rooms[0].sell_ends_1st
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[0].taken_tickets_1st / rooms[0].stock_1st < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[0].taken_tickets_1st / rooms[0].stock_1st >= 0.5 &&
+                      rooms[0].taken_tickets_1st < rooms[0].stock_1st
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="rooms[0].taken_tickets_1st >= rooms[0].stock_1st"
+                    color="red"
+                    >mdi-close</v-icon
+                  >
+                </td>
+                <td>o</td>
+              </tr>
+              <tr>
+                <th>次の次</th>
+                <td>x</td>
+                <td>o</td>
+              </tr>
+              <tr>
+                <th rowspan="2">12R</th>
+                <th>次</th>
+                <td>x</td>
+                <td>o</td>
+              </tr>
+              <tr>
+                <th>次の次</th>
+                <td>x</td>
+                <td>o</td>
+              </tr>
+            </tbody>
           </table></v-img
         >
         <v-img class="img" src="/images/map2F.png" />
@@ -48,52 +76,55 @@
       </v-col>
       <v-col cols="4" class=""> </v-col>
     </v-row>
-    <v-row class="mt-30" justify="center">
-      <v-menu offset-y>
-        <template #activator="{ on, attrs }">
-          <v-btn
-            depressed
-            class="text-subtitle-2 text-capitalize"
-            v-bind="attrs"
-            v-on="on"
-            >{{ 'nowplayingのhebe' ?? '未設定' }}<v-spacer /><v-icon
-              >mdi-chevron-down</v-icon
-            ></v-btn
-          >
-        </template>
-        <v-list>
-          <v-list-item
-            v-for="group in groups"
-            :key="group.id"
-            :value="group.groupname"
-            @click="console.log('hebeをpost')"
-            >{{ group.groupname }}</v-list-item
-          >
-        </v-list>
-      </v-menu>
-      <v-menu offset-y>
-        <template #activator="{ on, attrs }">
-          <v-btn
-            depressed
-            class="text-subtitle-2 text-capitalize"
-            v-bind="attrs"
-            v-on="on"
-            >{{ 'upnextのhebe' ?? '未設定' }}<v-spacer /><v-icon
-              >mdi-chevron-down</v-icon
-            ></v-btn
-          >
-        </template>
-        <v-list>
-          <v-list-item
-            v-for="group in groups"
-            :key="group.id"
-            :value="group.groupname"
-            @click="console.log('hebeをpost')"
-            >{{ group.groupname }}</v-list-item
-          >
-        </v-list>
-      </v-menu>
-    </v-row>
+
+    <!--
+      <v-row class="mt-30" justify="center">
+        <v-menu offset-y>
+          <template #activator="{ on, attrs }">
+            <v-btn
+              depressed
+              class="text-subtitle-2 text-capitalize"
+              v-bind="attrs"
+              v-on="on"
+              >{{ 'nowplayingのhebe' ?? '未設定' }}<v-spacer /><v-icon
+                >mdi-chevron-down</v-icon
+              ></v-btn
+            >
+          </template>
+          <v-list>
+            <v-list-item
+              v-for="hebe in hebes"
+              :key="hebe.id"
+              :value="hebe.groupname"
+              @click="console.log('hebeをpost')"
+              >{{ hebe.groupname }}</v-list-item
+            >
+          </v-list>
+        </v-menu>
+        <v-menu offset-y>
+          <template #activator="{ on, attrs }">
+            <v-btn
+              depressed
+              class="text-subtitle-2 text-capitalize"
+              v-bind="attrs"
+              v-on="on"
+              >{{ 'upnextのhebe' ?? '未設定' }}<v-spacer /><v-icon
+                >mdi-chevron-down</v-icon
+              ></v-btn
+            >
+          </template>
+          <v-list>
+            <v-list-item
+              v-for="hebe in hebes"
+              :key="hebe.id"
+              :value="hebe.groupname"
+              @click="console.log('hebeをpost')"
+              >{{ hebe.groupname }}</v-list-item
+            >
+          </v-list>
+        </v-menu>
+      </v-row>
+    -->
   </v-app>
 </template>
 
@@ -118,7 +149,7 @@ type RoomData = {
   stock_2nd: number
 }
 type Data = {
-  groups: Group[]
+  hebes: Group[]
   events: Event[]
   rooms: RoomData[]
 }
@@ -127,72 +158,70 @@ export default Vue.extend({
   name: 'InformationBoardPage',
   auth: false,
   async asyncData({ $axios }): Promise<Partial<Data>> {
-    // ここでクラス劇オンリーのgroupsを作成
-    const groups_task = []
+    // 公演がある前提なので、ないと必ずエラーが出る
+
+    // ここでクラス劇オンリーのgroupsを作成(R_groups)
+    const rooms_promises = []
     for (let i = 0; i < 24; i++) {
       const room_num =
         ((i + 1) % 8 === 0 ? 8 : (i + 1) % 8) + 10 * (((i / 8) | 0) + 1)
-      groups_task.push($axios.$get(`/groups/${room_num}r`))
+      // 11~38までの24個
+      rooms_promises.push($axios.$get(`/groups/${room_num}r`))
     }
-    const groups: Group[] = await Promise.all(groups_task)
+    const R_groups: Group[] = await Promise.all(rooms_promises)
 
     // 完成品の受け皿を作成
+    // templateで使う際は、rooms[i]のiにあたる数字は11Rから38Rまでを順番に並べたときをイメージ
     const rooms: RoomData[] = []
 
     // 全クラスの必要な内容をroomsに詰める
-
-    for (let i = 0; i < groups.length; i++) {
-      // ここで各クラスのsort済みeventsを作成
+    for (let i = 0; i < R_groups.length; i++) {
+      // ここで各クラスのsort済みeventsを作成、使うのは１つ目と２つ目だけ
       const events: Event[] = await $axios.$get(
-        `/groups/${groups[i].id}/events`
+        `/groups/${R_groups[i].id}/events`
       )
-      if (events.length !== 0) {
-        events.sort((i: Event) => {
-          return i.target === 'paper' ? 1 : -1
-        })
-        events.sort((x: Event, y: Event) => {
-          return new Date(x.starts_at) > new Date(y.starts_at) ? 1 : -1
-        })
-        events.sort((i: Event) => {
-          return new Date() > new Date(i.sell_starts) &&
-            new Date(i.sell_ends) > new Date()
-            ? -1
-            : 1
-        })
+      events.sort((i: Event) => {
+        return i.target === 'paper' ? 1 : -1
+      })
+      events.sort((x: Event, y: Event) => {
+        return new Date(x.starts_at) > new Date(y.starts_at) ? 1 : -1
+      })
+      events.sort((i: Event) => {
+        return new Date() > new Date(i.sell_starts) &&
+          new Date(i.sell_ends) > new Date()
+          ? -1
+          : 1
+      })
 
-        // 次、次の次、の残席状況を入手
-        const tickets_info = await Promise.all([
-          $axios.$get(`/groups/${groups[i].id}/events/${events[0].id}/tickets`),
-          $axios.$get(`/groups/${groups[i].id}/events/${events[1].id}/tickets`),
-        ])
-
-        rooms.push({
-          group_id: groups[i].id,
-          event_id_1st: events[0].id,
-          event_id_2nd: events[1].id,
-          starts_at_1st: events[0].starts_at,
-          starts_at_2nd: events[1].starts_at,
-          ends_at_1st: events[0].ends_at,
-          ends_at_2nd: events[1].ends_at,
-          sell_starts_1st: events[0].sell_starts,
-          sell_starts_2nd: events[1].sell_starts,
-          sell_ends_1st: events[0].sell_ends,
-          sell_ends_2nd: events[1].sell_ends,
-          taken_tickets_1st: tickets_info[0].taken_tickets,
-          taken_tickets_2nd: tickets_info[1].taken_tickets,
-          stock_1st: tickets_info[0].stock,
-          stock_2nd: tickets_info[1].stock,
-        })
-      } else {
-        rooms.push()
-      }
+      // １つ目と２つ目の公演の残席状況を入手
+      const tickets_info: any[] = await Promise.all([
+        $axios.$get(`/groups/${R_groups[i].id}/events/${events[0].id}/tickets`),
+        $axios.$get(`/groups/${R_groups[i].id}/events/${events[1].id}/tickets`),
+      ])
+      rooms.push({
+        group_id: R_groups[i].id,
+        event_id_1st: events[0].id,
+        event_id_2nd: events[1].id,
+        starts_at_1st: events[0].starts_at,
+        starts_at_2nd: events[1].starts_at,
+        ends_at_1st: events[0].ends_at,
+        ends_at_2nd: events[1].ends_at,
+        sell_starts_1st: events[0].sell_starts,
+        sell_starts_2nd: events[1].sell_starts,
+        sell_ends_1st: events[0].sell_ends,
+        sell_ends_2nd: events[1].sell_ends,
+        taken_tickets_1st: tickets_info[0].taken_tickets,
+        taken_tickets_2nd: tickets_info[1].taken_tickets,
+        stock_1st: tickets_info[0].stock,
+        stock_2nd: tickets_info[1].stock,
+      })
     }
 
     return { rooms }
   },
   data(): Data {
     return {
-      groups: [],
+      hebes: [],
       events: [],
       rooms: [],
     }
@@ -200,7 +229,19 @@ export default Vue.extend({
   head: {
     title: 'インフォメーションボード',
   },
-  methods: {},
+  methods: {
+    // isAvailable: 整理券が配布時間内であればtrue，それ以外はfalseを返すmethod
+    isAvailable(sell_starts: string, sell_ends: string) {
+      if (
+        new Date() > new Date(sell_starts) &&
+        new Date(sell_ends) > new Date()
+      ) {
+        return true
+      } else {
+        return false
+      }
+    },
+  },
 })
 </script>
 
