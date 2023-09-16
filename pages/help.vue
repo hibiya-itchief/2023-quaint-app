@@ -131,7 +131,7 @@
               <p v-show="q1" class="pl-5 pt-2 fade-in">
                 IT委員が個別で対応いたしますので、お手数ですが2F保健室横のIT質問ブースまでお越しください。<br />
                 第1公演の整理券配布開始の10分前から第5公演終了の10分後まで受け付けております。<br />
-                <!--<NuxtLink to="/map">校保健室プ</NuxtLink><br />-->
+                <!--<NuxtLink to="/map">校内マップ</NuxtLink><br />-->
                 <NuxtLink to="/schedule">配布スケジュール</NuxtLink><br />
               </p>
               <v-divider />
