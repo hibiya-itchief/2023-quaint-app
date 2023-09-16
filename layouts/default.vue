@@ -4,7 +4,7 @@
       <span>@{{ app_env }} </span>
       <span style="font-size: 0.5em">API:{{ api_url }} </span>
     </div>
-    <div class="hamburger-box">
+    <div v-if="$route.path !== '/board'" class="hamburger-box">
       <div
         class="hamburgermenu"
         :class="{ active: drawerMenu }"
@@ -163,7 +163,12 @@
       <Nuxt class="main-content" />
     </v-main>
 
-    <v-bottom-navigation color="sairai" fixed app>
+    <v-bottom-navigation
+      v-if="$route.path !== '/board'"
+      color="sairai"
+      fixed
+      app
+    >
       <v-btn to="/">
         <span>ホーム</span>
         <v-icon>mdi-home</v-icon>
