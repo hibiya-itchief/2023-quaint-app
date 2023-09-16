@@ -389,6 +389,8 @@
               </tr>
             </tbody>
           </table>
+
+          <h3 class="mt-10">１分間隔で更新が入ります。</h3>
         </v-col>
         <v-col cols="4" class="pa-2.25 pr-0">
           <table border="1" style="margin: auto">
@@ -1627,7 +1629,80 @@ export default Vue.extend({
   head: {
     title: 'インフォメーションボード',
   },
+  created() {
+    setInterval(() => {
+      this.DataRefresh()
+    }, 60000)
+  },
+
   methods: {
+    async DataRefresh() {
+      // asyncData と内容は全く同じ。
+
+      // 公演がある前提なので、ないと必ずエラーが出る
+
+      // ここでクラス劇オンリーのgroupsを作成(R_groups)
+      const rooms_promises = []
+      for (let i = 0; i < 24; i++) {
+        const room_num =
+          ((i + 1) % 8 === 0 ? 8 : (i + 1) % 8) + 10 * (((i / 8) | 0) + 1)
+        // 11~38までの24個
+        rooms_promises.push(this.$axios.$get(`/groups/${room_num}r`))
+      }
+      const R_groups: Group[] = await Promise.all(rooms_promises)
+
+      // 完成品の受け皿を作成
+      // templateで使う際は、rooms[i]のiにあたる数字は11Rから38Rまでを順番に並べたときをイメージ
+      const rooms: RoomData[] = []
+
+      // 全クラスの必要な内容をroomsに詰める
+      for (let i = 0; i < R_groups.length; i++) {
+        // ここで各クラスのsort済みeventsを作成、使うのは１つ目と２つ目だけ
+        const events: Event[] = await this.$axios.$get(
+          `/groups/${R_groups[i].id}/events`
+        )
+        events.sort((i: Event) => {
+          return i.target === 'paper' ? 1 : -1
+        })
+        events.sort((x: Event, y: Event) => {
+          return new Date(x.starts_at) > new Date(y.starts_at) ? 1 : -1
+        })
+        events.sort((i: Event) => {
+          return new Date() > new Date(i.sell_starts) &&
+            new Date(i.sell_ends) > new Date()
+            ? -1
+            : 1
+        })
+
+        // １つ目と２つ目の公演の残席状況を入手
+        const tickets_info: any[] = await Promise.all([
+          this.$axios.$get(
+            `/groups/${R_groups[i].id}/events/${events[0].id}/tickets`
+          ),
+          this.$axios.$get(
+            `/groups/${R_groups[i].id}/events/${events[1].id}/tickets`
+          ),
+        ])
+        rooms.push({
+          group_id: R_groups[i].id,
+          event_id_1st: events[0].id,
+          event_id_2nd: events[1].id,
+          starts_at_1st: events[0].starts_at,
+          starts_at_2nd: events[1].starts_at,
+          ends_at_1st: events[0].ends_at,
+          ends_at_2nd: events[1].ends_at,
+          sell_starts_1st: events[0].sell_starts,
+          sell_starts_2nd: events[1].sell_starts,
+          sell_ends_1st: events[0].sell_ends,
+          sell_ends_2nd: events[1].sell_ends,
+          taken_tickets_1st: tickets_info[0].taken_tickets,
+          taken_tickets_2nd: tickets_info[1].taken_tickets,
+          stock_1st: tickets_info[0].stock,
+          stock_2nd: tickets_info[1].stock,
+        })
+      }
+      this.rooms = rooms
+    },
     // isAvailable: 整理券が配布時間内であればtrue，それ以外はfalseを返すmethod
     isAvailable(sell_starts: string, sell_ends: string) {
       if (
@@ -1647,6 +1722,11 @@ export default Vue.extend({
 h2 {
   text-align: center;
   font-weight: normal;
+}
+
+h3 {
+  text-align: center;
+  font-weight: bold;
 }
 
 table {
