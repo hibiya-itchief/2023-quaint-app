@@ -19,21 +19,143 @@
                 <th rowspan="2">11R</th>
                 <th>次</th>
                 <td>
-                  <v-icon color="grey">mdi-cancel</v-icon>
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[0].sell_starts_1st,
+                        rooms[0].sell_ends_1st
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[0].taken_tickets_1st / rooms[0].stock_1st < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[0].taken_tickets_1st / rooms[0].stock_1st >= 0.5 &&
+                      rooms[0].taken_tickets_1st < rooms[0].stock_1st
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="rooms[0].taken_tickets_1st >= rooms[0].stock_1st"
+                    color="red"
+                    >mdi-close</v-icon
+                  >
                 </td>
               </tr>
               <tr>
                 <th>次の次</th>
-                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+                <td>
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[0].sell_starts_2nd,
+                        rooms[0].sell_ends_2nd
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[0].taken_tickets_2nd / rooms[0].stock_2nd < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[0].taken_tickets_2nd / rooms[0].stock_2nd >= 0.5 &&
+                      rooms[0].taken_tickets_2nd < rooms[0].stock_2nd
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="rooms[0].taken_tickets_2nd >= rooms[0].stock_2nd"
+                    color="red"
+                    >mdi-close</v-icon
+                  >
+                </td>
               </tr>
               <tr>
                 <th rowspan="2">12R</th>
                 <th>次</th>
-                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+                <td>
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[1].sell_starts_1st,
+                        rooms[1].sell_ends_1st
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[1].taken_tickets_1st / rooms[1].stock_1st < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[1].taken_tickets_1st / rooms[1].stock_1st >= 0.5 &&
+                      rooms[1].taken_tickets_1st < rooms[1].stock_1st
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="rooms[1].taken_tickets_1st >= rooms[1].stock_1st"
+                    color="red"
+                    >mdi-close</v-icon
+                  >
+                </td>
               </tr>
               <tr>
                 <th>次の次</th>
-                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+                <td>
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[1].sell_starts_2nd,
+                        rooms[1].sell_ends_2nd
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[1].taken_tickets_2nd / rooms[1].stock_2nd < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[1].taken_tickets_2nd / rooms[1].stock_2nd >= 0.5 &&
+                      rooms[1].taken_tickets_2nd < rooms[1].stock_2nd
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="rooms[1].taken_tickets_2nd >= rooms[1].stock_2nd"
+                    color="red"
+                    >mdi-close</v-icon
+                  >
+                </td>
               </tr>
             </tbody>
           </table>
@@ -50,32 +172,220 @@
                 <th rowspan="2">21R</th>
                 <th>次</th>
                 <td>
-                  <v-icon color="grey">mdi-cancel</v-icon>
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[8].sell_starts_1st,
+                        rooms[8].sell_ends_1st
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[8].taken_tickets_1st / rooms[8].stock_1st < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[8].taken_tickets_1st / rooms[8].stock_1st >= 0.5 &&
+                      rooms[8].taken_tickets_1st < rooms[8].stock_1st
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="rooms[8].taken_tickets_1st >= rooms[8].stock_1st"
+                    color="red"
+                    >mdi-close</v-icon
+                  >
                 </td>
               </tr>
               <tr>
                 <th>次の次</th>
-                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+                <td>
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[8].sell_starts_2nd,
+                        rooms[8].sell_ends_2nd
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[8].taken_tickets_2nd / rooms[8].stock_2nd < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[8].taken_tickets_2nd / rooms[8].stock_2nd >= 0.5 &&
+                      rooms[8].taken_tickets_2nd < rooms[8].stock_2nd
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="rooms[8].taken_tickets_2nd >= rooms[8].stock_2nd"
+                    color="red"
+                    >mdi-close</v-icon
+                  >
+                </td>
               </tr>
               <tr>
                 <th rowspan="2">22R</th>
                 <th>次</th>
-                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+                <td>
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[9].sell_starts_1st,
+                        rooms[9].sell_ends_1st
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[9].taken_tickets_1st / rooms[9].stock_1st < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[9].taken_tickets_1st / rooms[9].stock_1st >= 0.5 &&
+                      rooms[9].taken_tickets_1st < rooms[9].stock_1st
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="rooms[9].taken_tickets_1st >= rooms[9].stock_1st"
+                    color="red"
+                    >mdi-close</v-icon
+                  >
+                </td>
               </tr>
               <tr>
                 <th>次の次</th>
-                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+                <td>
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[9].sell_starts_2nd,
+                        rooms[9].sell_ends_2nd
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[9].taken_tickets_2nd / rooms[9].stock_2nd < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[9].taken_tickets_2nd / rooms[9].stock_2nd >= 0.5 &&
+                      rooms[9].taken_tickets_2nd < rooms[9].stock_2nd
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="rooms[9].taken_tickets_2nd >= rooms[9].stock_2nd"
+                    color="red"
+                    >mdi-close</v-icon
+                  >
+                </td>
               </tr>
 
               <tr>
                 <th class="g3">31R</th>
                 <th class="g3">次</th>
-                <td class="g3"><v-icon color="grey">mdi-cancel</v-icon></td>
+                <td class="g3">
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[16].sell_starts_1st,
+                        rooms[16].sell_ends_1st
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[16].taken_tickets_1st / rooms[16].stock_1st < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[16].taken_tickets_1st / rooms[16].stock_1st >=
+                        0.5 && rooms[16].taken_tickets_1st < rooms[16].stock_1st
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[16].taken_tickets_1st >= rooms[16].stock_1st
+                    "
+                    color="red"
+                    >mdi-close</v-icon
+                  >
+                </td>
               </tr>
               <tr>
                 <th class="g3">32R</th>
                 <th class="g3">次</th>
-                <td class="g3"><v-icon color="grey">mdi-cancel</v-icon></td>
+                <td class="g3">
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[17].sell_starts_1st,
+                        rooms[17].sell_ends_1st
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[17].taken_tickets_1st / rooms[17].stock_1st < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[17].taken_tickets_1st / rooms[17].stock_1st >=
+                        0.5 && rooms[17].taken_tickets_1st < rooms[17].stock_1st
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[17].taken_tickets_1st >= rooms[17].stock_1st
+                    "
+                    color="red"
+                    >mdi-close</v-icon
+                  >
+                </td>
               </tr>
             </tbody>
           </table>
@@ -94,77 +404,554 @@
                 <th rowspan="2">13R</th>
                 <th>次</th>
                 <td>
-                  <v-icon color="grey">mdi-cancel</v-icon>
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[2].sell_starts_1st,
+                        rooms[2].sell_ends_1st
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[2].taken_tickets_1st / rooms[2].stock_1st < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[2].taken_tickets_1st / rooms[2].stock_1st >= 0.5 &&
+                      rooms[2].taken_tickets_1st < rooms[2].stock_1st
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="rooms[2].taken_tickets_1st >= rooms[2].stock_1st"
+                    color="red"
+                    >mdi-close</v-icon
+                  >
                 </td>
               </tr>
               <tr>
                 <th>次の次</th>
-                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+                <td>
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[2].sell_starts_2nd,
+                        rooms[2].sell_ends_2nd
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[2].taken_tickets_2nd / rooms[2].stock_2nd < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[2].taken_tickets_2nd / rooms[2].stock_2nd >= 0.5 &&
+                      rooms[2].taken_tickets_2nd < rooms[2].stock_2nd
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="rooms[2].taken_tickets_2nd >= rooms[2].stock_2nd"
+                    color="red"
+                    >mdi-close</v-icon
+                  >
+                </td>
               </tr>
               <tr>
                 <th rowspan="2">14R</th>
                 <th>次</th>
-                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+                <td>
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[3].sell_starts_1st,
+                        rooms[3].sell_ends_1st
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[3].taken_tickets_1st / rooms[3].stock_1st < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[3].taken_tickets_1st / rooms[3].stock_1st >= 0.5 &&
+                      rooms[3].taken_tickets_1st < rooms[3].stock_1st
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="rooms[3].taken_tickets_1st >= rooms[3].stock_1st"
+                    color="red"
+                    >mdi-close</v-icon
+                  >
+                </td>
               </tr>
               <tr>
                 <th>次の次</th>
-                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+                <td>
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[3].sell_starts_2nd,
+                        rooms[3].sell_ends_2nd
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[3].taken_tickets_2nd / rooms[3].stock_2nd < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[3].taken_tickets_2nd / rooms[3].stock_2nd >= 0.5 &&
+                      rooms[3].taken_tickets_2nd < rooms[3].stock_2nd
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="rooms[3].taken_tickets_2nd >= rooms[3].stock_2nd"
+                    color="red"
+                    >mdi-close</v-icon
+                  >
+                </td>
               </tr>
               <tr>
                 <th rowspan="2">15R</th>
                 <th>次</th>
                 <td>
-                  <v-icon color="grey">mdi-cancel</v-icon>
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[4].sell_starts_1st,
+                        rooms[4].sell_ends_1st
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[4].taken_tickets_1st / rooms[4].stock_1st < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[4].taken_tickets_1st / rooms[4].stock_1st >= 0.5 &&
+                      rooms[4].taken_tickets_1st < rooms[4].stock_1st
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="rooms[4].taken_tickets_1st >= rooms[4].stock_1st"
+                    color="red"
+                    >mdi-close</v-icon
+                  >
                 </td>
               </tr>
               <tr>
                 <th>次の次</th>
-                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+                <td>
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[4].sell_starts_2nd,
+                        rooms[4].sell_ends_2nd
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[4].taken_tickets_2nd / rooms[4].stock_2nd < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[4].taken_tickets_2nd / rooms[4].stock_2nd >= 0.5 &&
+                      rooms[4].taken_tickets_2nd < rooms[4].stock_2nd
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="rooms[4].taken_tickets_2nd >= rooms[4].stock_2nd"
+                    color="red"
+                    >mdi-close</v-icon
+                  >
+                </td>
               </tr>
               <tr>
                 <th rowspan="2">23R</th>
                 <th>次</th>
-                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+                <td>
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[10].sell_starts_1st,
+                        rooms[10].sell_ends_1st
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[10].taken_tickets_1st / rooms[10].stock_1st < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[10].taken_tickets_1st / rooms[10].stock_1st >=
+                        0.5 && rooms[10].taken_tickets_1st < rooms[10].stock_1st
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[10].taken_tickets_1st >= rooms[10].stock_1st
+                    "
+                    color="red"
+                    >mdi-close</v-icon
+                  >
+                </td>
               </tr>
               <tr>
                 <th>次の次</th>
-                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+                <td>
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[10].sell_starts_2nd,
+                        rooms[10].sell_ends_2nd
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[10].taken_tickets_2nd / rooms[10].stock_2nd < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[10].taken_tickets_2nd / rooms[10].stock_2nd >=
+                        0.5 && rooms[10].taken_tickets_2nd < rooms[10].stock_2nd
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[10].taken_tickets_2nd >= rooms[10].stock_2nd
+                    "
+                    color="red"
+                    >mdi-close</v-icon
+                  >
+                </td>
               </tr>
               <tr>
                 <th rowspan="2">24R</th>
                 <th>次</th>
                 <td>
-                  <v-icon color="grey">mdi-cancel</v-icon>
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[11].sell_starts_1st,
+                        rooms[11].sell_ends_1st
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[11].taken_tickets_1st / rooms[11].stock_1st < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[11].taken_tickets_1st / rooms[11].stock_1st >=
+                        0.5 && rooms[11].taken_tickets_1st < rooms[11].stock_1st
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[11].taken_tickets_1st >= rooms[11].stock_1st
+                    "
+                    color="red"
+                    >mdi-close</v-icon
+                  >
                 </td>
               </tr>
               <tr>
                 <th>次の次</th>
-                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+                <td>
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[11].sell_starts_2nd,
+                        rooms[11].sell_ends_2nd
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[11].taken_tickets_2nd / rooms[11].stock_2nd < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[11].taken_tickets_2nd / rooms[11].stock_2nd >=
+                        0.5 && rooms[11].taken_tickets_2nd < rooms[11].stock_2nd
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[11].taken_tickets_2nd >= rooms[11].stock_2nd
+                    "
+                    color="red"
+                    >mdi-close</v-icon
+                  >
+                </td>
               </tr>
               <tr>
                 <th rowspan="2">25R</th>
                 <th>次</th>
-                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+                <td>
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[12].sell_starts_1st,
+                        rooms[12].sell_ends_1st
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[12].taken_tickets_1st / rooms[12].stock_1st < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[12].taken_tickets_1st / rooms[12].stock_1st >=
+                        0.5 && rooms[12].taken_tickets_1st < rooms[12].stock_1st
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[12].taken_tickets_1st >= rooms[12].stock_1st
+                    "
+                    color="red"
+                    >mdi-close</v-icon
+                  >
+                </td>
               </tr>
               <tr>
                 <th>次の次</th>
-                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+                <td>
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[12].sell_starts_2nd,
+                        rooms[12].sell_ends_2nd
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[12].taken_tickets_2nd / rooms[12].stock_2nd < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[12].taken_tickets_2nd / rooms[12].stock_2nd >=
+                        0.5 && rooms[12].taken_tickets_2nd < rooms[12].stock_2nd
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[12].taken_tickets_2nd >= rooms[12].stock_2nd
+                    "
+                    color="red"
+                    >mdi-close</v-icon
+                  >
+                </td>
               </tr>
 
               <tr>
                 <th class="g3">33R</th>
                 <th class="g3">次</th>
-                <td class="g3"><v-icon color="grey">mdi-cancel</v-icon></td>
+                <td class="g3">
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[18].sell_starts_1st,
+                        rooms[18].sell_ends_1st
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[18].taken_tickets_1st / rooms[18].stock_1st < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[18].taken_tickets_1st / rooms[18].stock_1st >=
+                        0.5 && rooms[18].taken_tickets_1st < rooms[18].stock_1st
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[18].taken_tickets_1st >= rooms[18].stock_1st
+                    "
+                    color="red"
+                    >mdi-close</v-icon
+                  >
+                </td>
               </tr>
               <tr>
                 <th class="g3">34R</th>
                 <th class="g3">次</th>
-                <td class="g3"><v-icon color="grey">mdi-cancel</v-icon></td>
+                <td class="g3">
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[19].sell_starts_1st,
+                        rooms[19].sell_ends_1st
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[19].taken_tickets_1st / rooms[19].stock_1st < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[19].taken_tickets_1st / rooms[19].stock_1st >=
+                        0.5 && rooms[19].taken_tickets_1st < rooms[19].stock_1st
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[19].taken_tickets_1st >= rooms[19].stock_1st
+                    "
+                    color="red"
+                    >mdi-close</v-icon
+                  >
+                </td>
               </tr>
               <tr>
                 <th class="g3">35R</th>
                 <th class="g3">次</th>
-                <td class="g3"><v-icon color="grey">mdi-cancel</v-icon></td>
+                <td class="g3">
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[20].sell_starts_1st,
+                        rooms[20].sell_ends_1st
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[20].taken_tickets_1st / rooms[20].stock_1st < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[20].taken_tickets_1st / rooms[20].stock_1st >=
+                        0.5 && rooms[20].taken_tickets_1st < rooms[20].stock_1st
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[20].taken_tickets_1st >= rooms[20].stock_1st
+                    "
+                    color="red"
+                    >mdi-close</v-icon
+                  >
+                </td>
               </tr>
             </tbody>
           </table>
@@ -183,77 +970,554 @@
                 <th rowspan="2">16R</th>
                 <th>次</th>
                 <td>
-                  <v-icon color="grey">mdi-cancel</v-icon>
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[5].sell_starts_1st,
+                        rooms[5].sell_ends_1st
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[5].taken_tickets_1st / rooms[5].stock_1st < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[5].taken_tickets_1st / rooms[5].stock_1st >= 0.5 &&
+                      rooms[5].taken_tickets_1st < rooms[5].stock_1st
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="rooms[5].taken_tickets_1st >= rooms[5].stock_1st"
+                    color="red"
+                    >mdi-close</v-icon
+                  >
                 </td>
               </tr>
               <tr>
                 <th>次の次</th>
-                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+                <td>
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[5].sell_starts_2nd,
+                        rooms[5].sell_ends_2nd
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[5].taken_tickets_2nd / rooms[5].stock_2nd < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[5].taken_tickets_2nd / rooms[5].stock_2nd >= 0.5 &&
+                      rooms[5].taken_tickets_2nd < rooms[5].stock_2nd
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="rooms[5].taken_tickets_2nd >= rooms[5].stock_2nd"
+                    color="red"
+                    >mdi-close</v-icon
+                  >
+                </td>
               </tr>
               <tr>
                 <th rowspan="2">17R</th>
                 <th>次</th>
-                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+                <td>
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[6].sell_starts_1st,
+                        rooms[6].sell_ends_1st
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[6].taken_tickets_1st / rooms[6].stock_1st < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[6].taken_tickets_1st / rooms[6].stock_1st >= 0.5 &&
+                      rooms[6].taken_tickets_1st < rooms[6].stock_1st
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="rooms[6].taken_tickets_1st >= rooms[6].stock_1st"
+                    color="red"
+                    >mdi-close</v-icon
+                  >
+                </td>
               </tr>
               <tr>
                 <th>次の次</th>
-                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+                <td>
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[6].sell_starts_2nd,
+                        rooms[6].sell_ends_2nd
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[6].taken_tickets_2nd / rooms[6].stock_2nd < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[6].taken_tickets_2nd / rooms[6].stock_2nd >= 0.5 &&
+                      rooms[6].taken_tickets_2nd < rooms[6].stock_2nd
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="rooms[6].taken_tickets_2nd >= rooms[6].stock_2nd"
+                    color="red"
+                    >mdi-close</v-icon
+                  >
+                </td>
               </tr>
               <tr>
                 <th rowspan="2">18R</th>
                 <th>次</th>
                 <td>
-                  <v-icon color="grey">mdi-cancel</v-icon>
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[7].sell_starts_1st,
+                        rooms[7].sell_ends_1st
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[7].taken_tickets_1st / rooms[7].stock_1st < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[7].taken_tickets_1st / rooms[7].stock_1st >= 0.5 &&
+                      rooms[7].taken_tickets_1st < rooms[7].stock_1st
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="rooms[7].taken_tickets_1st >= rooms[7].stock_1st"
+                    color="red"
+                    >mdi-close</v-icon
+                  >
                 </td>
               </tr>
               <tr>
                 <th>次の次</th>
-                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+                <td>
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[7].sell_starts_2nd,
+                        rooms[7].sell_ends_2nd
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[7].taken_tickets_2nd / rooms[7].stock_2nd < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[7].taken_tickets_2nd / rooms[7].stock_2nd >= 0.5 &&
+                      rooms[7].taken_tickets_2nd < rooms[7].stock_2nd
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="rooms[7].taken_tickets_2nd >= rooms[7].stock_2nd"
+                    color="red"
+                    >mdi-close</v-icon
+                  >
+                </td>
               </tr>
               <tr>
                 <th rowspan="2">26R</th>
                 <th>次</th>
-                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+                <td>
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[13].sell_starts_1st,
+                        rooms[13].sell_ends_1st
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[13].taken_tickets_1st / rooms[13].stock_1st < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[13].taken_tickets_1st / rooms[13].stock_1st >=
+                        0.5 && rooms[13].taken_tickets_1st < rooms[13].stock_1st
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[13].taken_tickets_1st >= rooms[13].stock_1st
+                    "
+                    color="red"
+                    >mdi-close</v-icon
+                  >
+                </td>
               </tr>
               <tr>
                 <th>次の次</th>
-                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+                <td>
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[13].sell_starts_2nd,
+                        rooms[13].sell_ends_2nd
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[13].taken_tickets_2nd / rooms[13].stock_2nd < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[13].taken_tickets_2nd / rooms[13].stock_2nd >=
+                        0.5 && rooms[13].taken_tickets_2nd < rooms[13].stock_2nd
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[13].taken_tickets_2nd >= rooms[13].stock_2nd
+                    "
+                    color="red"
+                    >mdi-close</v-icon
+                  >
+                </td>
               </tr>
               <tr>
                 <th rowspan="2">27R</th>
                 <th>次</th>
                 <td>
-                  <v-icon color="grey">mdi-cancel</v-icon>
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[14].sell_starts_1st,
+                        rooms[14].sell_ends_1st
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[14].taken_tickets_1st / rooms[14].stock_1st < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[14].taken_tickets_1st / rooms[14].stock_1st >=
+                        0.5 && rooms[14].taken_tickets_1st < rooms[14].stock_1st
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[14].taken_tickets_1st >= rooms[14].stock_1st
+                    "
+                    color="red"
+                    >mdi-close</v-icon
+                  >
                 </td>
               </tr>
               <tr>
                 <th>次の次</th>
-                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+                <td>
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[14].sell_starts_2nd,
+                        rooms[14].sell_ends_2nd
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[14].taken_tickets_2nd / rooms[14].stock_2nd < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[14].taken_tickets_2nd / rooms[14].stock_2nd >=
+                        0.5 && rooms[14].taken_tickets_2nd < rooms[14].stock_2nd
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[14].taken_tickets_2nd >= rooms[14].stock_2nd
+                    "
+                    color="red"
+                    >mdi-close</v-icon
+                  >
+                </td>
               </tr>
               <tr>
                 <th rowspan="2">28R</th>
                 <th>次</th>
-                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+                <td>
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[15].sell_starts_1st,
+                        rooms[15].sell_ends_1st
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[15].taken_tickets_1st / rooms[15].stock_1st < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[15].taken_tickets_1st / rooms[15].stock_1st >=
+                        0.5 && rooms[15].taken_tickets_1st < rooms[15].stock_1st
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[15].taken_tickets_1st >= rooms[15].stock_1st
+                    "
+                    color="red"
+                    >mdi-close</v-icon
+                  >
+                </td>
               </tr>
               <tr>
                 <th>次の次</th>
-                <td><v-icon color="grey">mdi-cancel</v-icon></td>
+                <td>
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[15].sell_starts_2nd,
+                        rooms[15].sell_ends_2nd
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[15].taken_tickets_2nd / rooms[15].stock_2nd < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[15].taken_tickets_2nd / rooms[15].stock_2nd >=
+                        0.5 && rooms[15].taken_tickets_2nd < rooms[15].stock_2nd
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[15].taken_tickets_2nd >= rooms[15].stock_2nd
+                    "
+                    color="red"
+                    >mdi-close</v-icon
+                  >
+                </td>
               </tr>
 
               <tr>
                 <th class="g3">36R</th>
                 <th class="g3">次</th>
-                <td class="g3"><v-icon color="grey">mdi-cancel</v-icon></td>
+                <td class="g3">
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[21].sell_starts_1st,
+                        rooms[21].sell_ends_1st
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[21].taken_tickets_1st / rooms[21].stock_1st < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[21].taken_tickets_1st / rooms[21].stock_1st >=
+                        0.5 && rooms[21].taken_tickets_1st < rooms[21].stock_1st
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[21].taken_tickets_1st >= rooms[21].stock_1st
+                    "
+                    color="red"
+                    >mdi-close</v-icon
+                  >
+                </td>
               </tr>
               <tr>
                 <th class="g3">37R</th>
                 <th class="g3">次</th>
-                <td class="g3"><v-icon color="grey">mdi-cancel</v-icon></td>
+                <td class="g3">
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[22].sell_starts_1st,
+                        rooms[22].sell_ends_1st
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[22].taken_tickets_1st / rooms[22].stock_1st < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[22].taken_tickets_1st / rooms[22].stock_1st >=
+                        0.5 && rooms[22].taken_tickets_1st < rooms[22].stock_1st
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[22].taken_tickets_1st >= rooms[22].stock_1st
+                    "
+                    color="red"
+                    >mdi-close</v-icon
+                  >
+                </td>
               </tr>
               <tr>
                 <th class="g3">38R</th>
                 <th class="g3">次</th>
-                <td class="g3"><v-icon color="grey">mdi-cancel</v-icon></td>
+                <td class="g3">
+                  <v-icon
+                    v-if="
+                      !isAvailable(
+                        rooms[23].sell_starts_1st,
+                        rooms[23].sell_ends_1st
+                      )
+                    "
+                    color="grey"
+                    >mdi-cancel</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[23].taken_tickets_1st / rooms[23].stock_1st < 0.5
+                    "
+                    color="green"
+                    >mdi-circle-double</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[23].taken_tickets_1st / rooms[23].stock_1st >=
+                        0.5 && rooms[23].taken_tickets_1st < rooms[23].stock_1st
+                    "
+                    color="orange"
+                    >mdi-triangle-outline</v-icon
+                  >
+                  <v-icon
+                    v-else-if="
+                      rooms[23].taken_tickets_1st >= rooms[23].stock_1st
+                    "
+                    color="red"
+                    >mdi-close</v-icon
+                  >
+                </td>
               </tr>
             </tbody>
           </table>
@@ -351,7 +1615,6 @@ export default Vue.extend({
         stock_2nd: tickets_info[1].stock,
       })
     }
-
     return { rooms }
   },
   data(): Data {
