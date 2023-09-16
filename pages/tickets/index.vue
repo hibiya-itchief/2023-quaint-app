@@ -102,6 +102,12 @@
                 <v-card-title class="text-h7 text-truncate">
                   {{ ticketInfo.group.title }}
                 </v-card-title>
+                <v-card-subtitle
+                  class="grey--text text--darken-2 text-h5 pb-0 text-truncate"
+                >
+                  {{ ticketInfo.event.eventname }}</v-card-subtitle
+                >
+
                 <v-card-subtitle class="pb-0 text-truncate">
                   {{ ticketInfo.group.groupname }}</v-card-subtitle
                 >
