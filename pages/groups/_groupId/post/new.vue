@@ -6,7 +6,9 @@
           <h2 class="mx-1 px-0" style="display: inline">
             <v-icon color="blue-grey">mdi-pencil</v-icon>
             <span class="grey--text text-subtitle-1">新規投稿の作成</span>
-            <v-btn class="ml-auto" color="primary"> 投稿 </v-btn>
+            <v-btn class="ml-auto" color="primary" @click="PrintEditor">
+              投稿
+            </v-btn>
           </h2>
 
           <p class="pa-2">
@@ -123,6 +125,7 @@ type Data = {
 
   userGroups: { admin: string; owner: string }
   hostname: string
+  editor: string
 }
 
 export default Vue.extend({
@@ -164,6 +167,7 @@ export default Vue.extend({
         owner: process.env.AZURE_AD_GROUPS_QUAINT_OWNER as string,
       },
       hostname: '',
+      editor: '',
     }
   },
   head() {
@@ -191,6 +195,10 @@ export default Vue.extend({
       }
     }
   },
-  methods: {},
+  methods: {
+    PrintEditor() {
+      console.log(this.editor)
+    },
+  },
 })
 </script>
