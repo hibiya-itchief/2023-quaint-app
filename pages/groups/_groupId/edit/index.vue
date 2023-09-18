@@ -311,66 +311,62 @@
             </div>
           </v-card>
 
-          <v-card v-show="true" class="mx-1 my-1 px-2 py-2" elevation="1">
+          <v-card class="mx-1 my-1 px-2 py-2" elevation="1">
             <v-card-title class="ma-0 pa-0">
               <p
                 class="mx-0 my-1 pa-0 grey--text text--darken-2 text-subtitle-2"
               >
-                <v-icon color="light-blue" class="mr-2">mdi-play-box</v-icon>
-                動画配信 Stream URL
+                <v-icon color="light-blue" class="mr-2">mdi-link</v-icon>
+                その他のリンク(Streamでの映像配信へのリンクもこちらへ)
               </p>
               <v-spacer></v-spacer>
               <a
-                v-show="!change_stream_url_form"
+                v-show="!change_url_form"
                 class="mx-0 my-2 pa-0 text-body-2"
-                @click="change_stream_url_form = !change_stream_url_form"
+                @click="change_url_form = !change_url_form"
                 >編集</a
               >
               <a
-                v-show="change_stream_url_form"
+                v-show="change_url_form"
                 class="mx-0 my-2 pa-0 text-body-2"
-                @click="change_stream_url_form = !change_stream_url_form"
+                @click="change_url_form = !change_url_form"
                 >キャンセル</a
               >
             </v-card-title>
             <v-card-text class="ma-0 pa-0">
-              <span class="mx-0 my-2 pa-0 text-body-1">{{
-                group?.stream_url
-              }}</span>
+              <span v-if="links.length == 0" class="mx-0 my-2 pa-0"
+                >リンクがありません</span
+              >
+              <v-list-item v-for="url in links" :key="url.id">
+                <v-list-item-icon>
+                  <v-icon>mdi-link</v-icon>
+                </v-list-item-icon>
+                <v-list-item-content>
+                  <v-list-item-title>{{ url.name }}</v-list-item-title>
+                  <span>{{ url.linktext }}</span>
+                </v-list-item-content>
+                <v-list-item-action>
+                  <v-icon v-show="change_url_form" @click="DeleteLink(url)"
+                    >mdi-close-circle</v-icon
+                  >
+                </v-list-item-action>
+              </v-list-item>
             </v-card-text>
-            <div v-show="change_stream_url_form">
+            <div v-show="change_url_form" class="mt-2">
               <v-card-text class="mx-0 px-0 py-2">
+                <p class="ma-0 pa-0 text-subtitle-1">リンクの追加</p>
                 <v-text-field
-                  v-model="change_stream_url_input"
-                  prefix="https://web.microsoftstream.com/video/"
-                  filled
-                  class="ma-0 pt-1 pb-0"
-                >
-                </v-text-field>
+                  v-model="change_url_name_input"
+                  label="表示されるリンクの名前"
+                ></v-text-field>
+                <v-text-field
+                  v-model="change_url_input"
+                  label="リンクのURL"
+                ></v-text-field>
               </v-card-text>
               <v-card-actions class="ma-0 px-0 py-0">
                 <v-spacer></v-spacer>
-                <v-btn
-                  color="primary"
-                  outlined
-                  @click="
-                    groupEdit.stream_url = null
-                    UpdateGroup()
-                  "
-                >
-                  URLを削除
-                </v-btn>
-                <v-btn
-                  color="primary"
-                  @click="
-                    groupEdit.stream_url =
-                      'https://web.microsoftstream.com/video/' +
-                      change_stream_url_input
-                    UpdateGroup()
-                  "
-                >
-                  適用
-                </v-btn>
+                <v-btn color="primary" @click="AddLink()"> 追加 </v-btn>
               </v-card-actions>
             </div>
           </v-card>
@@ -696,11 +692,12 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { Event, Group, GroupEdit, Tag } from '~/types/quaint'
+import { Event, Group, GroupEdit, GroupLink, Tag } from '~/types/quaint'
 type Data = {
   tags: Tag[]
   group: Group | undefined
   events: Event[]
+  links: GroupLink[]
 
   groupEdit: GroupEdit
 
@@ -721,6 +718,9 @@ type Data = {
   change_instagram_url_input: string
   change_stream_url_form: boolean
   change_stream_url_input: string
+  change_url_form: boolean
+  change_url_input: string
+  change_url_name_input: string
   change_thumbnail_image_form: boolean
   change_thumbnail_image_input: any
   change_tags_form: boolean
@@ -745,6 +745,7 @@ export default Vue.extend({
     let group
     let tags
     let events
+    let links
     if (payload !== undefined) {
       group = payload.group
       tags = payload.tags
@@ -754,10 +755,12 @@ export default Vue.extend({
         $axios.$get('/tags'),
         $axios.$get('/groups/' + params.groupId),
         $axios.$get('/groups/' + params.groupId + '/events'),
+        $axios.$get('groups/' + params.groupId + '/links'),
       ])
       tags = res[0]
       group = res[1]
       events = res[2]
+      links = res[3]
     }
     const { id, enable_vote, groupname, ...groupEdit } = group as Group
     return {
@@ -765,6 +768,7 @@ export default Vue.extend({
       group,
       events,
       groupEdit,
+      links,
       tag_selector: tags[0],
     }
   },
@@ -773,6 +777,7 @@ export default Vue.extend({
       tags: [],
       group: undefined,
       events: [],
+      links: [],
       tag_selector: { id: '', tagname: '' },
       groupEdit: {},
       userGroups: {
@@ -795,6 +800,9 @@ export default Vue.extend({
       change_instagram_url_input: '',
       change_stream_url_form: false,
       change_stream_url_input: '',
+      change_url_form: false,
+      change_url_input: '',
+      change_url_name_input: '',
       change_thumbnail_image_form: false,
       change_thumbnail_image_input: null,
       change_tags_form: false,
@@ -915,6 +923,58 @@ export default Vue.extend({
         .then((res) => {
           this.group = res.data
           this.success_message = 'サムネイル画像が変更されました'
+          this.success_alert = true
+          this.$nuxt.refresh()
+        })
+        .catch((e) => {
+          if (e.response) {
+            this.error_message = e.response.data.detail
+            if (e.response.status === 422) {
+              this.error_message = '入力された値の形式が不適切です'
+            }
+          } else {
+            this.error_message =
+              '予期しないエラーが発生しました。IT委員にお声がけください🙇‍♂️'
+          }
+          this.error_alert = true
+          this.$nuxt.refresh()
+        })
+    },
+    AddLink() {
+      if (this.change_url_name_input === '' || this.change_url_input === '') {
+        this.error_message = 'リンクが入力されていません'
+        this.error_alert = true
+        return
+      }
+      this.$axios
+        .post('/groups/' + this.group?.id + '/links', {
+          name: this.change_url_name_input,
+          linktext: this.change_url_input,
+        })
+        .then(() => {
+          this.success_message = 'リンクが追加されました'
+          this.success_alert = true
+          this.$nuxt.refresh()
+        })
+        .catch((e) => {
+          if (e.response) {
+            this.error_message = e.response.data.detail
+            if (e.response.status === 422) {
+              this.error_message = '入力された値の形式が不適切です'
+            }
+          } else {
+            this.error_message =
+              '予期しないエラーが発生しました。IT委員にお声がけください🙇‍♂️'
+          }
+          this.error_alert = true
+          this.$nuxt.refresh()
+        })
+    },
+    DeleteLink(link: GroupLink) {
+      this.$axios
+        .delete('/groups/' + this.group?.id + '/links/' + link.id)
+        .then(() => {
+          this.success_message = 'リンクが削除されました'
           this.success_alert = true
           this.$nuxt.refresh()
         })
