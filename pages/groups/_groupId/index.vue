@@ -32,6 +32,22 @@
                 </v-chip>
               </v-chip-group>
             </v-card-actions>
+            <v-card-actions>
+              <div v-for="link in links" :key="link.id" style="width: 100%">
+                <v-btn
+                  color="sairai"
+                  dark
+                  outlined
+                  rounded
+                  width="100%"
+                  :href="link.linktext"
+                >
+                  <v-icon>mdi-link</v-icon>
+                  {{ link.name }}
+                </v-btn>
+              </div>
+            </v-card-actions>
+            <v-divider></v-divider>
             <v-card-actions v-if="editable == true" class="py-1">
               <v-btn
                 color="blue-grey"
@@ -59,18 +75,6 @@
               >
                 <v-icon>mdi-ticket-confirmation</v-icon>
                 残席情報を確認
-              </v-btn>
-            </v-card-actions>
-            <v-card-actions class="mx-auto">
-              <v-btn
-                color="primary"
-                block
-                dark
-                rounded
-                @click="videoViewer = true"
-              >
-                <v-icon>mdi-play</v-icon>
-                映像で鑑賞
               </v-btn>
             </v-card-actions>
             <v-card-actions class="py-1">
@@ -113,56 +117,6 @@
                 ><v-icon>mdi-bookmark-outline</v-icon></v-btn
               >
             </v-card-actions>
-
-            <!--映像配信画面-->
-            <v-dialog v-model="videoViewer" fullscreen>
-              <v-card dark>
-                <v-toolbar dark color="primary">
-                  <v-toolbar-title class="mx-auto"
-                    >{{ group.title }} - {{ group.groupname }}</v-toolbar-title
-                  >
-                  <v-btn icon dark @click="videoViewer = false">
-                    <v-icon>mdi-close</v-icon>
-                  </v-btn>
-                </v-toolbar>
-                <v-row
-                  justify="center"
-                  align-content="center"
-                  class="ma-0 pa-0"
-                >
-                  <v-col cols="12">
-                    <iframe
-                      v-if="group.stream_url != null"
-                      class="ma-0 pa-0"
-                      height="400px"
-                      width="99%"
-                      :src="
-                        'https://web.microsoftstream.com/embed/video/' +
-                        streamVideoId +
-                        '?autoplay=false&showinfo=false'
-                      "
-                      allowfullscreen
-                    ></iframe>
-                    <v-card-text v-else class="pa-1 ma-0 deep-orange--text"
-                      >この団体の映像はまだ公開されていません。配信開始をお楽しみに！</v-card-text
-                    >
-                  </v-col>
-                  <v-card-text
-                    >※映像鑑賞には、学校で配布されたMicrosoftアカウントへのログインが必要です。</v-card-text
-                  >
-                  <v-col v-if="group.stream_url != null" cols="12">
-                    <v-row justify="center">
-                      <v-btn
-                        color="primary"
-                        :href="group.stream_url"
-                        target="_blank"
-                        >再生できない場合（Streamで再生）＞</v-btn
-                      >
-                    </v-row>
-                  </v-col>
-                </v-row>
-              </v-card>
-            </v-dialog>
           </v-card>
         </v-col>
         <v-col cols="12" sm="6" lg="4">
@@ -380,7 +334,7 @@
 </template>
 
 <script lang="ts">
-import { Event, Group } from 'types/quaint'
+import { Event, Group, GroupLink } from 'types/quaint'
 import Vue from 'vue'
 type Data = {
   userGroups: {
@@ -394,10 +348,9 @@ type Data = {
   }
   group: Group | undefined
   events: Event[]
+  links: GroupLink[]
   filteredEvents: Event[] //  ユーザ属性（e,g.students, parents）に合致する整理券のみが格納される配列
   selected_event: Event | null
-  videoViewer: boolean
-  streamVideoId: string
   editable: boolean
   success_alert: boolean
   error_alert: boolean
@@ -454,7 +407,10 @@ export default Vue.extend({
           listTakenTickets.push(ticketsInfo[i].taken_tickets)
         }
       })
-      return { group, events, listStock, listTakenTickets }
+      const links: GroupLink[] = await $axios.$get(
+        '/groups/' + params.groupId + '/links'
+      )
+      return { group, events, links, listStock, listTakenTickets }
     } else {
       return { group, events }
     }
@@ -470,12 +426,11 @@ export default Vue.extend({
         teachers: process.env.AZURE_AD_GROUPS_QUAINT_TEACHERS as string,
         chief: process.env.AZURE_AD_GROUPS_QUAINT_CHIEF as string,
       },
-      videoViewer: false,
       group: undefined,
       events: [],
+      links: [],
       filteredEvents: [],
       selected_event: null,
-      streamVideoId: '',
       editable: false, // 権限を持つユーザーがアクセスするとtrueになりページを編集できる
 
       ticket_person: 1,

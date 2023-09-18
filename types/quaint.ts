@@ -17,6 +17,12 @@ export type Group = {
 
   tags: Tag[]
 }
+export type GroupLink = {
+  id: string
+  name: string
+  group_id: string
+  linktext: string
+}
 export type GroupEdit = {
   title?: string | null
   description?: string | null
