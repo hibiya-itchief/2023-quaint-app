@@ -52,6 +52,10 @@
                     {{ link.name }}
                   </v-btn>
                 </div>
+                <span v-if="links.length !== 0" class="text-caption grey--text"
+                  >※Microsoft
+                  Streamで配信されている映像は「~~@metro.ed.jp」で終わる本校生徒のアカウントでログインしないと見ることができません。保護者の方はお子様の端末で一緒にご視聴ください。</span
+                >
               </v-card-actions>
               <v-divider></v-divider>
               <v-card-actions v-if="editable == true" class="py-1">
