@@ -33,8 +33,13 @@
                   </v-chip>
                 </v-chip-group>
               </v-card-actions>
-              <v-card-actions>
-                <div v-for="link in links" :key="link.id" style="width: 100%">
+              <v-card-actions style="width: 100%; display: block">
+                <div
+                  v-for="link in links"
+                  :key="link.id"
+                  class="my-1"
+                  style="width: 100%"
+                >
                   <v-btn
                     color="sairai"
                     dark
