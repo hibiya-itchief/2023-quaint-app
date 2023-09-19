@@ -9,7 +9,7 @@ export default Vue.extend({
     const ctx = canvas.getContext('2d')
     const img = new Image()
     img.src = '/images/countdown.jpg'
-    const yay = new Date('2023-09-16T00:00:00+09:00')
+    const yay = new Date('2024-09-14T00:00:00+09:00')
     const diff = Math.ceil(
       (yay.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
     ) // ミリ秒を日に変換
