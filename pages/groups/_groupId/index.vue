@@ -33,7 +33,8 @@
                   </v-chip>
                 </v-chip-group>
               </v-card-actions>
-              <v-card-actions style="width: 100%; display: block">
+              <!-- 一時的に映像配信を非表示
+                <v-card-actions style="width: 100%; display: block">
                 <div
                   v-for="link in links"
                   :key="link.id"
@@ -58,6 +59,7 @@
                 >
               </v-card-actions>
               <v-divider></v-divider>
+              -->
               <v-card-actions v-if="editable == true" class="py-1">
                 <v-btn
                   color="blue-grey"
