@@ -231,6 +231,7 @@ type Data = {
   sort_displayname: string
   query_cache: any
   search_result_number: number
+  storage_bookmarks: (string | null)[]
   display_bookmarks: boolean
   selectedTag: Tag | undefined
 }
@@ -255,6 +256,7 @@ export default Vue.extend({
       search_result_number: 0,
       search_query: '',
       sort_displayname: 'デフォルト順',
+      storage_bookmarks: [],
       display_bookmarks: false,
       query_cache: undefined,
     }
@@ -281,7 +283,10 @@ export default Vue.extend({
     // クエリパラメータを見て検索バー内の文字列を再現など
     if (typeof this.$route.query.q === 'string') {
       this.search_query = this.$route.query.q
-      this.PushQuery(null, undefined, null, null, null)
+      // 検索中はタグ選択ができないため、created時もtを削除
+      if (this.$route.query.t !== undefined) {
+        this.PushQuery(null, undefined, null, null, null)
+      }
       this.SearchGroups()
     }
     if (
@@ -318,10 +323,14 @@ export default Vue.extend({
     }
   },
   mounted() {
+    for (let i = 0; i < localStorage.length; i++) {
+      this.storage_bookmarks.push(localStorage.key(i))
+    }
     this.nowloading = false
   },
 
   methods: {
+    // それぞれ、Qは検索バーの内容、Tはタグ、Bはブックマーク、Sはソート(並び替え)、Rは昇順/降順の切り替え(ReverseのR)
     PushQuery(Q: any, T: any, B: any, S: any, R: any) {
       Q = Q === null ? this.$route.query.q : Q
       T = T === null ? this.$route.query.t : T
@@ -330,6 +339,7 @@ export default Vue.extend({
       R = R === null ? this.$route.query.r : R
       this.$router.push({ query: { q: Q, t: T, b: B, s: S, r: R } }) // nullは「現在のクエリを維持」と同義
     },
+
     SortGroups(sort: 'id' | 'groupname' | 'title') {
       if (sort === 'groupname') {
         this.sort_displayname = '団体名順'
@@ -435,13 +445,13 @@ export default Vue.extend({
 
     FilterBookmarks(id: string) {
       // お気に入りならtrue
-      if (this.nowloading === true) return false
-      for (let i = 0; i < localStorage.length; i++) {
-        if ('seiryofes.groups.favorite.' + id === localStorage.key(i)) {
-          return true
-        }
+      if (this.nowloading === true) {
+        return false
+      } else {
+        return this.storage_bookmarks.includes(
+          'seiryofes.groups.favorite.' + id
+        )
       }
-      return false
     },
 
     HashColor(text: string) {
