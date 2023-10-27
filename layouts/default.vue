@@ -1,72 +1,75 @@
 <template>
   <v-app>
-    <div v-if="app_env !== 'production'" class="app-env">
-      <span>@{{ app_env }} </span>
-      <span style="font-size: 0.5em">API:{{ api_url }} </span>
-    </div>
-    <div v-if="$route.path !== '/board'" class="hamburger-box">
-      <div
-        class="hamburgermenu"
-        :class="{ active: drawerMenu }"
-        @click="drawerMenu = !drawerMenu"
-      >
-        <div class="hamburger-btn"><span></span><span></span><span></span></div>
+    <client-only>
+      <div v-if="app_env !== 'production'" class="app-env">
+        <span>@{{ app_env }} </span>
+        <span style="font-size: 0.5em">API:{{ api_url }} </span>
       </div>
-    </div>
+      <div v-if="$route.path !== '/board'" class="hamburger-box">
+        <div
+          class="hamburgermenu"
+          :class="{ active: drawerMenu }"
+          @click="drawerMenu = !drawerMenu"
+        >
+          <div class="hamburger-btn">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+      </div>
 
-    <v-navigation-drawer
-      v-model="drawerMenu"
-      class="drawer-menu"
-      temporary
-      fixed
-      style="position: fixed"
-    >
-      <v-list nav dense>
-        <v-list-item-group active-class="light-blue--text text--accent-4">
-          <v-card v-show="$auth.loggedIn" elevation="0">
-            <v-card-title class="px-2 py-1"
-              ><v-icon class="mr-4">mdi-account-circle</v-icon
-              >{{ $auth.user?.name }}</v-card-title
-            >
-            <v-card-text class="px-2 py-1">
-              <v-chip-group column>
-                <v-chip
-                  v-show="$auth.user?.groups?.includes(userGroups.admin)"
-                  outlined
-                >
-                  👑Admin
-                </v-chip>
-                <v-chip
-                  v-show="$auth.user?.groups?.includes(userGroups.owner)"
-                  outlined
-                >
-                  団体代表者
-                </v-chip>
-                <v-chip
-                  v-show="$auth.user?.groups?.includes(userGroups.parents)"
-                  outlined
-                >
-                  保護者用アカウント
-                </v-chip>
-                <v-chip
-                  v-show="$auth.user?.groups?.includes(userGroups.students)"
-                  outlined
-                >
-                  生徒用アカウント
-                </v-chip>
-                <v-chip
-                  v-show="$auth.user?.groups?.includes(userGroups.teachers)"
-                  outlined
-                >
-                  先生用アカウント
-                </v-chip>
-                <v-chip
-                  v-show="$auth.user?.groups?.includes(userGroups.chief)"
-                  outlined
-                >
-                  チーフ会
-                </v-chip>
-                <!--(
+      <v-navigation-drawer
+        v-model="drawerMenu"
+        class="drawer-menu"
+        temporary
+        fixed
+        style="position: fixed"
+      >
+        <v-list nav dense>
+          <v-list-item-group active-class="light-blue--text text--accent-4">
+            <v-card v-show="$auth.loggedIn" elevation="0">
+              <v-card-title class="px-2 py-1"
+                ><v-icon class="mr-4">mdi-account-circle</v-icon
+                >{{ $auth.user?.name }}</v-card-title
+              >
+              <v-card-text class="px-2 py-1">
+                <v-chip-group column>
+                  <v-chip
+                    v-show="$auth.user?.groups?.includes(userGroups.admin)"
+                    outlined
+                  >
+                    👑Admin
+                  </v-chip>
+                  <v-chip
+                    v-show="$auth.user?.groups?.includes(userGroups.owner)"
+                    outlined
+                  >
+                    団体代表者
+                  </v-chip>
+                  <v-chip
+                    v-show="$auth.user?.groups?.includes(userGroups.parents)"
+                    outlined
+                  >
+                    保護者用アカウント
+                  </v-chip>
+                  <v-chip
+                    v-show="$auth.user?.groups?.includes(userGroups.students)"
+                    outlined
+                  >
+                    生徒用アカウント
+                  </v-chip>
+                  <v-chip
+                    v-show="$auth.user?.groups?.includes(userGroups.teachers)"
+                    outlined
+                  >
+                    先生用アカウント
+                  </v-chip>
+                  <v-chip
+                    v-show="$auth.user?.groups?.includes(userGroups.chief)"
+                    outlined
+                  >
+                    チーフ会
+                  </v-chip>
+                  <!--(
                   userGroups.entry)で同様の処理が可能？
                 <v-chip
                   v-show="$auth.user?.jobTitle?.includes('Visited')"
@@ -74,116 +77,117 @@
                 >
                   校内入場処理済み
                 </v-chip>-->
-              </v-chip-group>
-              <p class="ma-0 pa-0 text-caption grey--text">
-                ユーザーID：{{ $auth.user?.oid ?? $auth.user?.sub }}
-                <!--ADの場合ユーザーオブジェクトIDはoidに入ってる-->
-              </p>
-              <p
-                v-show="$auth.user?.groups?.includes(userGroups.admin)"
-                class="ma-0 pa-0 text-caption grey--text"
-              >
-                <a @click="revealToken()">APIトークンを表示</a>
-              </p>
-            </v-card-text>
-            <v-card-actions>
-              <v-btn
-                v-show="$auth.user?.groups?.includes(userGroups.admin)"
-                outlined
-                color="primary"
-                to="/admin"
-              >
-                管理者用画面
-              </v-btn>
-              <v-spacer></v-spacer>
-              <v-btn outlined color="primary" @click="logout()">
-                ログアウト
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-
-          <v-card v-show="!$auth.loggedIn" elevation="0">
-            <v-card-title class="px-2 py-1"
-              ><v-icon class="mr-4">mdi-account-circle</v-icon
-              ><span class="grey--text text-caption"
-                >ログインしていません</span
-              ></v-card-title
-            >
-            <v-card-text class="px-2 py-1"> </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn outlined color="primary" to="/login"> ログイン </v-btn>
-            </v-card-actions>
-          </v-card>
-
-          <v-divider></v-divider>
-        </v-list-item-group>
-      </v-list>
-      <template #append>
-        <div class="pa-0">
-          <v-list nav dense>
-            <v-list-item-group active-class="light-blue--text text--accent-4">
-              <v-list-item>
-                <v-list-item-icon>
-                  <v-icon>mdi-clipboard-text</v-icon>
-                </v-list-item-icon>
-                <v-list-item-title
-                  ><a
-                    style="text-decoration: none; color: inherit"
-                    href="https://forms.gle/aRv81UtSCSgS2gHq8"
-                    >フィードバック</a
-                  ></v-list-item-title
+                </v-chip-group>
+                <p class="ma-0 pa-0 text-caption grey--text">
+                  ユーザーID：{{ $auth.user?.oid ?? $auth.user?.sub }}
+                  <!--ADの場合ユーザーオブジェクトIDはoidに入ってる-->
+                </p>
+                <p
+                  v-show="$auth.user?.groups?.includes(userGroups.admin)"
+                  class="ma-0 pa-0 text-caption grey--text"
                 >
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-icon>
-                  <v-icon>mdi-github</v-icon>
-                </v-list-item-icon>
-                <v-list-item-title
-                  ><a
-                    style="text-decoration: none; color: inherit"
-                    href="https://github.com/hibiya-itchief"
-                    >GitHub</a
-                  ></v-list-item-title
+                  <a @click="revealToken()">APIトークンを表示</a>
+                </p>
+              </v-card-text>
+              <v-card-actions>
+                <v-btn
+                  v-show="$auth.user?.groups?.includes(userGroups.admin)"
+                  outlined
+                  color="primary"
+                  to="/admin"
                 >
-              </v-list-item>
+                  管理者用画面
+                </v-btn>
+                <v-spacer></v-spacer>
+                <v-btn outlined color="primary" @click="logout()">
+                  ログアウト
+                </v-btn>
+              </v-card-actions>
+            </v-card>
 
-              <v-divider></v-divider>
-              <p class="ma-0 pa-0 text-caption grey--text">
-                © 2023 東京都立日比谷高等学校 IT委員会 | IT Chief | Tokyo
-                Metropolitan Hibiya High School
-              </p>
-            </v-list-item-group>
-          </v-list>
-        </div>
-      </template>
-    </v-navigation-drawer>
+            <v-card v-show="!$auth.loggedIn" elevation="0">
+              <v-card-title class="px-2 py-1"
+                ><v-icon class="mr-4">mdi-account-circle</v-icon
+                ><span class="grey--text text-caption"
+                  >ログインしていません</span
+                ></v-card-title
+              >
+              <v-card-text class="px-2 py-1"> </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn outlined color="primary" to="/login"> ログイン </v-btn>
+              </v-card-actions>
+            </v-card>
 
-    <v-main>
-      <Nuxt class="main-content" />
-    </v-main>
+            <v-divider></v-divider>
+          </v-list-item-group>
+        </v-list>
+        <template #append>
+          <div class="pa-0">
+            <v-list nav dense>
+              <v-list-item-group active-class="light-blue--text text--accent-4">
+                <v-list-item>
+                  <v-list-item-icon>
+                    <v-icon>mdi-clipboard-text</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-title
+                    ><a
+                      style="text-decoration: none; color: inherit"
+                      href="https://forms.gle/aRv81UtSCSgS2gHq8"
+                      >フィードバック</a
+                    ></v-list-item-title
+                  >
+                </v-list-item>
+                <v-list-item>
+                  <v-list-item-icon>
+                    <v-icon>mdi-github</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-title
+                    ><a
+                      style="text-decoration: none; color: inherit"
+                      href="https://github.com/hibiya-itchief"
+                      >GitHub</a
+                    ></v-list-item-title
+                  >
+                </v-list-item>
 
-    <v-bottom-navigation
-      v-if="$route.path !== '/board'"
-      color="sairai"
-      fixed
-      app
-    >
-      <v-btn to="/">
-        <span>ホーム</span>
-        <v-icon>mdi-home</v-icon>
-      </v-btn>
+                <v-divider></v-divider>
+                <p class="ma-0 pa-0 text-caption grey--text">
+                  © 2023 東京都立日比谷高等学校 IT委員会 | IT Chief | Tokyo
+                  Metropolitan Hibiya High School
+                </p>
+              </v-list-item-group>
+            </v-list>
+          </div>
+        </template>
+      </v-navigation-drawer>
 
-      <v-btn to="/groups">
-        <span>探す</span>
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
+      <v-main>
+        <Nuxt class="main-content" />
+      </v-main>
 
-      <v-btn to="/tickets">
-        <span>整理券</span>
-        <v-icon>mdi-ticket</v-icon>
-      </v-btn>
-    </v-bottom-navigation>
+      <v-bottom-navigation
+        v-if="$route.path !== '/board'"
+        color="sairai"
+        fixed
+        app
+      >
+        <v-btn to="/">
+          <span>ホーム</span>
+          <v-icon>mdi-home</v-icon>
+        </v-btn>
+
+        <v-btn to="/groups">
+          <span>探す</span>
+          <v-icon>mdi-magnify</v-icon>
+        </v-btn>
+
+        <v-btn to="/tickets">
+          <span>整理券</span>
+          <v-icon>mdi-ticket</v-icon>
+        </v-btn>
+      </v-bottom-navigation>
+    </client-only>
   </v-app>
 </template>
 
