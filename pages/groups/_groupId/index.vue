@@ -425,10 +425,7 @@ export default Vue.extend({
           listTakenTickets.push(ticketsInfo[i].taken_tickets)
         }
       })
-      const links: GroupLink[] = await $axios.$get(
-        '/groups/' + params.groupId + '/links'
-      )
-      return { group, events, links, listStock, listTakenTickets }
+      return { group, events, listStock, listTakenTickets }
     } else {
       return { group, events }
     }
@@ -518,6 +515,13 @@ export default Vue.extend({
         })
       }
     }
+    this.$axios
+      .$get('/groups/' + this.$route.params.groupId + '/links')
+      .then((res) => {
+        for (let i = 0; i < res.length; i++) {
+          this.links.push(res[i])
+        }
+      })
     this.$axios
       .$get(
         '/ga/screenpageview?start_date=7daysAgo&end_date=today&page_path=' +
