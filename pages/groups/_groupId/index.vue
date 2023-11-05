@@ -36,6 +36,7 @@
               <v-card-actions style="width: 100%; display: block">
                 <div
                   v-for="link in links"
+                  v-show="$auth.user?.groups?.includes(userGroups.students)"
                   :key="link.id"
                   class="my-1"
                   style="width: 100%"
