@@ -2,7 +2,7 @@ import { NuxtConfig } from '@nuxt/types'
 import fetch from 'node-fetch'
 // @ts-ignore
 import colors from 'vuetify/es5/util/colors'
-import { Group, Tag } from './types/quaint'
+import { Group, Tag, GroupLink } from './types/quaint'
 
 const environment = process.env.QUAINT_ENV || 'development'
 const envSet = require(`./env.${environment}.js`)
@@ -251,7 +251,19 @@ const nuxtConfig: NuxtConfig = {
         })
       ).json()) as Tag[]
 
-      const groupRoutes = groups.map((group) => {
+      const allLinks: GroupLink[][]
+      for (let i = 0; i < groups.length; i++) {
+        allLinks.push(
+          await (
+            await fetch(baseurl_without_slash + '/' + groups[i].id + '/links', {
+              method: 'GET',
+            })
+          ).json()
+        )
+      }
+
+      const groupRoutes = groups.map((group, index) => {
+        const links: GroupLink[] = allLinks[index]
         return {
           route: `/groups/${group.id}`,
           payload: { group, links },
