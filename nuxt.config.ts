@@ -254,11 +254,11 @@ const nuxtConfig: NuxtConfig = {
       const allLinks: GroupLink[][] = []
       for (let i = 0; i < groups.length; i++) {
         allLinks.push(
-          await (
+          (await (
             await fetch(baseurl_without_slash + '/' + groups[i].id + '/links', {
               method: 'GET',
             })
-          ).json()
+          ).json()) as GroupLink[]
         )
       }
 
