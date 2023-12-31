@@ -251,7 +251,7 @@ const nuxtConfig: NuxtConfig = {
         })
       ).json()) as Tag[]
 
-      const allLinks: GroupLink[][]
+      const allLinks: GroupLink[][] = []
       for (let i = 0; i < groups.length; i++) {
         allLinks.push(
           await (
