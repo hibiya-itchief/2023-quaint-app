@@ -254,7 +254,7 @@ const nuxtConfig: NuxtConfig = {
       const groupRoutes = groups.map((group) => {
         return {
           route: `/groups/${group.id}`,
-          payload: group,
+          payload: { group, links },
         }
       })
       const groupEditRoutes = groups.map((group) => {
