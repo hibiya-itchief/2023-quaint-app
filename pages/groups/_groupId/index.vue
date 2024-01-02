@@ -409,9 +409,7 @@ export default Vue.extend({
     // nuxt generate時はpayloadを代入
     const group = payload ?? (await $axios.$get('/groups/' + params.groupId))
 
-    const links = await $axios.$get(
-      '/groups/' + this.$route.params.groupId + '/links'
-    )
+    const links = await $axios.$get('/groups/' + params.groupId + '/links')
 
     // 各ticketsを取得
     if (events.length !== 0) {
