@@ -409,6 +409,8 @@ export default Vue.extend({
     // nuxt generate時はpayloadを代入
     const group = payload ?? (await $axios.$get('/groups/' + params.groupId))
 
+    const links = await $axios.$get('/groups/' + params.groupId + '/links')
+
     // 各ticketsを取得
     if (events.length !== 0) {
       const getTicketsInfo = []
@@ -425,9 +427,9 @@ export default Vue.extend({
           listTakenTickets.push(ticketsInfo[i].taken_tickets)
         }
       })
-      return { group, events, listStock, listTakenTickets }
+      return { group, events, listStock, listTakenTickets, links }
     } else {
-      return { group, events }
+      return { group, events, links }
     }
   },
   data(): Data {
@@ -515,13 +517,6 @@ export default Vue.extend({
         })
       }
     }
-    this.$axios
-      .$get('/groups/' + this.$route.params.groupId + '/links')
-      .then((res) => {
-        for (let i = 0; i < res.length; i++) {
-          this.links.push(res[i])
-        }
-      })
     this.$axios
       .$get(
         '/ga/screenpageview?start_date=7daysAgo&end_date=today&page_path=' +
