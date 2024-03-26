@@ -423,6 +423,8 @@ export default Vue.extend({
     title: '整理券',
   },
   async created() {
+    // 静的サイトにするにあたって全て削除
+    /*
     this.fetchTicket()
     try {
       if (this.$auth.$state.strategy === 'ad') {
@@ -431,6 +433,7 @@ export default Vue.extend({
         this.qrcodeUrl = await getQRCodeDataUrl(this.$auth.user?.sub as string)
       }
     } catch {}
+    */
     // 500msごとに現在時刻を取得
     // setInterval(this.getNow, 500)
   },
