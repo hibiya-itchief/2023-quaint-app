@@ -1,20 +1,21 @@
-name: mainブランチの内容をもとにAPIから事前にデータを取得しCloudflare Pagesにデプロイ
-on:
-  schedule:
-    - cron: '0 15 * * *' # 毎日0時(日本時間)にビルド
-  workflow_dispatch:
-  push:
-    branches:
-      - 'main'
+#毎日デプロイするのをやめる
+#name: mainブランチの内容をもとにAPIから事前にデータを取得しCloudflare Pagesにデプロイ
+#on:
+#  schedule:
+#    - cron: '0 15 * * *' # 毎日0時(日本時間)にビルド
+#  workflow_dispatch:
+#  push:
+#    branches:
+#      - 'main'
 
-jobs:
-  deploy:
-    name: deploy to cloudflare
-    runs-on: ubuntu-latest
-    environment:
-      name: '星陵祭公式Webサイト'
-      url: https://seiryofes.com/
-    steps:
-      - name: Cloudflareのデプロイフックを実行
-        run: |
-          curl -X POST ${{ secrets.CLOUDFLARE_DEPLOY_HOOK_URL }}
+#jobs:
+#  deploy:
+#    name: deploy to cloudflare
+#    runs-on: ubuntu-latest
+#    environment:
+#      name: '星陵祭公式Webサイト'
+#      url: https://seiryofes.com/
+#    steps:
+#      - name: Cloudflareのデプロイフックを実行
+#        run: |
+#          curl -X POST ${{ secrets.CLOUDFLARE_DEPLOY_HOOK_URL }}
