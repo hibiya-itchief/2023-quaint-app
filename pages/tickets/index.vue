@@ -354,7 +354,6 @@
 </template>
 
 <script lang="ts">
-import { toDataURL as getQRCodeDataUrl } from 'qrcode'
 import { Event, Group, Ticket } from 'types/quaint'
 import Vue from 'vue'
 type TicketInfo = {
