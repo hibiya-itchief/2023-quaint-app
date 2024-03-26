@@ -1,18 +1,17 @@
 <template>
   <v-app>
-    <v-container name="ticket_container" fill-height>
-      <v-row justify="center" align-content="center">
-        <v-col cols="12">
-          <h2 id="title">
-            第48回星陵祭は終了しました。お越しいただき、本当にありがとうございました。
-          </h2>
-        </v-col>
-        <v-col cols="12">
-          <v-card class="text-center">
-            <v-card-title class="justify-center">日比谷高校文化祭</v-card-title>
-            <v-img src="/images/Sairai.jpeg"></v-img>
-            <v-card-title class="justify-center">星陵祭2023</v-card-title>
-          </v-card>
+    <v-container>
+      <v-row>
+        <v-col>
+          <div style="height: 220px"></div>
+          <div v-if="$vuetify.breakpoint.xs" class="container">
+            <h3 id="title">第48回星陵祭は終了しました。</h3>
+            <h3 id="title">お越しいただき、本当にありがとうございました。</h3>
+          </div>
+          <div v-else class="container">
+            <h2 id="title">第48回星陵祭は終了しました。</h2>
+            <h2 id="title">お越しいただき、本当にありがとうございました。</h2>
+          </div>
         </v-col>
       </v-row>
     </v-container>
@@ -262,9 +261,7 @@ export default Vue.extend({
 </script>
 <style>
 #title {
-  display: inline-block;
-  padding: 0.5rem 3rem 0.5rem 0;
-  margin-bottom: 5rem;
+  text-align: center;
   font-family: serif;
   font-weight: bold;
 }
