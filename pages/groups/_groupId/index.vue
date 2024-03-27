@@ -149,10 +149,11 @@
                 >すると整理券を取得できます。</v-card-subtitle
               >
               <v-divider class="mb-3"></v-divider>
-
+              <!--
               <v-btn class="ma-2" color="primary" @click="$nuxt.refresh()"
                 ><v-icon class="mr-1">mdi-reload</v-icon>再読み込み</v-btn
               >
+              -->
               <div v-for="(event, index) in suitableEvents()" :key="event.id">
                 <v-card
                   class="ma-2 d-flex"
@@ -517,17 +518,8 @@ export default Vue.extend({
         })
       }
     }
-    this.$axios
-      .$get(
-        '/ga/screenpageview?start_date=7daysAgo&end_date=today&page_path=' +
-          this.$route.path
-      )
-      .then((res) => {
-        this.view_count = res.view
-      })
-      .catch(() => {
-        this.view_count = 'エラー'
-      })
+
+    this.view_count = 'エラー'
 
     //  全ての公演（events）から，ログイン中のユーザ属性（e.g.students,parents）に合致する公演のみがfilteredEventsに格納される
     //  '&& this.isToday(val.sell_starts, val.sell_ends, val.starts_at)'を付け加えれば，当日の整理券のみが表示されるようになる
