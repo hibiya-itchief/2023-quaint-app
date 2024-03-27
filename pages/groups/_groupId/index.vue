@@ -57,36 +57,6 @@
                   Streamで配信されている映像は「~~@metro.ed.jp」で終わる本校生徒のアカウントでログインしないと見ることができません。保護者の方はお子様の端末で一緒にご視聴ください。</span
                 >
               </v-card-actions>
-              <v-divider></v-divider>
-              <v-card-actions v-if="editable == true" class="py-1">
-                <v-btn
-                  color="blue-grey"
-                  dark
-                  outlined
-                  rounded
-                  width="100%"
-                  :to="'/groups/' + group?.id + '/edit'"
-                >
-                  <v-icon>mdi-pencil</v-icon>
-                  団体情報を編集
-                </v-btn>
-              </v-card-actions>
-              <v-card-actions
-                v-if="editable == true && !IsNotClassroom(group)"
-                class="py-1"
-              >
-                <v-btn
-                  color="blue-grey"
-                  dark
-                  outlined
-                  rounded
-                  width="100%"
-                  :to="'/groups/' + group?.id + '/data'"
-                >
-                  <v-icon>mdi-ticket-confirmation</v-icon>
-                  残席情報を確認
-                </v-btn>
-              </v-card-actions>
               <v-card-actions class="py-1">
                 <v-btn
                   v-if="group.twitter_url != null"
