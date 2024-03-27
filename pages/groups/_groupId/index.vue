@@ -269,15 +269,7 @@
                   <v-card-actions class="px-1">
                     <v-spacer></v-spacer>
 
-                    <v-btn color="red" text @click.stop="dialog = false">
-                      いいえ
-                    </v-btn>
-                    <v-btn
-                      color="primary"
-                      @click="CreateTicket(selected_event, ticket_person)"
-                    >
-                      はい
-                    </v-btn>
+                    <p>2023年星陵祭は終了しました。</p>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
@@ -646,39 +638,6 @@ export default Vue.extend({
       }
       index = index % colors.length
       return colors[index]
-    },
-    async CreateTicket(event: Event, person: number) {
-      if (!this.$auth.loggedIn) {
-        this.error_message = '整理券の取得には'
-        this.error_snackbar_link = '/login'
-        this.error_alert = true
-        return 1
-      }
-      this.dialog = false
-      await this.$axios
-        .post(
-          '/groups/' +
-            event.group_id +
-            '/events/' +
-            event.id +
-            '/tickets?person=' +
-            person
-        )
-        .then(() => {
-          this.success_message = '整理券を取得できました！'
-          this.success_snackbar_link = '/tickets'
-          this.success_alert = true
-        })
-        .catch((e) => {
-          if (e.response) {
-            this.error_message = e.response.data.detail
-          } else {
-            this.error_message =
-              '予期せぬエラーが発生しました。IT委員にお声がけください🙇‍♂️'
-          }
-          this.error_snackbar_link = undefined
-          this.error_alert = true
-        })
     },
     selectEvent(event: Event) {
       if (
