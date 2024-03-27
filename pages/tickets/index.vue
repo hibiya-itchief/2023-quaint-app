@@ -1,360 +1,24 @@
 <template>
   <v-app>
-    <v-container name="ticket_container">
-      <v-row justify="center" align-content="center">
-        <v-col cols="12" sm="6" lg="6">
-          <v-btn
-            v-show="$auth.user?.groups?.includes(userGroups.parents)"
-            href="https://forms.office.com/Pages/ResponsePage.aspx?id=07VbxZj7okm9Yto1xwcA4mrjYZ4y3-RGkgE_OQbXv41UNEVDRU9BWUtWUlI5REtGTjZaUzNFVkNVNi4u"
-            class="primary"
-          >
-            保護者用投票フォーム
-          </v-btn>
-          <v-btn
-            v-show="$auth.user?.groups?.includes(userGroups.students)"
-            href="https://forms.office.com/Pages/ResponsePage.aspx?id=07VbxZj7okm9Yto1xwcA4mrjYZ4y3-RGkgE_OQbXv41UOTNTRlIzRTJIMU1IQUI2UlFEM1dWTlk0RS4u"
-            class="primary"
-          >
-            生徒用投票フォーム
-          </v-btn>
-          <!--現在時刻を表示・現在時刻を取得するとv-progress-linearが正常に動作しないため非表示-->
-          <!--
-            <v-chip v-if="time" label class="ma-1"
-              >{{ time }} <span class="text-h5">{{ seconds }} </span></v-chip
-            >
-            -->
-
-          <!--校内への入場処理が行われていない場合に，入場処理を促すメッセージと処理用のQRコードを表示-->
-          <!--ここのデザインをもうちょっと可愛く出来ないかな-->
-          <v-card
-            v-if="
-              !(
-                $auth.user?.jobTitle?.includes('Visited') ||
-                $auth.$state.strategy === 'ad'
-              )
-            "
-          >
-            <v-card-title class="text-h5">🥳星陵祭へようこそ！</v-card-title>
-            <v-card-subtitle class="text-h6"
-              >校門でこの画面をご提示ください。</v-card-subtitle
-            >
-            <v-card-text
-              >※日比谷生の入場手続きは不要です。そのままお待ちください。</v-card-text
-            >
-            <v-img
-              class="mx-auto my-0"
-              style="display: block"
-              :src="qrcodeUrl"
-              width="90%"
-            />
-            <!--mx-autoで画像を中央寄せに-->
-            <v-card-text
-              >User ID:{{ $auth.user?.oid ?? $auth.user?.sub }}</v-card-text
-            >
-          </v-card>
-
-          <!--整理券未取得の場合に，「探す」タブへ誘導-->
-          <v-card
-            v-if="
-              now_loading == false &&
-              tickets.length == 0 &&
-              ($auth.user?.jobTitle?.includes('Visited') ||
-                $auth.$state.strategy === 'ad')
-            "
-            class="ma-1 pa-2"
-          >
-            <div>
-              <v-card-title>まだ整理券を取得していません</v-card-title>
-              <v-card-actions>
-                <v-btn :href="'/groups'" block
-                  ><v-icon>mdi-magnify</v-icon>公演を探す</v-btn
-                >
-              </v-card-actions>
-            </div>
-          </v-card>
-
-          <!--開場中の整理券がある場合に上部に大きく表示-->
-          <div
-            v-for="ticketInfo in tickets"
-            :key="ticketInfo.ticket.id"
-            focusable
-          >
-            <v-card
-              v-if="
-                isUpNext(
-                  new Date(ticketInfo.event.starts_at),
-                  new Date(ticketInfo.event.ends_at)
-                ) && ticketInfo.ticket.status == 'active'
-              "
-            >
-              <v-card-title class="mb-2"
-                ><v-icon>mdi-ticket</v-icon>整理券
-                <v-spacer></v-spacer>
-                <v-chip color="primary" outlined label
-                  ><v-icon>mdi-theater</v-icon>開場中</v-chip
-                ></v-card-title
-              >
-              <v-card-subtitle
-                >この画面を各クラスの受付に提示してください。</v-card-subtitle
-              >
-              <v-divider></v-divider>
-              <div class="text-truncate">
-                <v-card-title class="text-h7 text-truncate">
-                  {{ ticketInfo.group.title }}
-                </v-card-title>
-                <v-card-subtitle
-                  class="grey--text text--darken-2 text-h5 pb-0 text-truncate"
-                >
-                  {{ ticketInfo.event.eventname }}</v-card-subtitle
-                >
-
-                <v-card-subtitle class="pb-0 text-truncate">
-                  {{ ticketInfo.group.groupname }}</v-card-subtitle
-                >
-                <div style="display: flex">
-                  <v-card-subtitle
-                    class="grey--text text--darken-2 text-truncate"
-                  >
-                    <!--日付：画面がごちゃごちゃするため省略．1日目の整理券を画面収録して2日目に使う人が現れるなどしたら，実装が必要-->
-                    <!--
-                <span class="text-h3"
-                  ><v-icon>mdi-calendar</v-icon
-                  >{{ dateFormatter(ticketInfo.event.starts_at) }}</span
-                >
-                -->
-                    <!--上演時刻-->
-                    <span class="text-h3"
-                      ><v-icon>mdi-clock-time-nine</v-icon
-                      >{{ timeFormatter(ticketInfo.event.starts_at) }}</span
-                    >
-                    -{{ timeFormatter(ticketInfo.event.ends_at) }}
-                    <v-spacer></v-spacer>
-                    <!--入場人数-->
-                    <span class="text-h3"
-                      ><v-icon>mdi-account-supervisor</v-icon
-                      >{{ ticketInfo.ticket.person }}</span
-                    >人
-                  </v-card-subtitle>
-                  <v-spacer></v-spacer>
-                  <img class="chochin" src="/images/chochin.png" />
-                </div>
-              </div>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <!--終演時刻前の時だけ「整理券をキャンセル」ボタンを表示-->
-                <v-btn
-                  v-if="!isUsed(new Date(ticketInfo.event.ends_at))"
-                  color="error"
-                  @click="selectCancelTicket(ticketInfo)"
-                >
-                  <v-icon>mdi-close</v-icon>
-                  整理券をキャンセル
-                </v-btn>
-              </v-card-actions>
-              <v-img
-                v-if="ticketInfo.group.public_thumbnail_image_url != null"
-                :src="ticketInfo.group.public_thumbnail_image_url"
-                width="100%"
-                contain
-                max-height="300px"
-              ></v-img>
-            </v-card>
+    <v-container>
+      <v-row>
+        <v-col>
+          <div style="height: 220px"></div>
+          <div v-if="$vuetify.breakpoint.xs" class="container">
+            <h3 id="title">第48回星陵祭は終了しました。</h3>
+            <h3 id="title">お越しいただき、本当にありがとうございました。</h3>
           </div>
-          <!--取得した整理券一覧-->
-          <v-card v-if="tickets.length !== 0" class="my-4">
-            <v-card-title
-              ><v-icon>mdi-ticket-account</v-icon>あなたの整理券</v-card-title
-            >
-            <v-expansion-panels inset>
-              <v-expansion-panel
-                v-for="ticketInfo in tickets"
-                :key="ticketInfo.ticket.id"
-                focusable
-              >
-                <!--activeな整理券のみ表示．キャンセル済み整理券とUpNextな整理券は表示されない-->
-                <div
-                  v-if="
-                    ticketInfo.ticket.status == 'active' &&
-                    !isUpNext(
-                      new Date(ticketInfo.event.starts_at),
-                      new Date(ticketInfo.event.ends_at)
-                    )
-                  "
-                >
-                  <v-expansion-panel-header class="pa-3">
-                    <div class="text-truncate">
-                      <v-list-item>
-                        <div>
-                          <v-img
-                            v-if="
-                              ticketInfo.group.public_thumbnail_image_url !=
-                              null
-                            "
-                            height="120px"
-                            width="90px"
-                            contain
-                            :src="ticketInfo.group.public_thumbnail_image_url"
-                          ></v-img>
-                          <v-img
-                            v-else
-                            :class="HashColor(ticketInfo.group.id)"
-                            height="120px"
-                            width="90px"
-                          ></v-img>
-                        </div>
-                        <div class="ma-2 text-truncate">
-                          <!--取得した整理券の情報を表示-->
-                          <v-list-item-subtitle class="text-truncate"
-                            >{{ dateFormatter(ticketInfo.event.starts_at) }}
-                            {{
-                              ticketInfo.event.eventname
-                            }}</v-list-item-subtitle
-                          >
-                          <v-list-item-title class="text-h7 text-truncate">
-                            {{ ticketInfo.group.title }}
-                          </v-list-item-title>
-                          <v-list-item-subtitle class="text-truncate">
-                            {{
-                              ticketInfo.group.groupname
-                            }}</v-list-item-subtitle
-                          >
-                          <v-list-item-subtitle
-                            class="mt-2 grey--text text--darken-2 text-truncate"
-                          >
-                            <span class="text-h5"
-                              ><v-icon>mdi-clock-time-nine</v-icon
-                              >{{
-                                timeFormatter(ticketInfo.event.starts_at)
-                              }}</span
-                            >
-                            -{{ timeFormatter(ticketInfo.event.ends_at) }}
-                          </v-list-item-subtitle>
-                          <v-list-item-subtitle
-                            class="mb-2 grey--text text--darken-2 text-truncate"
-                          >
-                            <span class="text-h5"
-                              ><v-icon>mdi-account-supervisor</v-icon
-                              >{{ ticketInfo.ticket.person }}</span
-                            >人
-                          </v-list-item-subtitle>
-
-                          <!--整理券の状況を「開場前」（開演20分前まで），「開場中」（開演20分前から終演），「公演終了」（終演以降）に分けて表示-->
-                          <v-chip
-                            v-if="
-                              isUpNext(
-                                new Date(ticketInfo.event.starts_at),
-                                new Date(ticketInfo.event.ends_at)
-                              )
-                            "
-                            color="primary"
-                            outlined
-                            label
-                            ><v-icon>mdi-theater</v-icon>開場中</v-chip
-                          >
-                          <v-chip
-                            v-else-if="
-                              isUsed(new Date(ticketInfo.event.ends_at))
-                            "
-                            color="error"
-                            outlined
-                            label
-                            ><v-icon>mdi-check</v-icon>公演終了</v-chip
-                          >
-                          <v-chip v-else color="green" outlined label>
-                            <v-icon>mdi-account-clock</v-icon>開場前
-                          </v-chip>
-                        </div>
-                      </v-list-item>
-                    </div>
-                  </v-expansion-panel-header>
-                  <v-expansion-panel-content class="pa-1">
-                    <v-divider></v-divider>
-                    <v-card-text>
-                      <p class="text-body-2 grey--text">
-                        ID: {{ ticketInfo.ticket.id }}
-                      </p>
-                    </v-card-text>
-                    <v-card-actions>
-                      <v-btn :href="'/groups/' + ticketInfo.group.id"
-                        >公演詳細
-                      </v-btn>
-                      <v-spacer></v-spacer>
-
-                      <!--終演時刻前の時だけ「整理券をキャンセル」ボタンを表示-->
-                      <v-btn
-                        v-if="!isUsed(new Date(ticketInfo.event.ends_at))"
-                        color="error"
-                        @click="selectCancelTicket(ticketInfo)"
-                      >
-                        <v-icon>mdi-close</v-icon>
-                        整理券をキャンセル
-                      </v-btn>
-                    </v-card-actions>
-                  </v-expansion-panel-content>
-                </div>
-              </v-expansion-panel>
-            </v-expansion-panels>
-          </v-card>
-
-          <!--整理券キャンセルの有無を問うダイアログ-->
-          <v-dialog
-            v-if="selectedTicket"
-            v-model="cancelDialog"
-            max-width="500"
-          >
-            <v-card>
-              <v-card-title class="text-h5">
-                本当にキャンセルしますか？
-              </v-card-title>
-              <v-card-subtitle class="pt-5 pb-0"
-                >{{ dateFormatter(selectedTicket.event.starts_at) }}
-                {{ selectedTicket.event.eventname }}</v-card-subtitle
-              >
-              <v-card-title class="pt-0">
-                {{ selectedTicket.group.title }}
-              </v-card-title>
-              <v-card-subtitle>{{
-                selectedTicket.group.groupname
-              }}</v-card-subtitle>
-              <v-card-text>この操作は取り消せません</v-card-text>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn text @click="cancelDialog = false">いいえ</v-btn>
-                <v-btn color="error" @click="CancelTicket(selectedTicket)"
-                  >はい</v-btn
-                >
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
+          <div v-else class="container">
+            <h2 id="title">第48回星陵祭は終了しました。</h2>
+            <h2 id="title">お越しいただき、本当にありがとうございました。</h2>
+          </div>
         </v-col>
       </v-row>
-      <v-snackbar v-model="success_alert" color="success" elevation="2">
-        {{ success_message }}
-        <template #action="{ attrs }">
-          <v-btn
-            color="white"
-            icon
-            v-bind="attrs"
-            @click="success_alert = false"
-          >
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </template>
-      </v-snackbar>
-      <v-snackbar v-model="error_alert" color="red" elevation="2">
-        {{ error_message }}
-        <template #action="{ attrs }">
-          <v-btn color="white" icon v-bind="attrs" @click="error_alert = false">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </template>
-      </v-snackbar>
     </v-container>
   </v-app>
 </template>
 
 <script lang="ts">
-import { toDataURL as getQRCodeDataUrl } from 'qrcode'
 import { Event, Group, Ticket } from 'types/quaint'
 import Vue from 'vue'
 type TicketInfo = {
@@ -423,6 +87,8 @@ export default Vue.extend({
     title: '整理券',
   },
   async created() {
+    // 静的サイトにするにあたって全て削除
+    /*
     this.fetchTicket()
     try {
       if (this.$auth.$state.strategy === 'ad') {
@@ -431,6 +97,7 @@ export default Vue.extend({
         this.qrcodeUrl = await getQRCodeDataUrl(this.$auth.user?.sub as string)
       }
     } catch {}
+    */
     // 500msごとに現在時刻を取得
     // setInterval(this.getNow, 500)
   },
@@ -593,6 +260,12 @@ export default Vue.extend({
 })
 </script>
 <style>
+#title {
+  text-align: center;
+  font-family: serif;
+  font-weight: bold;
+}
+
 .text-truncate {
   display: block;
   white-space: nowrap;
