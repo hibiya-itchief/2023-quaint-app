@@ -630,7 +630,7 @@ export default Vue.extend({
       return colors[index]
     },
 
-    async CreateTicket() {
+    CreateTicket() {
       this.error_message = '2023年星陵祭は終了しました。'
       this.error_alert_end = true
       return 1
