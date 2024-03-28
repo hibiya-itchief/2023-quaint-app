@@ -242,10 +242,7 @@
                     <v-btn color="red" text @click.stop="dialog = false">
                       いいえ
                     </v-btn>
-                    <v-btn
-                      color="primary"
-                      @click="CreateTicket(selected_event, ticket_person)"
-                    >
+                    <v-btn color="primary" @click="CreateTicket()">
                       はい
                     </v-btn>
                   </v-card-actions>
@@ -633,7 +630,7 @@ export default Vue.extend({
       return colors[index]
     },
 
-    async CreateTicket(event: Event, person: number) {
+    async CreateTicket() {
       this.error_message = '2023年星陵祭は終了しました。'
       this.error_alert_end = true
       return 1
