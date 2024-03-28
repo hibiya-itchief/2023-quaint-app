@@ -239,7 +239,15 @@
                   <v-card-actions class="px-1">
                     <v-spacer></v-spacer>
 
-                    <p>2023年星陵祭は終了しました。</p>
+                    <v-btn color="red" text @click.stop="dialog = false">
+                      いいえ
+                    </v-btn>
+                    <v-btn
+                      color="primary"
+                      @click="CreateTicket(selected_event, ticket_person)"
+                    >
+                      はい
+                    </v-btn>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
@@ -308,6 +316,19 @@
             </v-btn>
           </template>
         </v-snackbar>
+        <v-snackbar v-model="error_alert_end" color="red" elevation="2">
+          {{ error_message }}
+          <template #action="{ attrs }">
+            <v-btn
+              color="white"
+              icon
+              v-bind="attrs"
+              @click="error_alert_end = false"
+            >
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </template>
+        </v-snackbar>
       </client-only>
     </v-container>
   </v-app>
@@ -334,6 +355,7 @@ type Data = {
   editable: boolean
   success_alert: boolean
   error_alert: boolean
+  error_alert_end: boolean
   success_message: string
   error_message: string
   dialog: boolean
@@ -421,6 +443,7 @@ export default Vue.extend({
       ],
       success_alert: false,
       error_alert: false,
+      error_alert_end: false,
       success_message: '',
       error_message: '',
       dialog: false,
@@ -609,6 +632,13 @@ export default Vue.extend({
       index = index % colors.length
       return colors[index]
     },
+
+    async CreateTicket(event: Event, person: number) {
+      this.error_message = '2023年星陵祭は終了しました。'
+      this.error_alert_end = true
+      return 1
+    },
+
     selectEvent(event: Event) {
       if (
         new Date() < new Date(event.sell_starts) ||
