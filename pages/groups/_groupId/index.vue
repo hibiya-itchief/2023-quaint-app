@@ -57,36 +57,6 @@
                   Streamで配信されている映像は「~~@metro.ed.jp」で終わる本校生徒のアカウントでログインしないと見ることができません。保護者の方はお子様の端末で一緒にご視聴ください。</span
                 >
               </v-card-actions>
-              <v-divider></v-divider>
-              <v-card-actions v-if="editable == true" class="py-1">
-                <v-btn
-                  color="blue-grey"
-                  dark
-                  outlined
-                  rounded
-                  width="100%"
-                  :to="'/groups/' + group?.id + '/edit'"
-                >
-                  <v-icon>mdi-pencil</v-icon>
-                  団体情報を編集
-                </v-btn>
-              </v-card-actions>
-              <v-card-actions
-                v-if="editable == true && !IsNotClassroom(group)"
-                class="py-1"
-              >
-                <v-btn
-                  color="blue-grey"
-                  dark
-                  outlined
-                  rounded
-                  width="100%"
-                  :to="'/groups/' + group?.id + '/data'"
-                >
-                  <v-icon>mdi-ticket-confirmation</v-icon>
-                  残席情報を確認
-                </v-btn>
-              </v-card-actions>
               <v-card-actions class="py-1">
                 <v-btn
                   v-if="group.twitter_url != null"
@@ -273,10 +243,7 @@
                     <v-btn color="red" text @click.stop="dialog = false">
                       いいえ
                     </v-btn>
-                    <v-btn
-                      color="primary"
-                      @click="CreateTicket(selected_event, ticket_person)"
-                    >
+                    <v-btn color="primary" @click="CreateTicket()">
                       はい
                     </v-btn>
                   </v-card-actions>
@@ -347,6 +314,19 @@
             </v-btn>
           </template>
         </v-snackbar>
+        <v-snackbar v-model="error_alert_end" color="red" elevation="2">
+          {{ error_message }}
+          <template #action="{ attrs }">
+            <v-btn
+              color="white"
+              icon
+              v-bind="attrs"
+              @click="error_alert_end = false"
+            >
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </template>
+        </v-snackbar>
       </client-only>
     </v-container>
   </v-app>
@@ -373,6 +353,7 @@ type Data = {
   editable: boolean
   success_alert: boolean
   error_alert: boolean
+  error_alert_end: boolean
   success_message: string
   error_message: string
   dialog: boolean
@@ -460,6 +441,7 @@ export default Vue.extend({
       ],
       success_alert: false,
       error_alert: false,
+      error_alert_end: false,
       success_message: '',
       error_message: '',
       dialog: false,
@@ -639,39 +621,13 @@ export default Vue.extend({
       index = index % colors.length
       return colors[index]
     },
-    async CreateTicket(event: Event, person: number) {
-      if (!this.$auth.loggedIn) {
-        this.error_message = '整理券の取得には'
-        this.error_snackbar_link = '/login'
-        this.error_alert = true
-        return 1
-      }
-      this.dialog = false
-      await this.$axios
-        .post(
-          '/groups/' +
-            event.group_id +
-            '/events/' +
-            event.id +
-            '/tickets?person=' +
-            person
-        )
-        .then(() => {
-          this.success_message = '整理券を取得できました！'
-          this.success_snackbar_link = '/tickets'
-          this.success_alert = true
-        })
-        .catch((e) => {
-          if (e.response) {
-            this.error_message = e.response.data.detail
-          } else {
-            this.error_message =
-              '予期せぬエラーが発生しました。IT委員にお声がけください🙇‍♂️'
-          }
-          this.error_snackbar_link = undefined
-          this.error_alert = true
-        })
+
+    CreateTicket() {
+      this.error_message = '2023年星陵祭は終了しました。'
+      this.error_alert_end = true
+      return 1
     },
+
     selectEvent(event: Event) {
       if (
         new Date() < new Date(event.sell_starts) ||
